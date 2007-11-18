@@ -27,6 +27,7 @@
 			<zipfileset dir="." includes="build.xml" prefix="${ant.project.name}-${version}" />
 			<zipfileset dir="." includes="LICENSE.txt" prefix="${ant.project.name}-${version}" />
 		</zip>
+		<delete file="${ant.project.name}-${version}.jar" />
 	</target>
 	
 	<target name="clean">
