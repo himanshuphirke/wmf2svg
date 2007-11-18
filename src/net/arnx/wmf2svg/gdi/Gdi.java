@@ -1,0 +1,162 @@
+package net.arnx.wmf2svg.gdi;
+
+import java.awt.*;
+
+public interface Gdi {
+    public static final int OPAQUE = 2;
+    public static final int TRANSPARENT = 1;
+
+    public static final int TA_BASELINE = 24;
+    public static final int TA_BOTTOM = 8;
+    public static final int TA_TOP = 0;
+    public static final int TA_CENTER = 6;
+    public static final int TA_LEFT = 0;
+    public static final int TA_RIGHT = 2;
+    public static final int TA_NOUPDATECP = 0;
+    public static final int TA_RTLREADING = 256;
+    public static final int TA_UPDATECP = 1;
+    public static final int VTA_BASELINE = 24;
+    public static final int VTA_CENTER = 6;
+
+    public static final int ETO_CLIPPED = 4;
+    public static final int ETO_NUMERICSLOCAL = 1024;
+    public static final int ETO_NUMERICSLATIN = 2048;
+    public static final int ETO_GLYPH_INDEX = 16;
+    public static final int ETO_OPAQUE = 2;
+    public static final int ETO_PDY = 8192;
+    public static final int ETO_RTLREADING = 128;
+    public static final int ETO_IGNORELANGUAGE = 4096;
+
+    public static final int MM_ANISOTROPIC = 8;
+    public static final int MM_HIENGLISH = 5;
+    public static final int MM_HIMETRIC = 3;
+    public static final int MM_ISOTROPIC = 7;
+    public static final int MM_LOENGLISH = 4;
+    public static final int MM_LOMETRIC = 2;
+    public static final int MM_TEXT = 1;
+    public static final int MM_TWIPS = 6;
+
+    public static final int STRETCH_ANDSCANS = 2;
+    public static final int STRETCH_DELETESCANS = 3;
+    public static final int STRETCH_HALFTONE = 4;
+    public static final int STRETCH_ORSCANS = 2;
+    public static final int BLACKONWHITE = 2;
+    public static final int COLORONCOLOR = 3;
+    public static final int HALFTONE = 4;
+    public static final int WHITEONBLACK = 2;
+
+    public static final int ALTERNATE = 1;
+    public static final int WINDING = 2;
+
+    public static final int R2_BLACK = 1;
+    public static final int R2_COPYPEN = 13;
+    public static final int R2_MASKNOTPEN = 3;
+    public static final int R2_MASKPEN = 9;
+    public static final int R2_MASKPENNOT = 5;
+    public static final int R2_MERGENOTPEN = 12;
+    public static final int R2_MERGEPEN = 15;
+    public static final int R2_MERGEPENNOT = 14;
+    public static final int R2_NOP = 11;
+    public static final int R2_NOT = 6;
+    public static final int R2_NOTCOPYPEN = 4;
+    public static final int R2_NOTMASKPEN = 8;
+    public static final int R2_NOTMERGEPEN = 2;
+    public static final int R2_NOTXORPEN = 10;
+    public static final int R2_WHITE = 16;
+    public static final int R2_XORPEN = 7;
+    
+	public static final long BLACKNESS = 66;
+	public static final long DSTINVERT = 5570569;
+	public static final long MERGECOPY = 12583114;
+	public static final long MERGEPAINT = 12255782;
+	public static final long NOTSRCCOPY = 3342344;
+	public static final long NOTSRCERASE = 1114278;
+	public static final long PATCOPY = 15728673;
+	public static final long PATINVERT = 5898313;
+	public static final long PATPAINT = 16452105;
+	public static final long SRCAND = 8913094;
+	public static final long SRCCOPY = 13369376;
+	public static final long SRCERASE = 4457256;
+	public static final long SRCINVERT = 6684742;
+	public static final long SRCPAINT = 15597702;
+	public static final long WHITENESS = 16711778;
+	
+	public static final int DIB_RGB_COLORS = 0;
+	public static final int DIB_PAL_COLORS = 1;
+
+    public void placeableHeader(int vsx, int vsy, int vex, int vey, int dpi);
+    public void header();
+    public void animatePalette();
+    public void arc(int sxr, int syr, int exr, int eyr,
+		    int sxa, int sya, int exa, int eya);
+    public void bitBlt(int dx, int dy, int width, int height, int sx, int sy, long rop);
+    public void chord(int sxr, int syr, int exr, int eyr,
+		      int sxa, int sya, int exa, int eya);
+    public GdiBrush createBrushIndirect(int style, int color, int hatch);
+    public GdiObject createDIBPatternBrush(byte[] image, int usage);
+    public GdiFont createFontIndirect(int height, int width, int escapement,
+				      int orientation, int weight,
+				      boolean italic, boolean underline, boolean strikeout,
+				      int charset, int outPrecision, int clipPrecision,
+				      int quality, int pitchAndFamily, byte[] faceName);
+    public GdiObject createPalette();
+    public GdiObject createPatternBrush();
+    public GdiPen createPenIndirect(int style, int width, int color);
+    public void deleteObject(GdiObject obj);
+    public void ellipse(int sx, int sy, int ex, int ey);
+    public void escape(byte[] data);
+    public void excludeClipRect(int sx, int sy, int ex, int ey);
+    public void extFloodFill(int x, int y, int color, int type);
+    public void extTextOut(int x, int y, int options, int[] rect, byte[] text, int[] lpdx);
+    public void fillRgn();
+    public void floodFill(int x, int y, int color);
+    public void frameRgn();
+    public void intersectClipRect(int sx, int sy, int ex, int ey);
+    public void invertRgn();
+    public void lineTo(int ex, int ey);
+    public void moveToEx(int x, int y, Point old);
+    public void offsetClipRgn(int x, int y);
+    public void offsetViewportOrgEx(int x, int y, Point point);
+    public void offsetWindowOrgEx(int x, int y, Point point);
+    public void paintRgn();
+    public void patBlt();
+    public void pie(int sx, int sy, int ex, int ey, int sxr, int syr, int exr, int eyr);
+    public void polygon(Point[] points);
+    public void polyline(Point[] points);
+    public void polyPolygon(Point[][] points);
+    public void realizePalette();
+    public void restoreDC();
+    public void rectangle(int sx, int sy, int ex, int ey);
+    public void resizePalette(GdiObject palette);
+    public void roundRect(int sx, int sy, int ex, int ey, int rw, int rh);
+    public void seveDC();
+    public void scaleViewportExtEx(int x, int xd, int y, int yd, Point old);
+    public void scaleWindowExtEx(int x, int xd, int y, int yd, Point old);
+    public void selectClipRgn(GdiObject obj);
+    public void selectObject(GdiObject obj);
+    public void selectPalette(GdiObject obj, boolean mode);
+    public void setBkColor(int color);
+    public void setBkMode(int mode);
+    public void setDIBitsToDevice(int dx, int dy, long dw, long dh, int sx, int sy,
+        			int startscan, int scanlines, byte[] image, int colorUse);
+    public void setMapMode(int mode);
+    public void setMapperFlags(long flag);
+    public void setPaletteEntries();
+    public void setPixel(int x, int y, int color);
+    public void setPolyFillMode(int mode);
+    public void setROP2(int mode);
+    public void setStretchBltMode(int mode);
+    public void setTextAlign(int align);
+    public void setTextCharacterExtra(int extra);
+    public void setTextColor(int color);
+    public void setTextJustification(int breakExtra, int breakCount);
+    public void setViewportOrgEx(int x, int y);
+    public void setWindowExtEx(int width, int height);
+    public void setWindowOrgEx(int x, int y);
+    public void stretchBlt();
+    public void stretchDIBits(int dx, int dy, int dw, int dh,
+					int sx, int sy, int sw, int sh,
+					byte[] image, int usage, long rop);
+    public void textOut(int x, int y, byte[] text);
+    public void footer();
+}
