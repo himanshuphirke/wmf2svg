@@ -74,7 +74,8 @@ public class WmfParser {
 
 	public WmfParser() {
 	}
-
+	
+	
 	public void parse(InputStream is, Gdi gdi)
 		throws IOException, WmfParseException {
 		DataInput in = null;
