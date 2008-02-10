@@ -15,6 +15,9 @@
  */
 package net.arnx.wmf2svg.gdi.wmf;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public class WmfParseException extends Exception {
 	/**
 	 * The class fingerprint that is set to indicate serialization compatibility
