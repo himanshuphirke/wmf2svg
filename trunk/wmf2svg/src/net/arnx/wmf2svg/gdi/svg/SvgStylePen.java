@@ -17,6 +17,9 @@ package net.arnx.wmf2svg.gdi.svg;
 
 import net.arnx.wmf2svg.gdi.*;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 class SvgStylePen extends SvgStyleObject implements GdiPen {
 	
 	private int style;

@@ -19,6 +19,9 @@ import org.w3c.dom.*;
 
 import net.arnx.wmf2svg.gdi.*;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 class SvgStyleBrush extends SvgStyleObject implements GdiBrush {
 	private int style;
 	private int color;

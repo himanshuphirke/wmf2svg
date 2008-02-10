@@ -19,8 +19,7 @@ import java.io.*;
 import java.nio.ByteOrder;
 
 /**
- * @author A-Ran
- *
+ * @author Hidekatsu Izuno
  */
 public class DataInput {
 	private InputStream in;

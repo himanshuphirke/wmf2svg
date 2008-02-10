@@ -27,6 +27,10 @@ import org.w3c.dom.*;
 import net.arnx.wmf2svg.gdi.*;
 import net.arnx.wmf2svg.util.Base64;
 
+/**
+ * @author Hidekatsu Izuno
+ * @author Shunsuke Mori
+ */
 public class SvgGdi implements Gdi {
 	private Map props = new HashMap();
 
@@ -382,6 +386,9 @@ public class SvgGdi implements Gdi {
 		buffer.setLength(0);
 		int align = dc.getTextAlign();
 
+		if( align == 0 ){
+			y-= dc.getFont().getHeight();	
+		}
 		if ((align & 0x0006) == TA_RIGHT) {
 			buffer.append(" text-anchor: end;");
 		} else if ((align & 0x0006) == TA_CENTER) {
@@ -422,7 +429,7 @@ public class SvgGdi implements Gdi {
 
 		// x
 		buffer.setLength(0);
-		buffer.append(dc.toRelativeX(x));
+		buffer.append(dc.toAbsoluteX(x));
 
 		dx = dc.getFont().validateDx(text, dx);
 		if (dx != null) {
@@ -646,7 +653,7 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void restoreDC() {
-		dc = saveDC;
+		if(saveDC != null) dc = saveDC;
 	}
 
 	public void rectangle(int sx, int sy, int ex, int ey) {
@@ -804,24 +811,57 @@ public class SvgGdi implements Gdi {
 
 	public void stretchDIBits(int dx, int dy, int dw, int dh, int sx, int sy,
 			int sw, int sh, byte[] image, int usage, long rop) {
-		String data = bmpToURI(dibToBmp(image));
-		if (data == null || data.equals("")) {
-			return;
+		
+		try{
+			// convert to 24bit color
+			BufferedImage bufferedImage = bmpToImage(dibToBmp(image));
+			BufferedImage dst = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+			ColorConvertOp colorConvert = new ColorConvertOp(dst.getColorModel().getColorSpace(), null);
+			colorConvert.filter(bufferedImage, dst);
+			bufferedImage = dst;
+			
+			if (dh < 0) {
+				DataBuffer srcData = bufferedImage.getRaster().getDataBuffer();
+				BufferedImage dstImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage.getType());
+				DataBuffer dstData = dstImage.getRaster().getDataBuffer();
+				int lineSize = bufferedImage.getWidth() * bufferedImage.getColorModel().getPixelSize() / 8;
+				for (int h = 0, k = bufferedImage.getHeight() - 1; h < bufferedImage.getHeight(); h++, k--) {
+					for (int j = 0; j < lineSize; j++) {
+						dstData.setElem(h * lineSize + j, srcData.getElem(k * lineSize + j));
+					}
+				}
+				bufferedImage = dstImage;
+			}
+			
+			String data = imageToURI(bufferedImage);
+			
+			if (data == null || data.equals("")) {
+				return;
+			}
+
+			Element elem = doc.createElement("image");
+			if( dh < 0 ){
+				elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
+				elem.setAttribute("y", "" + dc.toAbsoluteY(dy+dh));
+				elem.setAttribute("width", "" + dc.toRelativeX(dw));
+				elem.setAttribute("height", "" + dc.toRelativeY(-dh));
+			}else{
+				elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
+				elem.setAttribute("y", "" + dc.toAbsoluteY(dy));
+				elem.setAttribute("width", "" + dc.toRelativeX(dw));
+				elem.setAttribute("height", "" + dc.toRelativeY(dh));
+			}
+	
+			if (sx != 0 || sy != 0 || sw != dw || sh != dh) {
+				elem.setAttribute("viewBox", "" + sx + " " + sy + " " + sw + " "+ sh);
+				elem.setAttribute("preserveAspectRatio", "none");
+			}
+	
+			elem.setAttribute("xlink:href", data);
+			parent.appendChild(elem);
+		}catch (Exception e) {
+			throw new UnsupportedOperationException();
 		}
-
-		Element elem = doc.createElement("image");
-		elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
-		elem.setAttribute("y", "" + dc.toAbsoluteY(dy));
-		elem.setAttribute("width", "" + dc.toRelativeX(dw));
-		elem.setAttribute("height", "" + dc.toRelativeY(dh));
-
-		if (sx != 0 || sy != 0 || sw != dw || sh != dh) {
-			elem.setAttribute("viewBox", "" + sx + " " + sy + " " + sw + " "
-					+ sh);
-		}
-
-		elem.setAttribute("xlink:href", data);
-		parent.appendChild(elem);
 	}
 
 	public void textOut(int x, int y, byte[] text) {
@@ -939,27 +979,31 @@ public class SvgGdi implements Gdi {
 
 		return (String) nameMap.get(style);
 	}
-
-	private String bmpToURI(byte[] bmp) {
+	
+	private String imageToURI(BufferedImage image) throws IOException {
 		StringBuffer buffer = new StringBuffer("data:image/png;base64,");
-		BufferedImage image = null;
+		ByteArrayOutputStream out = null;
 		try {
-			image = ImageIO.read(new ByteArrayInputStream(bmp));
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			out = new ByteArrayOutputStream();
 			ImageIO.write(image, "png", out);
 			out.close();
 			byte[] data = out.toByteArray();
 			buffer.append(Base64.encode(data));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			return buffer.toString();
 		} finally {
-			if (image != null) {
-				image.flush();
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+				}
 			}
 		}
-
-		return buffer.toString();
+	}
+	
+	private BufferedImage bmpToImage(byte[] bmp ) throws IOException{
+		BufferedImage image = ImageIO.read(new ByteArrayInputStream(bmp));
+		return image;
+		
 	}
 
 	private byte[] dibToBmp(byte[] dib) {
@@ -1016,6 +1060,7 @@ public class SvgGdi implements Gdi {
 			bfOffBits += (clrUsed == 0L) ? 0 : (0xFFFFFFFFL + 1) * 4;
 			break;
 		}
+		
 		data[10] = (byte) (bfOffBits & 0xff);
 		data[11] = (byte) ((bfOffBits >> 8) & 0xff);
 		data[12] = (byte) ((bfOffBits >> 16) & 0xff);

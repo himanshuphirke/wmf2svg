@@ -17,6 +17,9 @@ package net.arnx.wmf2svg.gdi;
 
 import java.awt.*;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public interface Gdi {
     public static final int OPAQUE = 2;
     public static final int TRANSPARENT = 1;
