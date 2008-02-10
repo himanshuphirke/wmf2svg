@@ -21,6 +21,7 @@ import java.nio.ByteOrder;
 
 import net.arnx.wmf2svg.gdi.*;
 import net.arnx.wmf2svg.io.DataInput;
+
 /**
  * @author Hidekatsu Izuno
  * @author Shunsuke Mori
