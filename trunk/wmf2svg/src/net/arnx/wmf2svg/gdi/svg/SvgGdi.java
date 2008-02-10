@@ -450,9 +450,7 @@ public class SvgGdi implements Gdi {
 		if (lang != null) {
 			elem.setAttribute("xml:lang", lang);
 		}
-		elem
-				.appendChild(doc.createTextNode(dc.getFont().convertEncoding(
-						text)));
+		elem.appendChild(doc.createTextNode(dc.getFont().convertEncoding(text)));
 		parent.appendChild(elem);
 	}
 
