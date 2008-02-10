@@ -8,7 +8,7 @@ public class MainTest extends TestCase {
 	 * TestCase for 'net.arnx.wmf2svg.Main.main(String[])'
 	 */
 	public void testMain() {
-		File dir = new File("./data");
+		File dir = new File(System.getProperty("user.home") + "/My Documents/My Pictures/Microsoft クリップ オーガナイザ");
 		File[] files = dir.listFiles(new FileFilter() {
 			public boolean accept(File file) {
 				return file.getName().endsWith(".wmf");
