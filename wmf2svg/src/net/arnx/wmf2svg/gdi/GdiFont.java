@@ -15,6 +15,9 @@
  */
 package net.arnx.wmf2svg.gdi;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public interface GdiFont extends GdiObject {
     public static final int FW_DONTCARE = 0;
     public static final int FW_THIN = 100;

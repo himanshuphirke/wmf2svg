@@ -17,6 +17,9 @@ package net.arnx.wmf2svg.gdi.svg;
 
 import net.arnx.wmf2svg.gdi.GdiException;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public class SvgGdiException extends GdiException {
 	/**
 	 * The class fingerprint that is set to indicate serialization compatibility

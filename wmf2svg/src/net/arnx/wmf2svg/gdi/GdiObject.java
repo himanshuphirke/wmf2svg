@@ -15,5 +15,8 @@
  */
 package net.arnx.wmf2svg.gdi;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public interface GdiObject {
 }

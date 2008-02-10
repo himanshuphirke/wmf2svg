@@ -15,6 +15,9 @@
  */
 package net.arnx.wmf2svg.gdi;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public interface GdiPen extends GdiObject {
     public static final int PS_SOLID = 0;
     public static final int PS_DASH = 1;

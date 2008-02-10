@@ -15,6 +15,9 @@
  */
 package net.arnx.wmf2svg.gdi.svg;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 abstract class SvgStyleObject {
 	private SvgGdi gdi;
 

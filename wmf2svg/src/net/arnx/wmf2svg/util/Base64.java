@@ -15,6 +15,9 @@
  */
 package net.arnx.wmf2svg.util;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public class Base64 {
 	private static final char[] ENCODE_DATA = {
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',

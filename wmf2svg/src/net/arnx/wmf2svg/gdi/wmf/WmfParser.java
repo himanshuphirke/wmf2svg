@@ -21,7 +21,10 @@ import java.nio.ByteOrder;
 
 import net.arnx.wmf2svg.gdi.*;
 import net.arnx.wmf2svg.io.DataInput;
-
+/**
+ * @author Hidekatsu Izuno
+ * @author Shunsuke Mori
+ */
 public class WmfParser {
 	private static final int RECORD_ANIMATE_PALETTE = 0x0436;
 	private static final int RECORD_ARC = 0x0817;
@@ -86,6 +89,7 @@ public class WmfParser {
 	private static final int RECORD_STRETCH_BLT = 0x0B23;
 	private static final int RECORD_STRETCH_DIBITS = 0x0F43;
 	private static final int RECORD_TEXT_OUT = 0x0521;
+	private static final int RECORD_DIB_STRETCH_BLT = 0x0B41;
 
 	public WmfParser() {
 	}
@@ -356,11 +360,11 @@ public class WmfParser {
 							if ((options & 0x0006) > 0) {
 								rect =
 									new int[] {
-										in.readInt32(),
-										in.readInt32(),
-										in.readInt32(),
-										in.readInt32()};
-								rsize -= 8;
+										in.readInt16(),
+										in.readInt16(),
+										in.readInt16(),
+										in.readInt16()};
+								rsize -= 4;
 							}
 							byte[] text = in.readBytes(count);
 							if (count % 2 == 1) {
@@ -761,6 +765,36 @@ public class WmfParser {
 							gdi.textOut(x, y, text);
 						}
 						break;
+					case RECORD_DIB_STRETCH_BLT:
+					{
+
+						long rop = in.readUint32();
+						int sh = in.readInt16();
+						int sw = in.readInt16();
+						int sx = in.readInt16();
+						int sy = in.readInt16();
+						int dh = in.readInt16();
+						int dw = in.readInt16();
+						int dx = in.readInt16();
+						int dy = in.readInt16();
+						
+						byte[] image =
+							in.readBytes(size * 2 - in.getCount());
+
+						gdi.stretchDIBits(
+							dy,
+							dx,
+							dw,
+							dh,
+							sx,
+							sy,
+							sw,
+							sh,
+							image,
+							0,
+							rop);
+						
+					}
 					default:
 					{
 					}

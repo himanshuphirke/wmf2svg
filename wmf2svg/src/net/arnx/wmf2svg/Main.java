@@ -24,24 +24,23 @@ import javax.xml.transform.stream.*;
 import net.arnx.wmf2svg.gdi.svg.*;
 import net.arnx.wmf2svg.gdi.wmf.*;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public class Main {
 	public static void main(String[] args) {
 		if (args.length != 2) {
-			System.err.println("error");
-			System.exit(0);
+			usage();
+			System.exit(-1);
 		}
 
-		SvgGdi gdi = null;
 		try {
 			InputStream in = new FileInputStream(args[0]);
 			WmfParser parser = new WmfParser();
-			gdi = new SvgGdi();
+			SvgGdi gdi = new SvgGdi();
 			parser.parse(in, gdi);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Document doc = gdi.getDocument();
-		try {
+		
+			Document doc = gdi.getDocument();
 			output(doc, new FileOutputStream(args[1]));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,5 +61,9 @@ public class Main {
 		transformer.transform(new DOMSource(doc), new StreamResult(out));
 		out.flush();
 		out.close();
+	}
+	
+	private static void usage() {
+		System.out.println("java -jar wmf2svg.jar [wmf filename] [svg filename]");
 	}
 }

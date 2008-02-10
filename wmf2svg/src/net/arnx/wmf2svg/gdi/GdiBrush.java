@@ -15,6 +15,9 @@
  */
 package net.arnx.wmf2svg.gdi;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public interface GdiBrush extends GdiObject {
 	public static final int BS_DIBPATTERN = 5;
 	public static final int BS_DIBPATTERN8X8 = 8;

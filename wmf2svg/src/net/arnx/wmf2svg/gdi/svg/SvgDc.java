@@ -20,6 +20,9 @@ import org.w3c.dom.*;
 
 import net.arnx.wmf2svg.gdi.*;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 public class SvgDc implements Cloneable {
 	private SvgGdi gdi;
 

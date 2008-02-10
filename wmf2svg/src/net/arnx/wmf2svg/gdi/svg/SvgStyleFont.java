@@ -19,6 +19,9 @@ import java.util.*;
 
 import net.arnx.wmf2svg.gdi.*;
 
+/**
+ * @author Hidekatsu Izuno
+ */
 class SvgStyleFont extends SvgStyleObject implements GdiFont {
 	private int height;
 	private int width;
