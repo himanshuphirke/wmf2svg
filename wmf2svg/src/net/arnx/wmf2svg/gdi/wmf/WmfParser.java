@@ -37,7 +37,10 @@ public class WmfParser {
 	private static final int RECORD_CREATE_PALETTE = 0x00F7;
 	private static final int RECORD_CREATE_PATTERN_BRUSH = 0x01F9;
 	private static final int RECORD_CREATE_PEN_INDIRECT = 0x02FA;
+	private static final int RECORD_CREATE_RECT_RGN = 0x0149;
 	private static final int RECORD_DELETE_OBJECT = 0x01F0;
+	private static final int RECORD_DIB_BIT_BLT = 0x0940;
+	private static final int RECORD_DIB_STRETCH_BLT = 0x0B41;
 	private static final int RECORD_ELLIPSE = 0x0418;
 	private static final int RECORD_ESCAPE = 0x0626;
 	private static final int RECORD_EXCLUDE_CLIP_RECT = 0x0415;
@@ -84,13 +87,13 @@ public class WmfParser {
 	private static final int RECORD_SET_TEXT_CHARACTER_EXTRA = 0x0108;
 	private static final int RECORD_SET_TEXT_COLOR = 0x0209;
 	private static final int RECORD_SET_TEXT_JUSTIFICATION = 0x020A;
+	private static final int RECORD_SET_VIEWPORT_EXT_EX = 0x020E;
 	private static final int RECORD_SET_VIEWPORT_ORG_EX = 0x020D;
 	private static final int RECORD_SET_WINDOW_EXT_EX = 0x020C;
 	private static final int RECORD_SET_WINDOW_ORG_EX = 0x020B;
 	private static final int RECORD_STRETCH_BLT = 0x0B23;
 	private static final int RECORD_STRETCH_DIBITS = 0x0F43;
 	private static final int RECORD_TEXT_OUT = 0x0521;
-	private static final int RECORD_DIB_STRETCH_BLT = 0x0B41;
 
 	public WmfParser() {
 	}
@@ -153,6 +156,7 @@ public class WmfParser {
 				switch (id) {
 					case RECORD_ANIMATE_PALETTE :
 						{
+							//TODO
 							gdi.animatePalette();
 						}
 						break;
@@ -203,10 +207,7 @@ public class WmfParser {
 							for (int i = 0; i < objs.length; i++) {
 								if (objs[i] == null) {
 									objs[i] =
-										gdi.createBrushIndirect(
-											style,
-											color,
-											hatch);
+										gdi.createBrushIndirect(style, color, hatch);
 									break;
 								}
 							}
@@ -298,13 +299,25 @@ public class WmfParser {
 							for (int i = 0; i < objs.length; i++) {
 								if (objs[i] == null) {
 									objs[i] =
-										gdi.createPenIndirect(
-											style,
-											width,
-											color);
+										gdi.createPenIndirect(style, width, color);
 									break;
 								}
 							}
+						}
+						break;
+					case RECORD_CREATE_RECT_RGN:
+						{
+							int ey = in.readInt16();
+							int ex = in.readInt16();
+							int sy = in.readInt16();
+							int sx = in.readInt16();
+							for (int i = 0; i < objs.length; i++) {
+								if (objs[i] == null) {
+									objs[i] = gdi.createRectRgn(sx, sy, ex, ey);
+									break;
+								}
+							}
+							
 						}
 						break;
 					case RECORD_DELETE_OBJECT :
@@ -312,6 +325,42 @@ public class WmfParser {
 							int objID = in.readUint16();
 							gdi.deleteObject(objs[objID]);
 							objs[objID] = null;
+						}
+						break;
+					case RECORD_DIB_BIT_BLT:
+						{
+							//TODO
+						}
+						break;
+					case RECORD_DIB_STRETCH_BLT:
+						{
+	
+							long rop = in.readUint32();
+							int sh = in.readInt16();
+							int sw = in.readInt16();
+							int sx = in.readInt16();
+							int sy = in.readInt16();
+							int dh = in.readInt16();
+							int dw = in.readInt16();
+							int dx = in.readInt16();
+							int dy = in.readInt16();
+							
+							byte[] image =
+								in.readBytes(size * 2 - in.getCount());
+							
+							//TODO
+							gdi.stretchDIBits(
+								dy,
+								dx,
+								dw,
+								dh,
+								sx,
+								sy,
+								sw,
+								sh,
+								image,
+								Gdi.DIB_RGB_COLORS,
+								rop);
 						}
 						break;
 					case RECORD_ELLIPSE :
@@ -385,6 +434,7 @@ public class WmfParser {
 						break;
 					case RECORD_FILL_RGN :
 						{
+							//TODO
 							gdi.fillRgn();
 						}
 						break;
@@ -398,6 +448,7 @@ public class WmfParser {
 						break;
 					case RECORD_FRAME_RGN :
 						{
+							//TODO
 							gdi.frameRgn();
 						}
 						break;
@@ -412,6 +463,7 @@ public class WmfParser {
 						break;
 					case RECORD_INVERT_RGN :
 						{
+							//TODO
 							gdi.invertRgn();
 						}
 						break;
@@ -452,11 +504,13 @@ public class WmfParser {
 						break;
 					case RECORD_PAINT_RGN :
 						{
+							//TODO
 							gdi.paintRgn();
 						}
 						break;
 					case RECORD_PAT_BLT :
 						{
+							//TODO
 							gdi.patBlt();
 						}
 						break;
@@ -512,6 +566,7 @@ public class WmfParser {
 						break;
 					case RECORD_REALIZE_PALETTE :
 						{
+							//TODO
 							gdi.realizePalette();
 						}
 						break;
@@ -526,6 +581,7 @@ public class WmfParser {
 						break;
 					case RECORD_RESIZE_PALETTE :
 						{
+							//TODO
 							int objID = in.readUint16();
 							gdi.resizePalette(objs[objID]);
 						}
@@ -644,6 +700,7 @@ public class WmfParser {
 						break;
 					case RECORD_SET_PALETTE_ENTRIES :
 						{
+							//TODO
 							gdi.setPaletteEntries();
 						}
 						break;
@@ -698,29 +755,37 @@ public class WmfParser {
 							gdi.setTextJustification(breakExtra, breakCount);
 						}
 						break;
+					case RECORD_SET_VIEWPORT_EXT_EX :
+						{
+							int y = in.readInt16();
+							int x = in.readInt16();
+							gdi.setViewportExtEx(x, y, null);
+						}
+					break;
 					case RECORD_SET_VIEWPORT_ORG_EX :
 						{
 							int y = in.readInt16();
 							int x = in.readInt16();
-							gdi.setViewportOrgEx(x, y);
+							gdi.setViewportOrgEx(x, y, null);
 						}
 						break;
 					case RECORD_SET_WINDOW_EXT_EX :
 						{
 							int height = in.readInt16();
 							int width = in.readInt16();
-							gdi.setWindowExtEx(width, height);
+							gdi.setWindowExtEx(width, height, null);
 						}
 						break;
 					case RECORD_SET_WINDOW_ORG_EX :
 						{
 							int y = in.readInt16();
 							int x = in.readInt16();
-							gdi.setWindowOrgEx(x, y);
+							gdi.setWindowOrgEx(x, y, null);
 						}
 						break;
 					case RECORD_STRETCH_BLT :
 						{
+							//TODO
 							gdi.stretchBlt();
 						}
 						break;
@@ -766,36 +831,6 @@ public class WmfParser {
 							gdi.textOut(x, y, text);
 						}
 						break;
-					case RECORD_DIB_STRETCH_BLT:
-					{
-
-						long rop = in.readUint32();
-						int sh = in.readInt16();
-						int sw = in.readInt16();
-						int sx = in.readInt16();
-						int sy = in.readInt16();
-						int dh = in.readInt16();
-						int dw = in.readInt16();
-						int dx = in.readInt16();
-						int dy = in.readInt16();
-						
-						byte[] image =
-							in.readBytes(size * 2 - in.getCount());
-
-						gdi.stretchDIBits(
-							dy,
-							dx,
-							dw,
-							dh,
-							sx,
-							sy,
-							sw,
-							sh,
-							image,
-							0,
-							rop);
-						break;
-					}
 					default:
 					{
 					}

@@ -101,6 +101,9 @@ public interface Gdi {
 	
 	public static final int DIB_RGB_COLORS = 0;
 	public static final int DIB_PAL_COLORS = 1;
+	
+	public static final int LAYOUT_BITMAPORIENTATIONPRESERVED = 8;
+	public static final int LAYOUT_RTL = 1;
 
     public void placeableHeader(int vsx, int vsy, int vex, int vey, int dpi);
     public void header();
@@ -120,6 +123,7 @@ public interface Gdi {
     public GdiObject createPalette();
     public GdiObject createPatternBrush();
     public GdiPen createPenIndirect(int style, int width, int color);
+    public GdiObject createRectRgn(int sx, int sy, int ex, int ey);
     public void deleteObject(GdiObject obj);
     public void ellipse(int sx, int sy, int ex, int ey);
     public void escape(byte[] data);
@@ -168,9 +172,10 @@ public interface Gdi {
     public void setTextCharacterExtra(int extra);
     public void setTextColor(int color);
     public void setTextJustification(int breakExtra, int breakCount);
-    public void setViewportOrgEx(int x, int y);
-    public void setWindowExtEx(int width, int height);
-    public void setWindowOrgEx(int x, int y);
+    public void setViewportExtEx(int x, int y, Dimension old);
+    public void setViewportOrgEx(int x, int y, Point old);
+    public void setWindowExtEx(int width, int height, Dimension old);
+    public void setWindowOrgEx(int x, int y, Point old);
     public void stretchBlt();
     public void stretchDIBits(int dx, int dy, int dw, int dh,
 					int sx, int sy, int sw, int sh,

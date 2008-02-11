@@ -15,6 +15,7 @@
  */
 package net.arnx.wmf2svg.gdi.svg;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import org.w3c.dom.*;
 
@@ -73,12 +74,20 @@ public class SvgDc implements Cloneable {
 		return dpi;
 	}
 	
-	public void setWindowOrgEx(int x, int y) {
+	public void setWindowOrgEx(int x, int y, Point old) {
+		if (old != null) {
+			old.x = wx;
+			old.y = wy;
+		}
 		wx = x;
 		wy = y;
 	}
 	
-	public void setWindowExtEx(int width, int height) {
+	public void setWindowExtEx(int width, int height, Dimension old) {
+		if (old != null) {
+			old.width = ww;
+			old.height = wh;
+		}
 		ww = width;
 		wh = height;
 	}
@@ -113,10 +122,10 @@ public class SvgDc implements Cloneable {
 		return wh;
 	}
 	
-	public void setViewportOrgEx(int x, int y) {
+	public void setViewportOrgEx(int x, int y, Point old) {
 	}
 	
-	public void setViewportExtEx(int width, int height) {
+	public void setViewportExtEx(int width, int height, Dimension old) {
 	}
 	
 	public void offsetViewportOrgEx(int x, int y, Point old) {
