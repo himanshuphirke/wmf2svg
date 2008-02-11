@@ -740,6 +740,10 @@ public class SvgGdi implements Gdi {
 	public void setDIBitsToDevice(int dx, int dy, long dw, long dh, int sx,
 			int sy, int startscan, int scanlines, byte[] image, int colorUse) {
 	}
+	
+	public void setGraphicsMode(int mode) {
+		dc.setGraphicsMode(mode);
+	}
 
 	public void setMapMode(int mode) {
 		dc.setMapMode(mode);

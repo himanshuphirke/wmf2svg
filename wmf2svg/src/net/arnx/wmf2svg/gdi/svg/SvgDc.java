@@ -53,6 +53,7 @@ public class SvgDc implements Cloneable {
 	private int mapMode = Gdi.MM_TEXT;
 	private int bkColor = 0x00FFFFFF;
 	private int bkMode = Gdi.OPAQUE;
+	private int graphicsMode = Gdi.GM_COMPATIBLE;
 	private int textColor = 0x00000000;
 	private int textSpace = 0;
 	private int textAlign = Gdi.TA_TOP | Gdi.TA_LEFT;
@@ -225,6 +226,14 @@ public class SvgDc implements Cloneable {
 
 	public void setBkMode(int mode) {
 		bkMode = mode;
+	}
+	
+	public int getGraphicsMode() {
+		return graphicsMode;
+	}
+	
+	public void setGraphicsMode(int mode) {
+		graphicsMode = mode;
 	}
 	
 	public int getTextColor() {
