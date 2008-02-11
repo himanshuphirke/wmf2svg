@@ -873,8 +873,11 @@ public class SvgGdi implements Gdi {
 
 	public void textOut(int x, int y, byte[] text) {
 		Element elem = doc.createElement("text");
+		
+		int escapement = 0;
 		if (dc.getFont() != null) {
 			elem.setAttribute("class", getClassString(dc.getFont()));
+			escapement = dc.getFont().getEscapement();
 		}
 		elem.setAttribute("fill", SvgStyleObject.toColor(dc.getTextColor()));
 
@@ -907,9 +910,15 @@ public class SvgGdi implements Gdi {
 		elem.setAttribute("style", buffer.toString());
 
 		elem.setAttribute("stroke", "none");
-
-		elem.setAttribute("x", "" + dc.toAbsoluteX(x));
-		elem.setAttribute("y", "" + dc.toAbsoluteY(y));
+		
+		int ax = dc.toAbsoluteX(x);
+		int ay = dc.toAbsoluteY(y);
+		elem.setAttribute("x", Integer.toString(ax));
+		elem.setAttribute("y", Integer.toString(ay));
+		
+		if (escapement != 0) {
+			elem.setAttribute("transform", "rotate(" + (escapement/10.0) + ", " + ax + ", " + ay + ")");
+		}
 
 		String str = dc.getFont().convertEncoding(text);
 
