@@ -441,7 +441,8 @@ public class SvgGdi implements Gdi {
 		int ax = dc.toAbsoluteX(x);
 		buffer.setLength(0);
 		buffer.append(ax);
-		dx = dc.getFont().validateDx(text, dx);
+		
+		if (dc.getFont() != null) dx = dc.getFont().validateDx(text, dx);
 		if (dx != null) {
 			for (int i = 0; i < dx.length - 1; i++) {
 				x += dx[i];
@@ -462,19 +463,28 @@ public class SvgGdi implements Gdi {
 			elem.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
 		}
 		
-		String str = dc.getFont().convertEncoding(text);
+		String str = null;
+		if (dc.getFont() != null) {
+			str = dc.getFont().convertEncoding(text);
+		} else {
+			try {
+				str = new String(text, "ASCII");
+			} catch (UnsupportedEncodingException e) {
+				// no handle
+			}
+		}
+
 		if (orientation != 0) {
 			buffer.setLength(0);
 			for (int i = 0; i < str.length(); i++) {
 				if (i != 0) buffer.append(' ');
-				buffer.append(-orientation/10.0);
+				buffer.append(orientation/10.0);
 			}
 			elem.setAttribute("rotate", buffer.toString());
 		}
 
-		String lang = dc.getFont().getLang();
-		if (lang != null) {
-			elem.setAttribute("xml:lang", lang);
+		if (dc.getFont() != null && dc.getFont().getLang() != null) {
+			elem.setAttribute("xml:lang", dc.getFont().getLang());
 		}
 		
 		elem.appendChild(doc.createTextNode(str));
@@ -944,7 +954,16 @@ public class SvgGdi implements Gdi {
 			elem.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
 		}
 
-		String str = dc.getFont().convertEncoding(text);
+		String str = null;
+		if (dc.getFont() != null) {
+			str = dc.getFont().convertEncoding(text);
+		} else {
+			try {
+				str = new String(text, "ASCII");
+			} catch (UnsupportedEncodingException e) {
+				// no handle
+			}
+		}
 
 		if (dc.getTextCharacterExtra() != 0) {
 			buffer.setLength(0);
@@ -963,14 +982,13 @@ public class SvgGdi implements Gdi {
 			buffer.setLength(0);
 			for (int i = 0; i < str.length(); i++) {
 				if (i != 0) buffer.append(' ');
-				buffer.append(-orientation/10.0);
+				buffer.append(orientation/10.0);
 			}
 			elem.setAttribute("rotate", buffer.toString());
 		}
 
-		String lang = dc.getFont().getLang();
-		if (lang != null) {
-			elem.setAttribute("xml:lang", lang);
+		if (dc.getFont() != null && dc.getFont().getLang() != null) {
+			elem.setAttribute("xml:lang", dc.getFont().getLang());
 		}
 		elem.appendChild(doc.createTextNode(str));
 		parent.appendChild(elem);
