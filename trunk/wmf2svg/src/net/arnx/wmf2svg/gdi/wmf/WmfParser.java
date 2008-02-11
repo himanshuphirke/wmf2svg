@@ -794,7 +794,7 @@ public class WmfParser {
 							image,
 							0,
 							rop);
-						
+						break;
 					}
 					default:
 					{

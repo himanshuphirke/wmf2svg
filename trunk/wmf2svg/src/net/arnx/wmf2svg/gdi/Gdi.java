@@ -101,9 +101,6 @@ public interface Gdi {
 	
 	public static final int DIB_RGB_COLORS = 0;
 	public static final int DIB_PAL_COLORS = 1;
-	
-	public static final int GM_COMPATIBLE = 1;
-	public static final int GM_ADVANCED = 2;
 
     public void placeableHeader(int vsx, int vsy, int vex, int vey, int dpi);
     public void header();
@@ -160,7 +157,6 @@ public interface Gdi {
     public void setBkMode(int mode);
     public void setDIBitsToDevice(int dx, int dy, long dw, long dh, int sx, int sy,
         			int startscan, int scanlines, byte[] image, int colorUse);
-    public void setGraphicsMode(int mode);
     public void setMapMode(int mode);
     public void setMapperFlags(long flag);
     public void setPaletteEntries();
