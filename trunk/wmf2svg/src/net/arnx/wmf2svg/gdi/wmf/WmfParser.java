@@ -798,6 +798,7 @@ public class WmfParser {
 					}
 					default:
 					{
+						System.out.println(id);
 					}
 				}
 				
