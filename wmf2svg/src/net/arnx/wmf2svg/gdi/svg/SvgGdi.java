@@ -382,8 +382,10 @@ public class SvgGdi implements Gdi {
 			int[] dx) {
 		Element elem = doc.createElement("text");
 
+		int escapement = 0;
 		if (dc.getFont() != null) {
 			elem.setAttribute("class", getClassString(dc.getFont()));
+			escapement = dc.getFont().getEscapement();
 		}
 		elem.setAttribute("fill", SvgStyleObject.toColor(dc.getTextColor()));
 
@@ -433,8 +435,10 @@ public class SvgGdi implements Gdi {
 		}
 
 		// x
+		int ax = dc.toAbsoluteX(x);
+		int ay = dc.toAbsoluteY(y);
 		buffer.setLength(0);
-		buffer.append(dc.toAbsoluteX(x));
+		buffer.append(ax);
 
 		dx = dc.getFont().validateDx(text, dx);
 		if (dx != null) {
@@ -449,7 +453,11 @@ public class SvgGdi implements Gdi {
 		}
 
 		elem.setAttribute("x", buffer.toString());
-		elem.setAttribute("y", "" + dc.toAbsoluteY(y));
+		elem.setAttribute("y", Integer.toString(ay));
+		
+		if (escapement != 0) {
+			elem.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
+		}
 
 		String lang = dc.getFont().getLang();
 		if (lang != null) {
@@ -917,7 +925,7 @@ public class SvgGdi implements Gdi {
 		elem.setAttribute("y", Integer.toString(ay));
 		
 		if (escapement != 0) {
-			elem.setAttribute("transform", "rotate(" + (escapement/10.0) + ", " + ax + ", " + ay + ")");
+			elem.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
 		}
 
 		String str = dc.getFont().convertEncoding(text);
