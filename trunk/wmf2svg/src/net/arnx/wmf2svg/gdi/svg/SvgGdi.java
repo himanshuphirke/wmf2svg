@@ -332,6 +332,11 @@ public class SvgGdi implements Gdi {
 			return pen;
 		}
 	}
+	
+	public GdiObject createRectRgn(int sx, int sy, int ex, int ey) {
+		return new GdiObject() {
+		};		
+	}
 
 	public void deleteObject(GdiObject obj) {
 		if (dc.getBrush() == obj) {
@@ -791,17 +796,21 @@ public class SvgGdi implements Gdi {
 			dc.setTextSpace(Math.abs(dc.toRelativeX(breakExtra)) / breakCount);
 		}
 	}
-
-	public void setViewportOrgEx(int x, int y) {
-		dc.setViewportOrgEx(x, y);
+	
+	public void setViewportExtEx(int x, int y, Dimension old) {
+		dc.setViewportExtEx(x, y, old);
 	}
 
-	public void setWindowExtEx(int width, int height) {
-		dc.setWindowExtEx(width, height);
+	public void setViewportOrgEx(int x, int y, Point old) {
+		dc.setViewportOrgEx(x, y, old);
 	}
 
-	public void setWindowOrgEx(int x, int y) {
-		dc.setWindowOrgEx(x, y);
+	public void setWindowExtEx(int width, int height, Dimension old) {
+		dc.setWindowExtEx(width, height, old);
+	}
+
+	public void setWindowOrgEx(int x, int y, Point old) {
+		dc.setWindowOrgEx(x, y, old);
 	}
 
 	public void stretchBlt() {
