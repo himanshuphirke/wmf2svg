@@ -383,9 +383,11 @@ public class SvgGdi implements Gdi {
 		Element elem = doc.createElement("text");
 
 		int escapement = 0;
+		int orientation = 0;
 		if (dc.getFont() != null) {
 			elem.setAttribute("class", getClassString(dc.getFont()));
 			escapement = dc.getFont().getEscapement();
+			orientation = dc.getFont().getOrientation();
 		}
 		elem.setAttribute("fill", SvgStyleObject.toColor(dc.getTextColor()));
 
@@ -431,15 +433,14 @@ public class SvgGdi implements Gdi {
 			if (rect != null) {
 				parent.appendChild(dc.createFillBk(rect));
 			} else {
+				//TODO
 			}
 		}
 
 		// x
 		int ax = dc.toAbsoluteX(x);
-		int ay = dc.toAbsoluteY(y);
 		buffer.setLength(0);
 		buffer.append(ax);
-
 		dx = dc.getFont().validateDx(text, dx);
 		if (dx != null) {
 			for (int i = 0; i < dx.length - 1; i++) {
@@ -451,19 +452,32 @@ public class SvgGdi implements Gdi {
 				dc.moveToEx(x + dx[dx.length - 1], y, null);
 			}
 		}
-
 		elem.setAttribute("x", buffer.toString());
+		
+		// y
+		int ay = dc.toAbsoluteY(y);
 		elem.setAttribute("y", Integer.toString(ay));
 		
 		if (escapement != 0) {
 			elem.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
+		}
+		
+		String str = dc.getFont().convertEncoding(text);
+		if (orientation != 0) {
+			buffer.setLength(0);
+			for (int i = 0; i < str.length(); i++) {
+				if (i != 0) buffer.append(' ');
+				buffer.append(-orientation/10.0);
+			}
+			elem.setAttribute("rotate", buffer.toString());
 		}
 
 		String lang = dc.getFont().getLang();
 		if (lang != null) {
 			elem.setAttribute("xml:lang", lang);
 		}
-		elem.appendChild(doc.createTextNode(dc.getFont().convertEncoding(text)));
+		
+		elem.appendChild(doc.createTextNode(str));
 		parent.appendChild(elem);
 	}
 
@@ -883,9 +897,11 @@ public class SvgGdi implements Gdi {
 		Element elem = doc.createElement("text");
 		
 		int escapement = 0;
+		int orientation = 0;
 		if (dc.getFont() != null) {
 			elem.setAttribute("class", getClassString(dc.getFont()));
 			escapement = dc.getFont().getEscapement();
+			orientation = dc.getFont().getOrientation();
 		}
 		elem.setAttribute("fill", SvgStyleObject.toColor(dc.getTextColor()));
 
@@ -941,6 +957,15 @@ public class SvgGdi implements Gdi {
 			}
 
 			elem.setAttribute("dx", buffer.toString());
+		}
+		
+		if (orientation != 0) {
+			buffer.setLength(0);
+			for (int i = 0; i < str.length(); i++) {
+				if (i != 0) buffer.append(' ');
+				buffer.append(-orientation/10.0);
+			}
+			elem.setAttribute("rotate", buffer.toString());
 		}
 
 		String lang = dc.getFont().getLang();
