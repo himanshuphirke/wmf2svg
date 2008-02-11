@@ -37,6 +37,7 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 	private int quality;
 	private int pitchAndFamily;
 	private String faceName;
+	private String lang;
 
 	public SvgStyleFont(
 		SvgGdi gdi,
@@ -70,6 +71,10 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 		this.quality = quality;
 		this.pitchAndFamily = pitchAndFamily;
 		this.faceName = convertEncoding(faceName);
+		
+		// xml:lang
+		this.lang = (String)getGDI().getProperty("lang." + getCharsetString());
+		if (this.lang != null && this.lang.trim().length() == 0) this.lang = null;
 	}
 	
 	public int getHeight() {
@@ -154,10 +159,6 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 	}
 
 	public String getLang() {
-		String lang = (String)getGDI().getProperty("lang." + getCharsetString());
-		if (lang != null && lang.equals("")) {
-			lang = null;
-		}
 		return lang;
 	}
 
@@ -356,7 +357,7 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 			}
 			buffer.append(";");
 		}
-
+		buffer.setCharAt(buffer.length()-1, ' ');
 		return buffer.toString();
 	}
 
