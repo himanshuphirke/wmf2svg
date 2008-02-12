@@ -387,7 +387,7 @@ public class SvgGdi implements Gdi {
 		if (dc.getFont() != null) {
 			elem.setAttribute("class", getClassString(dc.getFont()));
 			escapement = dc.getFont().getEscapement();
-			orientation = dc.getFont().getOrientation();
+			orientation = escapement-dc.getFont().getOrientation();
 		}
 		elem.setAttribute("fill", SvgStyleObject.toColor(dc.getTextColor()));
 
@@ -911,7 +911,7 @@ public class SvgGdi implements Gdi {
 		if (dc.getFont() != null) {
 			elem.setAttribute("class", getClassString(dc.getFont()));
 			escapement = dc.getFont().getEscapement();
-			orientation = dc.getFont().getOrientation();
+			orientation = escapement-dc.getFont().getOrientation();
 		}
 		elem.setAttribute("fill", SvgStyleObject.toColor(dc.getTextColor()));
 
