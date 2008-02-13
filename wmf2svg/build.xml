@@ -5,20 +5,31 @@
 	<property name="debug" value="off" />
 
 	<property name="src" location="src"/>
-	<property name="build" location="bin"/>
+	<property name="build" location="build"/>
 	<property name="dist" location="release"/>
 
 	<target name="init">
 		<tstamp />
 	</target>
 	
-	<target name="dist" depends="init">
-		<delete file="${ant.project.name}-${version}.zip" />
+	<target name="build" depends="init">
+		<mkdir dir="${build}" />
+		<javac  source="1.4" target="1.4" 
+			srcdir="${src}" destdir="${build}">
+		</javac>
 		
- 		<jar destfile="${ant.project.name}-${version}.jar" basedir="${build}">
+		
+	</target>
+	
+	<target name="dist" depends="build">
+		<delete file="${ant.project.name}-${version}.zip" />
+
+		<jar destfile="${ant.project.name}-${version}.jar">
 			<manifest>
 				<attribute name="Main-Class" value="net.arnx.wmf2svg.Main"/>
 			</manifest>
+			<fileset dir="${build}" includes="**/*.class" />
+			<fileset dir="${src}" excludes="**/*.java" />
 		</jar> 
 		
 		<zip destfile="${ant.project.name}-${version}.zip" update="true">
