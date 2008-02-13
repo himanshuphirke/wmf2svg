@@ -154,14 +154,15 @@ class SvgStyleBrush extends SvgStyleObject implements GdiBrush {
 		// fill
 		switch (style) {
 			case BS_SOLID :
-				buffer.append(" fill: ").append(toColor(color)).append(";");
+				buffer.append("fill: ").append(toColor(color)).append("; ");
 				break;
 			case BS_HATCHED :
 				break;
 			default :
-				buffer.append(" fill: none;");
+				buffer.append("fill: none; ");
 		}
-
+		
+		if (buffer.length() > 0) buffer.setLength(buffer.length()-1);
 		return buffer.toString();
 	}
 

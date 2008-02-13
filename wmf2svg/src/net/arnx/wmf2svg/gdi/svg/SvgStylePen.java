@@ -54,17 +54,17 @@ class SvgStylePen extends SvgStyleObject implements GdiPen {
 		StringBuffer buffer = new StringBuffer();
 
 		if (style == PS_NULL) {
-			buffer.append(" stroke: none;");
+			buffer.append("stroke: none; ");
 		} else {
 			// stroke
-			buffer.append(" stroke: " + toColor(color) + ";");
+			buffer.append("stroke: " + toColor(color) + "; ");
 
 			// stroke-width
-			buffer.append(" stroke-width: " + width + ";");
+			buffer.append("stroke-width: " + width + "; ");
 
 			// stroke-dasharray
 			if (width == 1 && PS_DASH <= style && style <= PS_DASHDOTDOT) {
-				buffer.append(" stroke-dasharray: ");
+				buffer.append("stroke-dasharray: ");
 				switch (style) {
 					case PS_DASH :
 						buffer.append(
@@ -100,10 +100,11 @@ class SvgStylePen extends SvgStyleObject implements GdiPen {
 								+ toRealSize(3));
 						break;
 				}
-				buffer.append(";");
+				buffer.append("; ");
 			}
 		}
 
+		if (buffer.length() > 0) buffer.setLength(buffer.length()-1);
 		return buffer.toString();
 	}
 

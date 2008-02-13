@@ -36,6 +36,7 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 	private int clipPrecision;
 	private int quality;
 	private int pitchAndFamily;
+	
 	private String faceName;
 	private String lang;
 
@@ -279,7 +280,7 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 
 		// font-style
 		if (italic) {
-			buffer.append(" font-style: italic;");
+			buffer.append("font-style: italic; ");
 		}
 
 		// font-weight
@@ -293,26 +294,27 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 			}
 
 			if (weight == FW_BOLD) {
-				buffer.append(" font-weight: bold;");
+				buffer.append("font-weight: bold; ");
 			} else {
-				buffer.append(" font-weight: " + weight + ";");
+				buffer.append("font-weight: " + weight + "; ");
 			}
 		}
-
+		
 		if (height > 0) {
-			buffer.append(
-				" font-size: " + Math.abs(getGDI().getDC().toRelativeY(height)) + ";");
+			buffer.append("font-size: ").append(Math.abs(getGDI().getDC().toRelativeY(height))).append("; ");
 		} else if (height < 0) {
-			buffer.append(" font-size: " + (-height) + ";");
+			buffer.append("font-size: ").append(-height).append("; ");
 		}
 
 		// font-family
 		List fontList = new ArrayList();
 		if (faceName.length() != 0) {
-			fontList.add(faceName);
+			String fontFamily = faceName;
+			if (faceName.charAt(0) == '@') fontFamily = faceName.substring(1);
+			fontList.add(fontFamily);
 
 			String altfont =
-				(String)getGDI().getProperty("alternative-font." + faceName);
+				(String)getGDI().getProperty("alternative-font." + fontFamily);
 			if (altfont != null && altfont.length() != 0) {
 				fontList.add(altfont);
 			}
@@ -328,11 +330,12 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 		}
 
 		if (!fontList.isEmpty()) {
-			buffer.append(" font-family:");
+			buffer.append("font-family:");
 		}
 
+		boolean isVertical = false;
 		for (Iterator i = fontList.iterator(); i.hasNext();) {
-			String font = (String) i.next();
+			String font = (String)i.next();
 			if (font.indexOf(" ") != -1) {
 				buffer.append(" \"" + font + "\"");
 			} else {
@@ -343,21 +346,21 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 				buffer.append(",");
 			}
 		}
-
-		buffer.append(";");
+		buffer.append("; ");
 
 		// text-decoration
 		if (underline || strikeout) {
-			buffer.append(" text-decoration:");
+			buffer.append("text-decoration:");
 			if (underline) {
 				buffer.append(" underline");
 			}
 			if (strikeout) {
 				buffer.append(" overline");
 			}
-			buffer.append(";");
+			buffer.append("; ");
 		}
-		buffer.setCharAt(buffer.length()-1, ' ');
+		
+		if (buffer.length() > 0) buffer.setLength(buffer.length()-1);
 		return buffer.toString();
 	}
 
