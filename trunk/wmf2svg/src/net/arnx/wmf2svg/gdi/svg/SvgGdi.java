@@ -41,9 +41,9 @@ public class SvgGdi implements Gdi {
 	private Document doc = null;
 
 	private Element parent = null;
-
+	
 	private Element defs = null;
-
+	
 	private Element style = null;
 
 	private int brushNo = 0;
@@ -126,6 +126,14 @@ public class SvgGdi implements Gdi {
 	public Document getDocument() {
 		return doc;
 	}
+	
+	public Element getDefsElement() {
+		return defs;
+	}
+	
+	public Element getStyleElement() {
+		return style;
+	}
 
 	public void placeableHeader(int wsx, int wsy, int wex, int wey, int dpi) {
 		if (parent == null) {
@@ -166,9 +174,20 @@ public class SvgGdi implements Gdi {
 		parent = root;
 
 		defs = doc.createElement("defs");
+		root.appendChild(defs);
 
 		style = doc.createElement("style");
 		style.setAttribute("type", "text/css");
+		root.appendChild(style);
+		
+		Element background = doc.createElement("rect");
+		background.setAttribute("x", "0");
+		background.setAttribute("y", "0");
+		background.setAttribute("width", "100%");
+		background.setAttribute("height", "100%");
+		background.setAttribute("stroke", "none");
+		background.setAttribute("fill", "rgb(255, 255, 255)");
+		root.appendChild(background);
 	}
 
 	public void animatePalette() {
@@ -919,6 +938,11 @@ public class SvgGdi implements Gdi {
 				elem.setAttribute("viewBox", "" + sx + " " + sy + " " + sw + " "+ sh);
 				elem.setAttribute("preserveAspectRatio", "none");
 			}
+			
+			String ropFilter = dc.getRopFilter(rop);
+			if (ropFilter != null) {
+				elem.setAttribute("filter", ropFilter);
+			}
 	
 			elem.setAttribute("xlink:href", data);
 			parent.appendChild(elem);
@@ -1030,7 +1054,9 @@ public class SvgGdi implements Gdi {
 		root.setAttribute("stroke-linecap", "round");
 		root.setAttribute("fill-rule", "evenodd");
 
-		if (!objectMap.isEmpty()) {
+		if (objectMap.isEmpty()) {
+			root.removeChild(style);
+		} else {
 			buffer.setLength(0);
 			buffer.append("\n");
 			for (Iterator i = objectMap.keySet().iterator(); i.hasNext();) {
@@ -1039,11 +1065,10 @@ public class SvgGdi implements Gdi {
 						so).append(" }\n");
 			}
 			style.appendChild(doc.createTextNode(buffer.toString()));
-			root.insertBefore(style, root.getFirstChild());
 		}
 
-		if (defs.hasChildNodes()) {
-			root.insertBefore(defs, root.getFirstChild());
+		if (!defs.hasChildNodes()) {
+			root.removeChild(defs);
 		}
 	}
 
@@ -1090,7 +1115,7 @@ public class SvgGdi implements Gdi {
 		}
 	}
 	
-	private BufferedImage bmpToImage(byte[] bmp ) throws IOException{
+	private BufferedImage bmpToImage(byte[] bmp) throws IOException{
 		BufferedImage image = ImageIO.read(new ByteArrayInputStream(bmp));
 		return image;
 	}
