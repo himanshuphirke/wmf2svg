@@ -328,6 +328,187 @@ public class SvgDc implements Cloneable {
 		}
 		return bk;
 	}
+	
+	public String getRopFilter(long rop) {
+		String name = null;
+		Document doc = gdi.getDocument();
+		
+		if (rop == Gdi.BLACKNESS) {
+			name = "BLACKNESS_FILTER";
+			Element filter = doc.getElementById(name);
+			if (filter == null) {
+				filter = gdi.getDocument().createElement("filter");
+				filter.setAttribute("id", name);
+				
+				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("in", "SourceGraphic");
+				feColorMatrix.setAttribute("values", "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0");
+				filter.appendChild(feColorMatrix);
+				
+				gdi.getDefsElement().appendChild(filter);
+			}
+		} else if (rop == Gdi.NOTSRCERASE) {
+			name = "NOTSRCERASE_FILTER";
+			Element filter = doc.getElementById(name);
+			if (filter == null) {
+				filter = gdi.getDocument().createElement("filter");
+				filter.setAttribute("id", name);
+				
+				Element feComposite = doc.createElement("feComposite");
+				feComposite.setAttribute("in", "SourceGraphic");
+				feComposite.setAttribute("in2", "BackgroundImage");
+				feComposite.setAttribute("operator", "arithmetic");
+				feComposite.setAttribute("k1", "1");
+				feComposite.setAttribute("result", "result0");
+				filter.appendChild(feComposite);
+
+				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("in", "result0");
+				feColorMatrix.setAttribute("values", "-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0");
+				filter.appendChild(feColorMatrix);
+				
+				gdi.getDefsElement().appendChild(filter);
+			}			
+		} else if (rop == Gdi.NOTSRCCOPY) {
+			name = "NOTSRCCOPY_FILTER";
+			Element filter = doc.getElementById(name);
+			if (filter == null) {
+				filter = gdi.getDocument().createElement("filter");
+				filter.setAttribute("id", name);
+				
+				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("in", "SourceGraphic");
+				feColorMatrix.setAttribute("values", "-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0");
+				filter.appendChild(feColorMatrix);
+				
+				gdi.getDefsElement().appendChild(filter);
+			}
+		} else if (rop == Gdi.SRCERASE) {
+			name = "SRCERASE_FILTER";
+			Element filter = doc.getElementById(name);
+			if (filter == null) {
+				filter = gdi.getDocument().createElement("filter");
+				filter.setAttribute("id", name);
+
+				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("in", "BackgroundImage");
+				feColorMatrix.setAttribute("values", "-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0");
+				feColorMatrix.setAttribute("result", "result0");
+				filter.appendChild(feColorMatrix);
+				
+				Element feComposite = doc.createElement("feComposite");
+				feComposite.setAttribute("in", "SourceGraphic");
+				feComposite.setAttribute("in2", "result0");
+				feComposite.setAttribute("operator", "arithmetic");
+				feComposite.setAttribute("k2", "1");
+				feComposite.setAttribute("k3", "1");
+				filter.appendChild(feComposite);
+				
+				gdi.getDefsElement().appendChild(filter);
+			}
+		} else if (rop == Gdi.PATINVERT) {
+			// TODO
+		} else if (rop == Gdi.SRCINVERT) {
+			// TODO
+		} else if (rop == Gdi.DSTINVERT) {
+			name = "DSTINVERT_FILTER";
+			Element filter = doc.getElementById(name);
+			if (filter == null) {
+				filter = gdi.getDocument().createElement("filter");
+				filter.setAttribute("id", name);
+				
+				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("in", "BackgroundImage");
+				feColorMatrix.setAttribute("values", "-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0");
+				filter.appendChild(feColorMatrix);
+				
+				gdi.getDefsElement().appendChild(filter);
+			}
+		} else if (rop == Gdi.SRCAND) {
+			name = "SRCAND_FILTER";
+			Element filter = doc.getElementById(name);
+			if (filter == null) {
+				filter = gdi.getDocument().createElement("filter");
+				filter.setAttribute("id", name);
+				
+				Element feComposite = doc.createElement("feComposite");
+				feComposite.setAttribute("in", "SourceGraphic");
+				feComposite.setAttribute("in2", "BackgroundImage");
+				feComposite.setAttribute("operator", "arithmetic");
+				feComposite.setAttribute("k1", "1");
+				filter.appendChild(feComposite);
+				
+				gdi.getDefsElement().appendChild(filter);
+			}
+		} else if (rop == Gdi.MERGEPAINT) {
+			name = "MERGEPAINT_FILTER";
+			Element filter = doc.getElementById(name);
+			if (filter == null) {
+				filter = gdi.getDocument().createElement("filter");
+				filter.setAttribute("id", name);
+
+				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("in", "SourceGraphic");
+				feColorMatrix.setAttribute("values", "-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0");
+				feColorMatrix.setAttribute("result", "result0");
+				filter.appendChild(feColorMatrix);
+				
+				Element feComposite = doc.createElement("feComposite");
+				feComposite.setAttribute("in", "result0");
+				feComposite.setAttribute("in2", "BackgroundImage");
+				feComposite.setAttribute("operator", "arithmetic");
+				feComposite.setAttribute("k1", "1");
+				filter.appendChild(feComposite);
+				
+				gdi.getDefsElement().appendChild(filter);
+			}
+		} else if (rop == Gdi.MERGECOPY) {
+			// TODO
+		} else if (rop == Gdi.SRCPAINT) {
+			name = "SRCPAINT_FILTER";
+			Element filter = doc.getElementById(name);
+			if (filter == null) {
+				filter = gdi.getDocument().createElement("filter");
+				filter.setAttribute("id", name);
+				
+				Element feComposite = doc.createElement("feComposite");
+				feComposite.setAttribute("in", "SourceGraphic");
+				feComposite.setAttribute("in2", "BackgroundImage");
+				feComposite.setAttribute("operator", "arithmetic");
+				feComposite.setAttribute("k2", "1");
+				feComposite.setAttribute("k3", "1");
+				filter.appendChild(feComposite);
+				
+				gdi.getDefsElement().appendChild(filter);
+			}
+		} else if (rop == Gdi.PATCOPY) {
+			// TODO
+		} else if (rop == Gdi.PATPAINT) {
+			// TODO
+		} else if (rop == Gdi.WHITENESS) {
+			name = "WHITENESS_FILTER";
+			Element filter = doc.getElementById(name);
+			if (filter == null) {
+				filter = gdi.getDocument().createElement("filter");
+				filter.setAttribute("id", name);
+				
+				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("in", "SourceGraphic");
+				feColorMatrix.setAttribute("values", "1 0 0 0 1 0 1 0 0 1 0 0 1 0 1 0 0 0 1 0");
+				filter.appendChild(feColorMatrix);
+				
+				gdi.getDefsElement().appendChild(filter);
+			}
+		}
+		
+		if (name != null) {
+			if (!doc.getDocumentElement().hasAttribute("enable-background")) {
+				doc.getDocumentElement().setAttribute("enable-background", "new");
+			}
+			return "url(#" + name + ")";
+		}
+		return null;
+	}
 
 	public Object clone() {
 		try {
