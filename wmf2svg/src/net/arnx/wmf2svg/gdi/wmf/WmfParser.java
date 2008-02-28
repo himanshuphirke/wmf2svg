@@ -348,19 +348,7 @@ public class WmfParser {
 							byte[] image =
 								in.readBytes(size * 2 - in.getCount());
 							
-							//TODO
-							gdi.stretchDIBits(
-								dy,
-								dx,
-								dw,
-								dh,
-								sx,
-								sy,
-								sw,
-								sh,
-								image,
-								Gdi.DIB_RGB_COLORS,
-								rop);
+							gdi.dibStretchBlt(dx, dy, dw, dh, sx, sy, sw, sh, image, rop);
 						}
 						break;
 					case RECORD_ELLIPSE :
@@ -805,18 +793,7 @@ public class WmfParser {
 							byte[] image =
 								in.readBytes(size * 2 - in.getCount());
 
-							gdi.stretchDIBits(
-								dx,
-								dy,
-								dw,
-								dh,
-								sx,
-								sy,
-								sw,
-								sh,
-								image,
-								usage,
-								rop);
+							gdi.stretchDIBits(dx, dy, dw, dh, sx, sy, sw, sh, image, usage, rop);
 						}
 						break;
 					case RECORD_TEXT_OUT :
