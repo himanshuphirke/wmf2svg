@@ -179,15 +179,6 @@ public class SvgGdi implements Gdi {
 		style = doc.createElement("style");
 		style.setAttribute("type", "text/css");
 		root.appendChild(style);
-		
-		Element background = doc.createElement("rect");
-		background.setAttribute("x", "0");
-		background.setAttribute("y", "0");
-		background.setAttribute("width", "100%");
-		background.setAttribute("height", "100%");
-		background.setAttribute("stroke", "none");
-		background.setAttribute("fill", "rgb(255, 255, 255)");
-		root.appendChild(background);
 	}
 
 	public void animatePalette() {
@@ -366,6 +357,24 @@ public class SvgGdi implements Gdi {
 			dc.setPen(defaultPen);
 		}
 	}
+	
+    public void dibStretchBlt(int dx, int dy, int dw, int dh,
+			int sx, int sy, int sw, int sh,
+			byte[] image, long rop) {
+    	
+    	stretchDIBits(
+				dy,
+				dx,
+				dw,
+				dh,
+				sx,
+				sy,
+				sw,
+				sh,
+				image,
+				Gdi.DIB_RGB_COLORS,
+				rop);
+    }
 
 	public void ellipse(int sx, int sy, int ex, int ey) {
 		Element elem = doc.createElement("ellipse");

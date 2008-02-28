@@ -125,6 +125,9 @@ public interface Gdi {
     public GdiPen createPenIndirect(int style, int width, int color);
     public GdiObject createRectRgn(int sx, int sy, int ex, int ey);
     public void deleteObject(GdiObject obj);
+    public void dibStretchBlt(int dx, int dy, int dw, int dh,
+			int sx, int sy, int sw, int sh,
+			byte[] image, long rop);
     public void ellipse(int sx, int sy, int ex, int ey);
     public void escape(byte[] data);
     public void excludeClipRect(int sx, int sy, int ex, int ey);
