@@ -321,10 +321,10 @@ public class SvgDc implements Cloneable {
 		if (getBkMode() == Gdi.OPAQUE) {
 			bk = gdi.getDocument().createElement("rect");
 			bk.setAttribute("fill", SvgStyleObject.toColor(getBkColor()));
-			bk.setAttribute("x", "" + toAbsoluteX(rect[0]));
-			bk.setAttribute("y", "" + toAbsoluteY(rect[1]));
-			bk.setAttribute("width", "" + toRelativeX(rect[2]));
-			bk.setAttribute("height", "" + toRelativeY(rect[3]));
+			bk.setAttribute("x", Integer.toString(toAbsoluteX(rect[0])));
+			bk.setAttribute("y", Integer.toString(toAbsoluteY(rect[1])));
+			bk.setAttribute("width", Integer.toString(toRelativeX(rect[2])));
+			bk.setAttribute("height", Integer.toString(toRelativeY(rect[3])));
 		}
 		return bk;
 	}
