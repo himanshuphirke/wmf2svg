@@ -32,7 +32,6 @@ public class WmfParser {
 	private static final int RECORD_BIT_BLT = 0x0922;
 	private static final int RECORD_CHORD = 0x0830;
 	private static final int RECORD_CREATE_BRUSH_INDIRECT = 0x02FC;
-	private static final int RECORD_CREATE_DIB_PATTERN_BRUSH = 0x0142;
 	private static final int RECORD_CREATE_FONT_INDIRECT = 0x02FB;
 	private static final int RECORD_CREATE_PALETTE = 0x00F7;
 	private static final int RECORD_CREATE_PATTERN_BRUSH = 0x01F9;
@@ -40,6 +39,7 @@ public class WmfParser {
 	private static final int RECORD_CREATE_RECT_RGN = 0x0149;
 	private static final int RECORD_DELETE_OBJECT = 0x01F0;
 	private static final int RECORD_DIB_BIT_BLT = 0x0940;
+	private static final int RECORD_DIB_CREATE_PATTERN_BRUSH = 0x0142;
 	private static final int RECORD_DIB_STRETCH_BLT = 0x0B41;
 	private static final int RECORD_ELLIPSE = 0x0418;
 	private static final int RECORD_ESCAPE = 0x0626;
@@ -217,21 +217,6 @@ public class WmfParser {
 							}
 						}
 						break;
-					case RECORD_CREATE_DIB_PATTERN_BRUSH :
-						{
-							int usage = in.readInt32();
-							byte[] image =
-								in.readBytes(size * 2 - in.getCount());
-
-							for (int i = 0; i < objs.length; i++) {
-								if (objs[i] == null) {
-									objs[i] =
-										gdi.createDIBPatternBrush(image, usage);
-									break;
-								}
-							}
-						}
-						break;
 					case RECORD_CREATE_FONT_INDIRECT :
 						{
 							int height = in.readInt16();
@@ -356,6 +341,21 @@ public class WmfParser {
 									in.readBytes(size * 2 - in.getCount());
 								
 								gdi.dibBitBlt(image, dx, dy, width, height, sx, sy, rop);
+							}
+						}
+						break;
+					case RECORD_DIB_CREATE_PATTERN_BRUSH :
+						{
+							int usage = in.readInt32();
+							byte[] image =
+								in.readBytes(size * 2 - in.getCount());
+	
+							for (int i = 0; i < objs.length; i++) {
+								if (objs[i] == null) {
+									objs[i] =
+										gdi.createDIBPatternBrush(image, usage);
+									break;
+								}
 							}
 						}
 						break;
