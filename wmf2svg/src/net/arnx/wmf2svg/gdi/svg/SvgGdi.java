@@ -816,8 +816,9 @@ public class SvgGdi implements Gdi {
 		dc.setBkMode(mode);
 	}
 
-	public void setDIBitsToDevice(int dx, int dy, long dw, long dh, int sx,
+	public void setDIBitsToDevice(int dx, int dy, int dw, int dh, int sx,
 			int sy, int startscan, int scanlines, byte[] image, int colorUse) {
+		this.stretchDIBits(dx, dy, dw, dh, sx, sy, dw, dh, image, colorUse, SRCCOPY);
 	}
 
 	public void setMapMode(int mode) {
