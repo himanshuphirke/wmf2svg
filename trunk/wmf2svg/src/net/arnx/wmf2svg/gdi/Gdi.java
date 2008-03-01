@@ -110,7 +110,7 @@ public interface Gdi {
     public void animatePalette();
     public void arc(int sxr, int syr, int exr, int eyr,
 		    int sxa, int sya, int exa, int eya);
-    public void bitBlt(int dx, int dy, int width, int height, int sx, int sy, long rop);
+    public void bitBlt(byte[] bits, int dx, int dy, int width, int height, int sx, int sy, long rop);
     public void chord(int sxr, int syr, int exr, int eyr,
 		      int sxa, int sya, int exa, int eya);
     public GdiBrush createBrushIndirect(int style, int color, int hatch);
@@ -125,9 +125,10 @@ public interface Gdi {
     public GdiPen createPenIndirect(int style, int width, int color);
     public GdiObject createRectRgn(int sx, int sy, int ex, int ey);
     public void deleteObject(GdiObject obj);
-    public void dibStretchBlt(int dx, int dy, int dw, int dh,
-			int sx, int sy, int sw, int sh,
-			byte[] image, long rop);
+    public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh,
+			int sx, int sy, long rop);
+    public void dibStretchBlt(byte[] image, int dx, int dy, int dw, int dh,
+			int sx, int sy, int sw, int sh, long rop);
     public void ellipse(int sx, int sy, int ex, int ey);
     public void escape(byte[] data);
     public void excludeClipRect(int sx, int sy, int ex, int ey);
@@ -179,7 +180,8 @@ public interface Gdi {
     public void setViewportOrgEx(int x, int y, Point old);
     public void setWindowExtEx(int width, int height, Dimension old);
     public void setWindowOrgEx(int x, int y, Point old);
-    public void stretchBlt();
+    public void stretchBlt(byte[] image, int dx, int dy, int dw, int dh,
+			int sx, int sy, int sw, int sh, long rop);
     public void stretchDIBits(int dx, int dy, int dw, int dh,
 					int sx, int sy, int sw, int sh,
 					byte[] image, int usage, long rop);

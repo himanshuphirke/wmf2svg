@@ -183,7 +183,11 @@ public class WmfParser {
 							int width = in.readInt16();
 							int dy = in.readInt16();
 							int dx = in.readInt16();
-							gdi.bitBlt(dx, dy, width, height, sx, sy, rop);
+							
+							byte[] image =
+								in.readBytes(size * 2 - in.getCount());
+							
+							gdi.bitBlt(image, dx, dy, width, height, sx, sy, rop);
 						}
 						break;
 					case RECORD_CHORD :
@@ -246,8 +250,8 @@ public class WmfParser {
 							int pitch = 0x00000003 & pitchAndFamily;
 							int family = 0x000000F0 & pitchAndFamily;
 							byte[] faceName = in.readBytes(2 * (size - 9));
-							GdiObject obj =
-								gdi.createFontIndirect(
+							
+							GdiObject obj = gdi.createFontIndirect(
 									height,
 									width,
 									escapement,
@@ -262,6 +266,7 @@ public class WmfParser {
 									quality,
 									pitchAndFamily,
 									faceName);
+							
 							for (int i = 0; i < objs.length; i++) {
 								if (objs[i] == null) {
 									objs[i] = obj;
@@ -329,7 +334,29 @@ public class WmfParser {
 						break;
 					case RECORD_DIB_BIT_BLT:
 						{
-							//TODO
+							boolean isRop = false;
+							
+							long rop = in.readUint32();
+							int sy = in.readInt16();
+							int sx = in.readInt16();
+							int sc = in.readInt16();
+							int height = in.readInt16();
+							if (height == 0) {
+								height = in.readInt16();
+								isRop = true;
+							}
+							int width = in.readInt16();
+							int dy = in.readInt16();
+							int dx = in.readInt16();
+							
+							if (isRop) {
+								gdi.dibBitBlt(null, dx, dy, width, height, sx, sy, rop);
+							} else {
+								byte[] image =
+									in.readBytes(size * 2 - in.getCount());
+								
+								gdi.dibBitBlt(image, dx, dy, width, height, sx, sy, rop);
+							}
 						}
 						break;
 					case RECORD_DIB_STRETCH_BLT:
@@ -348,7 +375,7 @@ public class WmfParser {
 							byte[] image =
 								in.readBytes(size * 2 - in.getCount());
 							
-							gdi.dibStretchBlt(dx, dy, dw, dh, sx, sy, sw, sh, image, rop);
+							gdi.dibStretchBlt(image, dx, dy, dw, dh, sx, sy, sw, sh, rop);
 						}
 						break;
 					case RECORD_ELLIPSE :
@@ -749,7 +776,7 @@ public class WmfParser {
 							int x = in.readInt16();
 							gdi.setViewportExtEx(x, y, null);
 						}
-					break;
+						break;
 					case RECORD_SET_VIEWPORT_ORG_EX :
 						{
 							int y = in.readInt16();
@@ -773,8 +800,20 @@ public class WmfParser {
 						break;
 					case RECORD_STRETCH_BLT :
 						{
-							//TODO
-							gdi.stretchBlt();
+							long rop = in.readUint32();
+							int sh = in.readInt16();
+							int sw = in.readInt16();
+							int sy = in.readInt16();
+							int sx = in.readInt16();
+							int dh = in.readInt16();
+							int dw = in.readInt16();
+							int dy = in.readInt16();
+							int dx = in.readInt16();
+							
+							byte[] image =
+								in.readBytes(size * 2 - in.getCount());
+
+							gdi.stretchBlt(image, dx, dy, dw, dh, sx, sy, sw, sh, rop);
 						}
 						break;
 					case RECORD_STRETCH_DIBITS :
