@@ -459,18 +459,16 @@ public class SvgGdi implements Gdi {
 			y = dc.getCurrentY();
 		}
 
-		if (dc.getBkMode() == OPAQUE) {
-			if (rect != null) parent.appendChild(dc.createFillBk(rect));
-		}
-
 		// x
 		int ax = dc.toAbsoluteX(x);
+		int width = 0;
 		if (vertical) {
 			elem.setAttribute("x", Integer.toString(ax));
+			if (dc.getFont() != null) width = dc.getFont().getFontSize();
 		} else {
 			buffer.setLength(0);
 			buffer.append(ax);
-			
+
 			if (dc.getFont() != null) {
 				dx = dc.getFont().validateDx(text, dx);
 			}
@@ -479,35 +477,65 @@ public class SvgGdi implements Gdi {
 				for (int i = 0; i < dx.length - 1; i++) {
 					x += dx[i];
 					buffer.append(" ").append(dc.toAbsoluteX(x));
+					width += dx[i];
 				}
 	
 				if ((align & 0x0001) == TA_UPDATECP) {
 					dc.moveToEx(x + dx[dx.length - 1], y, null);
 				}
+				width += dx[dx.length - 1];
+			} else {
+				if (dc.getFont() != null) width = (dc.getFont().getFontSize() * text.length)/2;
 			}
+			
 			elem.setAttribute("x", buffer.toString());
 		}
 		
 		// y
 		int ay = dc.toAbsoluteY(y);
+		int height = 0;
 		if (vertical) {
 			buffer.setLength(0);
 			buffer.append(ay);
 			
-			if (dc.getFont() != null) dx = dc.getFont().validateDx(text, dx);
+			if (dc.getFont() != null) {
+				dx = dc.getFont().validateDx(text, dx);
+			}
+			
 			if (dx != null) {
 				for (int i = 0; i < dx.length - 1; i++) {
 					y += dx[i];
 					buffer.append(" ").append(dc.toAbsoluteY(y));
+					height += dx[i];
 				}
 	
 				if ((align & 0x0001) == TA_UPDATECP) {
 					dc.moveToEx(x, y + dx[dx.length - 1], null);
 				}
+				height += dx[dx.length - 1];
+			} else {
+				if (dc.getFont() != null) height = (dc.getFont().getFontSize() * text.length)/2;
 			}
 			elem.setAttribute("y", buffer.toString());
 		} else {
 			elem.setAttribute("y", Integer.toString(ay));
+			if (dc.getFont() != null) height = dc.getFont().getFontSize();
+		}
+
+		if (dc.getBkMode() == OPAQUE) {
+			if (rect == null && dc.getFont() != null) {
+				rect = new int[4];
+				if (vertical) { 
+					rect[0] = x-(int)(width * 0.85);
+					rect[1] = y;
+				} else {
+					rect[0] = x;
+					rect[1] = y-(int)(height * 0.85);
+				}
+				rect[2] = width;
+				rect[3] = height;
+			}
+			parent.appendChild(dc.createFillBk(rect));
 		}
 		
 		if (escapement != 0)  {
