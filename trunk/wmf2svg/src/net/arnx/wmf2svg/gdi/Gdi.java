@@ -163,7 +163,7 @@ public interface Gdi {
     public void selectPalette(GdiObject obj, boolean mode);
     public void setBkColor(int color);
     public void setBkMode(int mode);
-    public void setDIBitsToDevice(int dx, int dy, long dw, long dh, int sx, int sy,
+    public void setDIBitsToDevice(int dx, int dy, int dw, int dh, int sx, int sy,
         			int startscan, int scanlines, byte[] image, int colorUse);
     public void setMapMode(int mode);
     public void setMapperFlags(long flag);
