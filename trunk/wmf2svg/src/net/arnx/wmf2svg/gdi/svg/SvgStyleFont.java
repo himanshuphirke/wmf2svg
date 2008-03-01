@@ -274,7 +274,14 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 
 		return ndx;
 	}
-
+	
+	public int getFontSize() {
+		if (height > 0) {
+			return Math.abs(getGDI().getDC().toRelativeY(height));
+		}
+		return -height;
+	}
+	
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 
@@ -300,11 +307,8 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 			}
 		}
 		
-		if (height > 0) {
-			buffer.append("font-size: ").append(Math.abs(getGDI().getDC().toRelativeY(height))).append("; ");
-		} else if (height < 0) {
-			buffer.append("font-size: ").append(-height).append("; ");
-		}
+		int fontSize = getFontSize();
+		if (fontSize != 0) buffer.append("font-size: ").append(fontSize).append("; ");
 
 		// font-family
 		List fontList = new ArrayList();
