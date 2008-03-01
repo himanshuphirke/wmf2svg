@@ -403,6 +403,7 @@ public class SvgGdi implements Gdi {
 	public void extTextOut(int x, int y, int options, int[] rect, byte[] text,
 			int[] dx) {
 		Element elem = doc.createElement("text");
+		Element bk = null;
 
 		int escapement = 0;
 		boolean vertical = false;
@@ -525,20 +526,35 @@ public class SvgGdi implements Gdi {
 		if (dc.getBkMode() == OPAQUE) {
 			if (rect == null && dc.getFont() != null) {
 				rect = new int[4];
-				if (vertical) { 
+				if (vertical) {
 					rect[0] = x-(int)(width * 0.85);
-					rect[1] = y;
+					if ((align & 0x0006) == TA_RIGHT) {
+						rect[0] = y-height;
+					} else if ((align & 0x0006) == TA_CENTER) {
+						rect[0] = y-height/2;
+					} else {
+						rect[0] = y;
+					}
 				} else {
-					rect[0] = x;
+					if ((align & 0x0006) == TA_RIGHT) {
+						rect[0] = x-width;						
+					} else if ((align & 0x0006) == TA_CENTER) {
+						rect[0] = x-width/2;						
+					} else {
+						rect[0] = x;
+					}
 					rect[1] = y-(int)(height * 0.85);
 				}
 				rect[2] = width;
 				rect[3] = height;
 			}
-			parent.appendChild(dc.createFillBk(rect));
+			bk = dc.createFillBk(rect);
 		}
 		
 		if (escapement != 0)  {
+			if (bk != null) {
+				bk.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
+			}
 			elem.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
 		}
 		
@@ -557,6 +573,7 @@ public class SvgGdi implements Gdi {
 			elem.setAttribute("xml:lang", dc.getFont().getLang());
 		}
 		
+		if (bk != null) parent.appendChild(bk);
 		elem.appendChild(doc.createTextNode(str));
 		parent.appendChild(elem);
 	}
