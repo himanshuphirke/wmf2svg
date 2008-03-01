@@ -302,11 +302,6 @@ public class SvgGdi implements Gdi {
 		}
 	}
 
-	public GdiObject createDIBPatternBrush(byte[] image, int usage) {
-		return new GdiObject() {
-		};
-	}
-
 	public GdiFont createFontIndirect(int height, int width, int escapement,
 			int orientation, int weight, boolean italic, boolean underline,
 			boolean strikeout, int charset, int outPrecision,
@@ -362,6 +357,11 @@ public class SvgGdi implements Gdi {
 	public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, long rop) {
 		this.dibStretchBlt(image, dx, dy, dw, dh, sx, sy, dw, dh, rop);
+	}
+
+	public GdiObject dibCreatePatternBrush(byte[] image, int usage) {
+		return new GdiObject() {
+		};
 	}
 	
     public void dibStretchBlt(byte[] image, int dx, int dy, int dw, int dh,

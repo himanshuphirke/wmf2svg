@@ -352,8 +352,7 @@ public class WmfParser {
 	
 							for (int i = 0; i < objs.length; i++) {
 								if (objs[i] == null) {
-									objs[i] =
-										gdi.createDIBPatternBrush(image, usage);
+									objs[i] = gdi.dibCreatePatternBrush(image, usage);
 									break;
 								}
 							}
