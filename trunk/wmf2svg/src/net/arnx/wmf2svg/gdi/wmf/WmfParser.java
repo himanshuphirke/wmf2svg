@@ -361,7 +361,6 @@ public class WmfParser {
 						break;
 					case RECORD_DIB_STRETCH_BLT:
 						{
-	
 							long rop = in.readUint32();
 							int sh = in.readInt16();
 							int sw = in.readInt16();
