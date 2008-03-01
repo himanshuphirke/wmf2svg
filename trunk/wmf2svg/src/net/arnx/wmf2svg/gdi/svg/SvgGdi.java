@@ -460,11 +460,7 @@ public class SvgGdi implements Gdi {
 		}
 
 		if (dc.getBkMode() == OPAQUE) {
-			if (rect != null) {
-				parent.appendChild(dc.createFillBk(rect));
-			} else {
-				//TODO
-			}
+			if (rect != null) parent.appendChild(dc.createFillBk(rect));
 		}
 
 		// x
