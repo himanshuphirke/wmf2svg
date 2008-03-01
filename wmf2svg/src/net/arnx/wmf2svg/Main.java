@@ -16,6 +16,8 @@
 package net.arnx.wmf2svg;
 
 import java.io.*;
+import java.util.zip.GZIPOutputStream;
+
 import org.w3c.dom.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -31,7 +33,6 @@ public class Main {
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			usage();
-			System.exit(-1);
 		}
 
 		try {
@@ -41,7 +42,12 @@ public class Main {
 			parser.parse(in, gdi);
 		
 			Document doc = gdi.getDocument();
-			output(doc, new FileOutputStream(args[1]));
+			OutputStream out = new FileOutputStream(args[1]);
+			if (args[1].endsWith(".svgz")) {
+				out = new GZIPOutputStream(out);
+			}
+			
+			output(doc, out);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,6 +70,7 @@ public class Main {
 	}
 	
 	private static void usage() {
-		System.out.println("java -jar wmf2svg.jar [wmf filename] [svg filename]");
+		System.out.println("java -jar wmf2svg.jar [wmf filename] [svg filename(svg, xml, or .svgz)]");
+		System.exit(-1);
 	}
 }
