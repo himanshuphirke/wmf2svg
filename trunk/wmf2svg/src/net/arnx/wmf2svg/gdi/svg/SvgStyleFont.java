@@ -308,7 +308,7 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 		}
 		
 		int fontSize = getFontSize();
-		if (fontSize != 0) buffer.append("font-size: ").append(fontSize).append("; ");
+		if (fontSize != 0) buffer.append("font-size: ").append(fontSize).append("px; ");
 
 		// font-family
 		List fontList = new ArrayList();
