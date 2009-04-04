@@ -185,7 +185,7 @@ public class SvgDc implements Cloneable {
 	}
 	
 	public int toAbsoluteX(int x) {
-		if (ww > 0) {
+		if (ww >= 0) {
 			return (int)((mx * x / wsx) - (wx + wox)/wsx);
 		} else {
 			return (int)((wx + wox)/wsx - (mx * x / wsx));
@@ -193,7 +193,7 @@ public class SvgDc implements Cloneable {
 	}
 	
 	public int toAbsoluteY(int y) {
-		if (wh > 0) {
+		if (wh >= 0) {
 			return (int)((my * y / wsy) - (wy + woy)/wsy);
 		} else {
 			return (int)((wy + woy)/wsy - (my * y / wsy));
@@ -201,7 +201,7 @@ public class SvgDc implements Cloneable {
 	}
 	
 	public int toRelativeX(int x) {
-		if (ww > 0) {
+		if (ww >= 0) {
 			return (int)(mx * x / wsx);
 		} else {
 			return (int)(-mx * x / wsx);
@@ -209,7 +209,7 @@ public class SvgDc implements Cloneable {
 	}
 	
 	public int toRelativeY(int y) {
-		if (wh > 0) {
+		if (wh >= 0) {
 			return (int)(my * y /wsy);
 		} else {
 			return (int)(-my * y /wsy);
