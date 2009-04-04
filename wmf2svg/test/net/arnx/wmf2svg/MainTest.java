@@ -19,7 +19,7 @@ public class MainTest extends TestCase {
 		for (int i = 0; i < files.length; i++) {
 			String name = files[i].getAbsolutePath();
 			name = name.substring(0, name.length() - 4);
-			System.out.println(name + "transforming...");
+			System.out.println(name + " transforming...");
 			Main.main(new String[] {name + ".wmf", name + ".svg"});
 		}
 	}
