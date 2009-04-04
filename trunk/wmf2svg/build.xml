@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <project name="wmf2svg" default="dist">
-	<property name="version" value="0.8.1" />
+	<property name="version" value="0.8.2" />
 	<property name="debug" value="off" />
 
 	<property name="src" location="src"/>
