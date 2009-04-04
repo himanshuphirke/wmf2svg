@@ -366,7 +366,7 @@ public class SvgGdi implements Gdi {
 	
     public void dibStretchBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, int sw, int sh, long rop) {
-    	
+		
     	this.stretchDIBits(dx, dy, dw, dh, sx, sy, sw, sh, image, Gdi.DIB_RGB_COLORS, rop);
     }
 
@@ -995,7 +995,10 @@ public class SvgGdi implements Gdi {
 				elem.setAttribute("xlink:href", data);
 				parent.appendChild(elem);
 			}catch (Exception e) {
-				throw new UnsupportedOperationException();
+				UnsupportedOperationException uoe = new UnsupportedOperationException();
+				uoe.initCause(e);
+				
+				throw uoe;
 			}
 		} else {
 			// TODO
