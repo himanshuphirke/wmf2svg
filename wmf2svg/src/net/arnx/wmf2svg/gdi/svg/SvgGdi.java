@@ -233,7 +233,7 @@ public class SvgGdi implements Gdi {
 
 	public void bitBlt(byte[] image, int dx, int dy, int dw, int dh, 
 			int sx, int sy, long rop) {
-		this.dibBitBlt(image, dx, dy, dw, dh, sx, sy, rop);
+		bmpToSvg(image, dx, dy, dw, dh, sx, sy, dw, dh, Gdi.DIB_RGB_COLORS, rop);
 	}
 
 	public void chord(int sxr, int syr, int exr, int eyr, int sxa, int sya,
@@ -356,7 +356,7 @@ public class SvgGdi implements Gdi {
 	
 	public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, long rop) {
-		this.dibStretchBlt(image, dx, dy, dw, dh, sx, sy, dw, dh, rop);
+		this.bitBlt(image, dx, dy, dw, dh, sx, sy, rop);
 	}
 
 	public GdiObject dibCreatePatternBrush(byte[] image, int usage) {
@@ -940,69 +940,7 @@ public class SvgGdi implements Gdi {
 
 	public void stretchDIBits(int dx, int dy, int dw, int dh, int sx, int sy,
 			int sw, int sh, byte[] image, int usage, long rop) {
-		
-		if (image != null) {
-			try {
-				// convert to 24bit color
-				BufferedImage bufferedImage = bmpToImage(dibToBmp(image));
-				BufferedImage dst = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-				ColorConvertOp colorConvert = new ColorConvertOp(dst.getColorModel().getColorSpace(), null);
-				colorConvert.filter(bufferedImage, dst);
-				bufferedImage = dst;
-				
-				if (dh < 0) {
-					DataBuffer srcData = bufferedImage.getRaster().getDataBuffer();
-					BufferedImage dstImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage.getType());
-					DataBuffer dstData = dstImage.getRaster().getDataBuffer();
-					int lineSize = bufferedImage.getWidth() * bufferedImage.getColorModel().getPixelSize() / 8;
-					for (int h = 0, k = bufferedImage.getHeight() - 1; h < bufferedImage.getHeight(); h++, k--) {
-						for (int j = 0; j < lineSize; j++) {
-							dstData.setElem(h * lineSize + j, srcData.getElem(k * lineSize + j));
-						}
-					}
-					bufferedImage = dstImage;
-				}
-				
-				String data = imageToURI(bufferedImage);
-				
-				if (data == null || data.equals("")) {
-					return;
-				}
-	
-				Element elem = doc.createElement("image");
-				if( dh < 0 ){
-					elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
-					elem.setAttribute("y", "" + dc.toAbsoluteY(dy+dh));
-					elem.setAttribute("width", "" + dc.toRelativeX(dw));
-					elem.setAttribute("height", "" + dc.toRelativeY(-dh));
-				}else{
-					elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
-					elem.setAttribute("y", "" + dc.toAbsoluteY(dy));
-					elem.setAttribute("width", "" + dc.toRelativeX(dw));
-					elem.setAttribute("height", "" + dc.toRelativeY(dh));
-				}
-		
-				if (sx != 0 || sy != 0 || sw != dw || sh != dh) {
-					elem.setAttribute("viewBox", "" + sx + " " + sy + " " + sw + " "+ sh);
-					elem.setAttribute("preserveAspectRatio", "none");
-				}
-				
-				String ropFilter = dc.getRopFilter(rop);
-				if (ropFilter != null) {
-					elem.setAttribute("filter", ropFilter);
-				}
-		
-				elem.setAttribute("xlink:href", data);
-				parent.appendChild(elem);
-			}catch (Exception e) {
-				UnsupportedOperationException uoe = new UnsupportedOperationException();
-				uoe.initCause(e);
-				
-				throw uoe;
-			}
-		} else {
-			// TODO
-		}
+		bmpToSvg(image, dx, dy, dw, dh, sx, sy, sw, sh, usage,rop);
 	}
 
 	public void textOut(int x, int y, byte[] text) {
@@ -1097,14 +1035,15 @@ public class SvgGdi implements Gdi {
 
 	public void footer() {
 		Element root = doc.getDocumentElement();
-		if (!root.hasAttribute("width")) {
+		if (!root.hasAttribute("width") && dc.getWindowWidth() != 0) {
 			root.setAttribute("width", "" + Math.abs(dc.getWindowWidth()));
 		}
-		if (!root.hasAttribute("height")) {
+		if (!root.hasAttribute("height") && dc.getWindowHeight() != 0) {
 			root.setAttribute("height", "" + Math.abs(dc.getWindowHeight()));
 		}
-		root.setAttribute("viewBox", "0 0 " + Math.abs(dc.getWindowWidth())
-				+ " " + Math.abs(dc.getWindowHeight()));
+		if (dc.getWindowWidth() != 0 && dc.getWindowHeight() != 0) {
+			root.setAttribute("viewBox", "0 0 " + Math.abs(dc.getWindowWidth()) + " " + Math.abs(dc.getWindowHeight()));
+		}
 		root.setAttribute("stroke-linecap", "round");
 		root.setAttribute("fill-rule", "evenodd");
 
@@ -1149,6 +1088,71 @@ public class SvgGdi implements Gdi {
 		return (String) nameMap.get(style);
 	}
 	
+	private void bmpToSvg(byte[] image, int dx, int dy, int dw, int dh, int sx, int sy,
+			int sw, int sh, int usage, long rop) {
+		if (image == null) return; //TODO
+		
+		
+		try {
+			// convert to 24bit color
+			BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(dibToBmp(image)));
+			BufferedImage dst = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+			ColorConvertOp colorConvert = new ColorConvertOp(dst.getColorModel().getColorSpace(), null);
+			colorConvert.filter(bufferedImage, dst);
+			bufferedImage = dst;
+			
+			if (dh < 0) {
+				DataBuffer srcData = bufferedImage.getRaster().getDataBuffer();
+				BufferedImage dstImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage.getType());
+				DataBuffer dstData = dstImage.getRaster().getDataBuffer();
+				int lineSize = bufferedImage.getWidth() * bufferedImage.getColorModel().getPixelSize() / 8;
+				for (int h = 0, k = bufferedImage.getHeight() - 1; h < bufferedImage.getHeight(); h++, k--) {
+					for (int j = 0; j < lineSize; j++) {
+						dstData.setElem(h * lineSize + j, srcData.getElem(k * lineSize + j));
+					}
+				}
+				bufferedImage = dstImage;
+			}
+			
+			String data = imageToURI(bufferedImage);
+			
+			if (data == null || data.equals("")) {
+				return;
+			}
+
+			Element elem = doc.createElement("image");
+			if( dh < 0 ){
+				elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
+				elem.setAttribute("y", "" + dc.toAbsoluteY(dy+dh));
+				elem.setAttribute("width", "" + dc.toRelativeX(dw));
+				elem.setAttribute("height", "" + dc.toRelativeY(-dh));
+			}else{
+				elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
+				elem.setAttribute("y", "" + dc.toAbsoluteY(dy));
+				elem.setAttribute("width", "" + dc.toRelativeX(dw));
+				elem.setAttribute("height", "" + dc.toRelativeY(dh));
+			}
+	
+			if (sx != 0 || sy != 0 || sw != dw || sh != dh) {
+				elem.setAttribute("viewBox", "" + sx + " " + sy + " " + sw + " "+ sh);
+				elem.setAttribute("preserveAspectRatio", "none");
+			}
+			
+			String ropFilter = dc.getRopFilter(rop);
+			if (ropFilter != null) {
+				elem.setAttribute("filter", ropFilter);
+			}
+	
+			elem.setAttribute("xlink:href", data);
+			parent.appendChild(elem);
+		} catch (Exception e) {
+			UnsupportedOperationException uoe = new UnsupportedOperationException();
+			uoe.initCause(e);
+			
+			throw uoe;
+		}
+	}
+	
 	private String imageToURI(BufferedImage image) throws IOException {
 		StringBuffer buffer = new StringBuffer("data:image/png;base64,");
 		ByteArrayOutputStream out = null;
@@ -1167,11 +1171,6 @@ public class SvgGdi implements Gdi {
 				}
 			}
 		}
-	}
-	
-	private BufferedImage bmpToImage(byte[] bmp) throws IOException{
-		BufferedImage image = ImageIO.read(new ByteArrayInputStream(bmp));
-		return image;
 	}
 
 	private byte[] dibToBmp(byte[] dib) {
@@ -1233,6 +1232,7 @@ public class SvgGdi implements Gdi {
 		data[11] = (byte) ((bfOffBits >> 8) & 0xff);
 		data[12] = (byte) ((bfOffBits >> 16) & 0xff);
 		data[13] = (byte) ((bfOffBits >> 24) & 0xff);
+		
 		System.arraycopy(dib, 0, data, 14, dib.length);
 
 		return data;

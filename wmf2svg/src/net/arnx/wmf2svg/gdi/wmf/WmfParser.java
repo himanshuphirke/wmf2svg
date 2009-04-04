@@ -178,14 +178,12 @@ public class WmfParser {
 							long rop = in.readUint32();
 							int sy = in.readInt16();
 							int sx = in.readInt16();
-							int sc = in.readInt16();
 							int height = in.readInt16();
 							int width = in.readInt16();
 							int dy = in.readInt16();
 							int dx = in.readInt16();
 							
-							byte[] image =
-								in.readBytes(size * 2 - in.getCount());
+							byte[] image = in.readBytes(size * 2 - in.getCount());
 							
 							gdi.bitBlt(image, dx, dy, width, height, sx, sy, rop);
 						}
@@ -324,7 +322,6 @@ public class WmfParser {
 							long rop = in.readUint32();
 							int sy = in.readInt16();
 							int sx = in.readInt16();
-							int sc = in.readInt16();
 							int height = in.readInt16();
 							if (height == 0) {
 								height = in.readInt16();
@@ -337,8 +334,7 @@ public class WmfParser {
 							if (isRop) {
 								gdi.dibBitBlt(null, dx, dy, width, height, sx, sy, rop);
 							} else {
-								byte[] image =
-									in.readBytes(size * 2 - in.getCount());
+								byte[] image = in.readBytes(size * 2 - in.getCount());
 								
 								gdi.dibBitBlt(image, dx, dy, width, height, sx, sy, rop);
 							}
