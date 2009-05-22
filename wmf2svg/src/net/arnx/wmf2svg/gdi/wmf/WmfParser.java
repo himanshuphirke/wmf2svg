@@ -15,7 +15,6 @@
  */
 package net.arnx.wmf2svg.gdi.wmf;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.ByteOrder;
 
@@ -102,6 +101,7 @@ public class WmfParser {
 	public void parse(InputStream is, Gdi gdi)
 		throws IOException, WmfParseException {
 		DataInput in = null;
+		boolean isEmpty = true;
 
 		try {
 			in = new DataInput(new BufferedInputStream(is), ByteOrder.LITTLE_ENDIAN);
@@ -110,6 +110,7 @@ public class WmfParser {
 			int mtHeaderSize = 0;
 			
 			long key = in.readUint32();
+			isEmpty = false;
 			if (key == 0x9AC6CDD7) {
 				int hmf = in.readInt16();
 				int vsx = in.readInt16();
@@ -136,7 +137,7 @@ public class WmfParser {
 			int mtNoParameters = in.readUint16();
 
 			if (mtType != 1 || mtHeaderSize != 9) {
-				throw new WmfParseException();
+				throw new WmfParseException("invalid file format.");
 			}
 			
 			gdi.header();
@@ -852,10 +853,10 @@ public class WmfParser {
 				}
 			}
 			in.close();
-		} catch (EOFException e) {
-			// no handle
-		}
 
-		gdi.footer();
+			gdi.footer();
+		} catch (EOFException e) {
+			if (isEmpty) throw new WmfParseException("input file size is zero.");
+		}
 	}
 }

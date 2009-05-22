@@ -15,7 +15,6 @@
  */
 package net.arnx.wmf2svg.gdi.svg;
 
-import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.*;
@@ -917,7 +916,7 @@ public class SvgGdi implements Gdi {
 		}
 	}
 	
-	public void setViewportExtEx(int x, int y, Dimension old) {
+	public void setViewportExtEx(int x, int y, Size old) {
 		dc.setViewportExtEx(x, y, old);
 	}
 
@@ -925,7 +924,7 @@ public class SvgGdi implements Gdi {
 		dc.setViewportOrgEx(x, y, old);
 	}
 
-	public void setWindowExtEx(int width, int height, Dimension old) {
+	public void setWindowExtEx(int width, int height, Size old) {
 		dc.setWindowExtEx(width, height, old);
 	}
 

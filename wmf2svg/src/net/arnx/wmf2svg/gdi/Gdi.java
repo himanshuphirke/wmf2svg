@@ -15,8 +15,6 @@
  */
 package net.arnx.wmf2svg.gdi;
 
-import java.awt.*;
-
 /**
  * @author Hidekatsu Izuno
  */
@@ -176,9 +174,9 @@ public interface Gdi {
     public void setTextCharacterExtra(int extra);
     public void setTextColor(int color);
     public void setTextJustification(int breakExtra, int breakCount);
-    public void setViewportExtEx(int x, int y, Dimension old);
+    public void setViewportExtEx(int x, int y, Size old);
     public void setViewportOrgEx(int x, int y, Point old);
-    public void setWindowExtEx(int width, int height, Dimension old);
+    public void setWindowExtEx(int width, int height, Size old);
     public void setWindowOrgEx(int x, int y, Point old);
     public void stretchBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, int sw, int sh, long rop);
