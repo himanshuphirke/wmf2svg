@@ -18,10 +18,14 @@ package net.arnx.wmf2svg.gdi.svg;
 import java.awt.image.*;
 import java.io.*;
 import java.util.*;
-import java.util.List;
 import javax.imageio.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
+
+import com.google.appengine.api.images.Image;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ImagesService.OutputEncoding;
 
 import net.arnx.wmf2svg.gdi.*;
 import net.arnx.wmf2svg.util.Base64;
@@ -31,6 +35,21 @@ import net.arnx.wmf2svg.util.Base64;
  * @author Shunsuke Mori
  */
 public class SvgGdi implements Gdi {
+	private static Class imageApi;
+	
+	static {
+		try {
+			imageApi = Class.forName("com.google.appengine.api.images.Image");
+		} catch (ClassNotFoundException e) {
+			try {
+				imageApi = Class.forName("javax.imageio.ImageIO");
+			} catch (ClassNotFoundException e2) {
+				imageApi = null;
+			}
+		}
+	}
+	
+	
 	private Map props = new HashMap();
 
 	private SvgDc dc;
@@ -1093,28 +1112,46 @@ public class SvgGdi implements Gdi {
 		
 		
 		try {
-			// convert to 24bit color
-			BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(dibToBmp(image)));
-			BufferedImage dst = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-			ColorConvertOp colorConvert = new ColorConvertOp(dst.getColorModel().getColorSpace(), null);
-			colorConvert.filter(bufferedImage, dst);
-			bufferedImage = dst;
-			
-			if (dh < 0) {
-				DataBuffer srcData = bufferedImage.getRaster().getDataBuffer();
-				BufferedImage dstImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage.getType());
-				DataBuffer dstData = dstImage.getRaster().getDataBuffer();
-				int lineSize = bufferedImage.getWidth() * bufferedImage.getColorModel().getPixelSize() / 8;
-				for (int h = 0, k = bufferedImage.getHeight() - 1; h < bufferedImage.getHeight(); h++, k--) {
-					for (int j = 0; j < lineSize; j++) {
-						dstData.setElem(h * lineSize + j, srcData.getElem(k * lineSize + j));
+			if (Image.class.equals(imageApi)) {
+				ImagesService imagesService = ImagesServiceFactory.getImagesService();
+				
+				Image bmp = ImagesServiceFactory.makeImage(dibToBmp(image));
+
+				StringBuffer buffer = new StringBuffer("data:image/png;base64,");
+				buffer.append(Base64.encode(imagesService.applyTransform(null, bmp, OutputEncoding.PNG).getImageData()));
+			} else {
+				// convert to 24bit color
+				BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(dibToBmp(image)));
+				BufferedImage dst = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+				ColorConvertOp colorConvert = new ColorConvertOp(dst.getColorModel().getColorSpace(), null);
+				colorConvert.filter(bufferedImage, dst);
+				bufferedImage = dst;
+				
+				if (dh < 0) {
+					DataBuffer srcData = bufferedImage.getRaster().getDataBuffer();
+					BufferedImage dstImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage.getType());
+					DataBuffer dstData = dstImage.getRaster().getDataBuffer();
+					int lineSize = bufferedImage.getWidth() * bufferedImage.getColorModel().getPixelSize() / 8;
+					for (int h = 0, k = bufferedImage.getHeight() - 1; h < bufferedImage.getHeight(); h++, k--) {
+						for (int j = 0; j < lineSize; j++) {
+							dstData.setElem(h * lineSize + j, srcData.getElem(k * lineSize + j));
+						}
 					}
+					bufferedImage = dstImage;
 				}
-				bufferedImage = dstImage;
+				
+				StringBuffer buffer = new StringBuffer("data:image/png;base64,");
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				try {
+					ImageIO.write(bufferedImage, "png", out);
+					byte[] data = out.toByteArray();
+					buffer.append(Base64.encode(data));
+				} catch (IOException e) {
+					// never occurred.
+				}
 			}
 			
-			String data = imageToURI(bufferedImage);
-			
+			String data = buffer.toString();
 			if (data == null || data.equals("")) {
 				return;
 			}
@@ -1149,26 +1186,6 @@ public class SvgGdi implements Gdi {
 			uoe.initCause(e);
 			
 			throw uoe;
-		}
-	}
-	
-	private String imageToURI(BufferedImage image) throws IOException {
-		StringBuffer buffer = new StringBuffer("data:image/png;base64,");
-		ByteArrayOutputStream out = null;
-		try {
-			out = new ByteArrayOutputStream();
-			ImageIO.write(image, "png", out);
-			out.close();
-			byte[] data = out.toByteArray();
-			buffer.append(Base64.encode(data));
-			return buffer.toString();
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-				}
-			}
 		}
 	}
 
