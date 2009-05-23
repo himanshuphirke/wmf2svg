@@ -1090,7 +1090,6 @@ public class SvgGdi implements Gdi {
 			int sw, int sh, int usage, long rop) {
 		if (image == null) return; //TODO
 		
-		
 		try {
 			image = ImageUtil.convert(dibToBmp(image), "png", dh < 0);
 		} catch (Exception e) {
