@@ -17,6 +17,7 @@ package net.arnx.wmf2svg.gdi.wmf;
 
 import java.io.*;
 import java.nio.ByteOrder;
+import java.util.logging.Logger;
 
 import net.arnx.wmf2svg.gdi.*;
 import net.arnx.wmf2svg.io.DataInput;
@@ -80,6 +81,7 @@ public class WmfParser {
 	private static final int RECORD_SET_PALETTE_ENTRIES = 0x0037;
 	private static final int RECORD_SET_PIXEL = 0x041F;
 	private static final int RECORD_SET_POLY_FILL_MODE = 0x0106;
+	private static final int RECORD_SET_REL_ABS = 0x0105;
 	private static final int RECORD_SET_ROP2 = 0x0104;
 	private static final int RECORD_SET_STRETCH_BLT_MODE = 0x0107;
 	private static final int RECORD_SET_TEXT_ALIGN = 0x012E;
@@ -93,10 +95,11 @@ public class WmfParser {
 	private static final int RECORD_STRETCH_BLT = 0x0B23;
 	private static final int RECORD_STRETCH_DIBITS = 0x0F43;
 	private static final int RECORD_TEXT_OUT = 0x0521;
-
-	public WmfParser() {
-	}
 	
+	private static Logger log = Logger.getLogger(WmfParser.class.getName());
+	
+	public WmfParser() {
+	}	
 	
 	public void parse(InputStream is, Gdi gdi)
 		throws IOException, WmfParseException {
@@ -728,6 +731,12 @@ public class WmfParser {
 							gdi.setPolyFillMode(mode);
 						}
 						break;
+					case RECORD_SET_REL_ABS:
+						{
+							int mode = in.readInt16();
+							gdi.setRelAbs(mode);
+						}
+						break;
 					case RECORD_SET_ROP2 :
 						{
 							int mode = in.readInt16();
@@ -843,8 +852,9 @@ public class WmfParser {
 						}
 						break;
 					default:
-					{
-					}
+						{
+							log.fine("unsuppored id find: " + id + " (size=" + size + ")");
+						}
 				}
 				
 				int rest = size * 2 - in.getCount();

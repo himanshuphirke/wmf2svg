@@ -57,6 +57,7 @@ public class SvgDc implements Cloneable {
 	private int textAlign = Gdi.TA_TOP | Gdi.TA_LEFT;
 	private int textDx = 0;
 	private int polyFillMode = Gdi.ALTERNATE;
+	private int relAbsMode = 0;
 	private int rop2Mode = Gdi.R2_COPYPEN;
 	private int stretchBltMode = Gdi.STRETCH_ANDSCANS;
 	
@@ -248,6 +249,14 @@ public class SvgDc implements Cloneable {
 	
 	public void setPolyFillMode(int mode) {
 		polyFillMode = mode;
+	}
+	
+	public int getRelAbs() {
+		return relAbsMode;
+	}
+	
+	public void setRelAbs(int mode) {
+		relAbsMode = mode;
 	}
 	
 	public int getROP2() {
