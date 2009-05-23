@@ -15,8 +15,6 @@
  */
 package net.arnx.wmf2svg.gdi.svg;
 
-import java.util.logging.Logger;
-
 import org.w3c.dom.*;
 
 import net.arnx.wmf2svg.gdi.*;
@@ -25,8 +23,6 @@ import net.arnx.wmf2svg.gdi.*;
  * @author Hidekatsu Izuno
  */
 public class SvgDc implements Cloneable {
-	private static Logger log = Logger.getLogger(SvgDc.class.getName());
-	
 	private SvgGdi gdi;
 
 	private int dpi = 1440;
