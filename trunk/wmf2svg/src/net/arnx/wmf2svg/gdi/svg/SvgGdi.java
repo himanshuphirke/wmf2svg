@@ -137,7 +137,8 @@ public class SvgGdi implements Gdi {
 		if (parent == null) {
 			init();
 		}
-
+		
+		dc.setWindowExtEx(Math.abs(wex - wsx), Math.abs(wey - wsy), null);
 		dc.setDpi(dpi);
 
 		Element root = doc.getDocumentElement();
