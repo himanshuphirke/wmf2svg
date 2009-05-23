@@ -100,7 +100,7 @@ public class ImageUtil {
 			}
 		}
 		
-		return null;
+		return outimage;
 	}
 	
 }
