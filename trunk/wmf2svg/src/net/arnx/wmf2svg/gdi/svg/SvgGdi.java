@@ -17,6 +17,8 @@ package net.arnx.wmf2svg.gdi.svg;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
+
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 
@@ -29,6 +31,7 @@ import net.arnx.wmf2svg.util.ImageUtil;
  * @author Shunsuke Mori
  */
 public class SvgGdi implements Gdi {
+	private static Logger log = Logger.getLogger(SvgGdi.class.getName());
 	
 	private Map props = new HashMap();
 
@@ -181,6 +184,7 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void animatePalette() {
+		// TODO
 	}
 
 	public void arc(int sxr, int syr, int exr, int eyr, int sxa, int sya,
@@ -318,11 +322,15 @@ public class SvgGdi implements Gdi {
 	}
 
 	public GdiObject createPalette() {
+		// TODO
+		log.fine("not implemented: createPalette");
 		return new GdiObject() {
 		};
 	}
 
 	public GdiObject createPatternBrush() {
+		// TODO
+		log.fine("not implemented: createPatternBrush");
 		return new GdiObject() {
 		};
 	}
@@ -339,6 +347,8 @@ public class SvgGdi implements Gdi {
 	}
 	
 	public GdiObject createRectRgn(int sx, int sy, int ex, int ey) {
+		// TODO
+		log.fine("not implemented: createRectRgn");
 		return new GdiObject() {
 		};		
 	}
@@ -359,6 +369,8 @@ public class SvgGdi implements Gdi {
 	}
 
 	public GdiObject dibCreatePatternBrush(byte[] image, int usage) {
+		// TODO
+		log.fine("not implemented: dibCreatePatternBrush");
 		return new GdiObject() {
 		};
 	}
@@ -394,9 +406,13 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void excludeClipRect(int sx, int sy, int ex, int ey) {
+		// TODO
+		log.fine("not implemented: excludeClipRect");
 	}
 
 	public void extFloodFill(int x, int y, int color, int type) {
+		// TODO
+		log.fine("not implemented: extFloodFill");
 	}
 
 	public void extTextOut(int x, int y, int options, int[] rect, byte[] text,
@@ -577,19 +593,29 @@ public class SvgGdi implements Gdi {
 		parent.appendChild(elem);
 	}
 
-	public void fillRgn() {
+	public void fillRgn(GdiObject rgn, GdiObject brush) {
+		// TODO
+		log.fine("not implemented: fillRgn");
 	}
 
 	public void floodFill(int x, int y, int color) {
+		// TODO
+		log.fine("not implemented: floodFill");
 	}
 
-	public void frameRgn() {
+	public void frameRgn(GdiObject rgn, GdiObject brush, int width, int height) {
+		// TODO
+		log.fine("not implemented: frameRgn");
 	}
 
 	public void intersectClipRect(int sx, int sy, int ex, int ey) {
+		// TODO
+		log.fine("not implemented: intersectClipRect");
 	}
 
-	public void invertRgn() {
+	public void invertRgn(GdiObject rgn) {
+		// TODO
+		log.fine("not implemented: invertRgn");
 	}
 
 	public void lineTo(int ex, int ey) {
@@ -614,6 +640,8 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void offsetClipRgn(int x, int y) {
+		// TODO
+		log.fine("not implemented: offsetClipRgn (x=" + x + ", y=" + y + ")");
 	}
 
 	public void offsetViewportOrgEx(int x, int y, Point point) {
@@ -624,10 +652,14 @@ public class SvgGdi implements Gdi {
 		dc.offsetWindowOrgEx(x, y, point);
 	}
 
-	public void paintRgn() {
+	public void paintRgn(GdiObject rgn) {
+		// TODO
+		log.fine("not implemented: paintRgn");
 	}
 
-	public void patBlt() {
+	public void patBlt(int x, int y, int width, int height, long rop) {
+		// TODO
+		log.fine("not implemented: patBlt");
 	}
 
 	public void pie(int sxr, int syr, int exr, int eyr, int sxa, int sya,
@@ -771,6 +803,8 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void realizePalette() {
+		// TODO
+		log.fine("not implemented: realizePalette");
 	}
 
 	public void restoreDC() {
@@ -799,6 +833,8 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void resizePalette(GdiObject obj) {
+		// TODO
+		log.fine("not implemented: ResizePalette");
 	}
 
 	public void roundRect(int sx, int sy, int ex, int ey, int rw, int rh) {
@@ -828,15 +864,17 @@ public class SvgGdi implements Gdi {
 		saveDC = (SvgDc) dc.clone();
 	}
 
-	public void scaleViewportExtEx(int x, int xd, int y, int yd, Point old) {
+	public void scaleViewportExtEx(int x, int xd, int y, int yd, Size old) {
 		dc.scaleViewportExtEx(x, xd, y, yd, old);
 	}
 
-	public void scaleWindowExtEx(int x, int xd, int y, int yd, Point old) {
+	public void scaleWindowExtEx(int x, int xd, int y, int yd, Size old) {
 		dc.scaleWindowExtEx(x, xd, y, yd, old);
 	}
 
-	public void selectClipRgn(GdiObject obj) {
+	public void selectClipRgn(GdiObject rgn) {
+		// TODO
+		log.fine("not implemented: selectClipRgn");
 	}
 
 	public void selectObject(GdiObject obj) {
@@ -850,6 +888,8 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void selectPalette(GdiObject obj, boolean mode) {
+		// TODO
+		log.fine("not implemented: selectPalette");
 	}
 
 	public void setBkColor(int color) {
@@ -871,10 +911,12 @@ public class SvgGdi implements Gdi {
 
 	public void setMapperFlags(long flag) {
 		// TODO
+		log.fine("not implemented: setMapperFlags");
 	}
 
 	public void setPaletteEntries() {
 		// TODO
+		log.fine("not implemented: setPaletteEntries");
 	}
 
 	public void setPixel(int x, int y, int color) {
@@ -1095,7 +1137,10 @@ public class SvgGdi implements Gdi {
 	
 	private void bmpToSvg(byte[] image, int dx, int dy, int dw, int dh, int sx, int sy,
 			int sw, int sh, int usage, long rop) {
-		if (image == null) return; //TODO
+		if (image == null) {
+			// TODO
+			return;
+		}
 		
 		try {
 			image = ImageUtil.convert(dibToBmp(image), "png", dh < 0);

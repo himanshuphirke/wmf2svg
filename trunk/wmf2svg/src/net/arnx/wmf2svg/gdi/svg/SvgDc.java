@@ -15,6 +15,8 @@
  */
 package net.arnx.wmf2svg.gdi.svg;
 
+import java.util.logging.Logger;
+
 import org.w3c.dom.*;
 
 import net.arnx.wmf2svg.gdi.*;
@@ -23,6 +25,8 @@ import net.arnx.wmf2svg.gdi.*;
  * @author Hidekatsu Izuno
  */
 public class SvgDc implements Cloneable {
+	private static Logger log = Logger.getLogger(SvgDc.class.getName());
+	
 	private SvgGdi gdi;
 
 	private int dpi = 1440;
@@ -44,6 +48,20 @@ public class SvgDc implements Cloneable {
 	// mapping scale
 	private double mx = 1.0;
 	private double my = 1.0;
+	
+	// viewport
+	private int vx = 0;
+	private int vy = 0;
+	private int vw = 0;
+	private int vh = 0;
+	
+	// viewport offset
+	private int vox = 0;
+	private int voy = 0;
+	
+	// viewport scale
+	private double vsx = 1.0;
+	private double vsy = 1.0;
 	
 	// current location
 	private int cx = 0;
@@ -100,7 +118,8 @@ public class SvgDc implements Cloneable {
 		woy += y;
 	}
 	
-	public void scaleWindowExtEx(int x, int xd, int y, int yd, Point old) {
+	public void scaleWindowExtEx(int x, int xd, int y, int yd, Size old) {
+		// TODO
 		wsx = (wsx * x)/xd;
 		wsy = (wsy * y)/yd;
 	}
@@ -122,15 +141,36 @@ public class SvgDc implements Cloneable {
 	}
 	
 	public void setViewportOrgEx(int x, int y, Point old) {
+		if (old != null) {
+			old.x = vx;
+			old.y = vy;
+		}
+		vx = x;
+		vy = y;
 	}
 	
 	public void setViewportExtEx(int width, int height, Size old) {
+		if (old != null) {
+			old.width = vw;
+			old.height = vh;
+		}
+		vw = width;
+		vh = height;
 	}
 	
 	public void offsetViewportOrgEx(int x, int y, Point old) {
+		if (old != null) {
+			old.x = vox;
+			old.y = voy;
+		}
+		vox = x;
+		voy = y;
 	}
 	
-	public void scaleViewportExtEx(int x, int xd, int y, int yd, Point old) {
+	public void scaleViewportExtEx(int x, int xd, int y, int yd, Size old) {
+		// TODO
+		vsx = (vsx * x)/xd;
+		vsy = (vsy * y)/yd;
 	}
 	
 	public int getMapMode() {
@@ -184,35 +224,23 @@ public class SvgDc implements Cloneable {
 	}
 	
 	public int toAbsoluteX(int x) {
-		if (ww >= 0) {
-			return (int)((mx * x / wsx) - (wx + wox)/wsx);
-		} else {
-			return (int)((wx + wox)/wsx - (mx * x / wsx));
-		}
+		// TODO Handle Viewport
+		return ((ww >= 0) ? 1 : -1) * (int)((mx * x - (wx + wox)) / wsy);
 	}
 	
 	public int toAbsoluteY(int y) {
-		if (wh >= 0) {
-			return (int)((my * y / wsy) - (wy + woy)/wsy);
-		} else {
-			return (int)((wy + woy)/wsy - (my * y / wsy));
-		}
+		// TODO Handle Viewport
+		return ((wh >= 0) ? 1 : -1) * (int)((my * y - (wy + woy)) / wsy);
 	}
 	
 	public int toRelativeX(int x) {
-		if (ww >= 0) {
-			return (int)(mx * x / wsx);
-		} else {
-			return (int)(-mx * x / wsx);
-		}
+		// TODO Handle Viewport
+		return ((ww >= 0) ? 1 : -1) * (int)(mx * x / wsx);
 	}
 	
 	public int toRelativeY(int y) {
-		if (wh >= 0) {
-			return (int)(my * y /wsy);
-		} else {
-			return (int)(-my * y /wsy);
-		}
+		// TODO Handle Viewport
+		return ((wh >= 0) ? 1 : -1) * (int)(my * y / wsy);
 	}
 
 	public void setDpi(int dpi) {
