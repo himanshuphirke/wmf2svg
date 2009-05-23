@@ -161,6 +161,7 @@ public class WmfParser {
 					case RECORD_ANIMATE_PALETTE :
 						{
 							//TODO
+							log.fine("not implemented: AnimatePalette");
 							gdi.animatePalette();
 						}
 						break;
@@ -447,8 +448,9 @@ public class WmfParser {
 						break;
 					case RECORD_FILL_RGN :
 						{
-							//TODO
-							gdi.fillRgn();
+							int brushID = in.readUint16();
+							int rgnID = in.readUint16();
+							gdi.fillRgn(objs[rgnID], objs[brushID]);
 						}
 						break;
 					case RECORD_FLOOD_FILL :
@@ -461,8 +463,11 @@ public class WmfParser {
 						break;
 					case RECORD_FRAME_RGN :
 						{
-							//TODO
-							gdi.frameRgn();
+							int height = in.readInt16();
+							int width = in.readInt16();
+							int brushID = in.readUint16();
+							int rgnID = in.readUint16();
+							gdi.frameRgn(objs[rgnID], objs[brushID], width, height);
 						}
 						break;
 					case RECORD_INTERSECT_CLIP_RECT :
@@ -476,8 +481,8 @@ public class WmfParser {
 						break;
 					case RECORD_INVERT_RGN :
 						{
-							//TODO
-							gdi.invertRgn();
+							int rgnID = in.readUint16();
+							gdi.invertRgn(objs[rgnID]);
 						}
 						break;
 					case RECORD_LINE_TO :
@@ -517,14 +522,18 @@ public class WmfParser {
 						break;
 					case RECORD_PAINT_RGN :
 						{
-							//TODO
-							gdi.paintRgn();
+							int objID = in.readUint16();
+							gdi.paintRgn(objs[objID]);
 						}
 						break;
 					case RECORD_PAT_BLT :
 						{
-							//TODO
-							gdi.patBlt();
+							long rop = in.readUint32();
+							int height = in.readInt16();
+							int width = in.readInt16();
+							int y = in.readInt16();
+							int x = in.readInt16();
+							gdi.patBlt(x, y, width, height, rop);
 						}
 						break;
 					case RECORD_PIE :
@@ -579,7 +588,6 @@ public class WmfParser {
 						break;
 					case RECORD_REALIZE_PALETTE :
 						{
-							//TODO
 							gdi.realizePalette();
 						}
 						break;
@@ -594,7 +602,6 @@ public class WmfParser {
 						break;
 					case RECORD_RESIZE_PALETTE :
 						{
-							//TODO
 							int objID = in.readUint16();
 							gdi.resizePalette(objs[objID]);
 						}
@@ -714,6 +721,7 @@ public class WmfParser {
 					case RECORD_SET_PALETTE_ENTRIES :
 						{
 							//TODO
+							log.fine("not implemented: PaletteEntries");
 							gdi.setPaletteEntries();
 						}
 						break;
