@@ -15,17 +15,10 @@
  */
 package net.arnx.wmf2svg.gdi.svg;
 
-import java.awt.image.*;
 import java.io.*;
 import java.util.*;
-import javax.imageio.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
-
-import com.google.appengine.api.images.Image;
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.images.ImagesService.OutputEncoding;
 
 import net.arnx.wmf2svg.gdi.*;
 import net.arnx.wmf2svg.util.Base64;
