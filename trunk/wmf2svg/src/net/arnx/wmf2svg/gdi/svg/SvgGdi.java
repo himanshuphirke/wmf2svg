@@ -29,26 +29,13 @@ import com.google.appengine.api.images.ImagesService.OutputEncoding;
 
 import net.arnx.wmf2svg.gdi.*;
 import net.arnx.wmf2svg.util.Base64;
+import net.arnx.wmf2svg.util.ImageUtil;
 
 /**
  * @author Hidekatsu Izuno
  * @author Shunsuke Mori
  */
 public class SvgGdi implements Gdi {
-	private static Class imageApi;
-	
-	static {
-		try {
-			imageApi = Class.forName("com.google.appengine.api.images.Image");
-		} catch (ClassNotFoundException e) {
-			try {
-				imageApi = Class.forName("javax.imageio.ImageIO");
-			} catch (ClassNotFoundException e2) {
-				imageApi = null;
-			}
-		}
-	}
-	
 	
 	private Map props = new HashMap();
 
@@ -1112,81 +1099,46 @@ public class SvgGdi implements Gdi {
 		
 		
 		try {
-			if (Image.class.equals(imageApi)) {
-				ImagesService imagesService = ImagesServiceFactory.getImagesService();
-				
-				Image bmp = ImagesServiceFactory.makeImage(dibToBmp(image));
-
-				StringBuffer buffer = new StringBuffer("data:image/png;base64,");
-				buffer.append(Base64.encode(imagesService.applyTransform(null, bmp, OutputEncoding.PNG).getImageData()));
-			} else {
-				// convert to 24bit color
-				BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(dibToBmp(image)));
-				BufferedImage dst = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-				ColorConvertOp colorConvert = new ColorConvertOp(dst.getColorModel().getColorSpace(), null);
-				colorConvert.filter(bufferedImage, dst);
-				bufferedImage = dst;
-				
-				if (dh < 0) {
-					DataBuffer srcData = bufferedImage.getRaster().getDataBuffer();
-					BufferedImage dstImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage.getType());
-					DataBuffer dstData = dstImage.getRaster().getDataBuffer();
-					int lineSize = bufferedImage.getWidth() * bufferedImage.getColorModel().getPixelSize() / 8;
-					for (int h = 0, k = bufferedImage.getHeight() - 1; h < bufferedImage.getHeight(); h++, k--) {
-						for (int j = 0; j < lineSize; j++) {
-							dstData.setElem(h * lineSize + j, srcData.getElem(k * lineSize + j));
-						}
-					}
-					bufferedImage = dstImage;
-				}
-				
-				StringBuffer buffer = new StringBuffer("data:image/png;base64,");
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				try {
-					ImageIO.write(bufferedImage, "png", out);
-					byte[] data = out.toByteArray();
-					buffer.append(Base64.encode(data));
-				} catch (IOException e) {
-					// never occurred.
-				}
-			}
-			
-			String data = buffer.toString();
-			if (data == null || data.equals("")) {
-				return;
-			}
-
-			Element elem = doc.createElement("image");
-			if( dh < 0 ){
-				elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
-				elem.setAttribute("y", "" + dc.toAbsoluteY(dy+dh));
-				elem.setAttribute("width", "" + dc.toRelativeX(dw));
-				elem.setAttribute("height", "" + dc.toRelativeY(-dh));
-			}else{
-				elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
-				elem.setAttribute("y", "" + dc.toAbsoluteY(dy));
-				elem.setAttribute("width", "" + dc.toRelativeX(dw));
-				elem.setAttribute("height", "" + dc.toRelativeY(dh));
-			}
-	
-			if (sx != 0 || sy != 0 || sw != dw || sh != dh) {
-				elem.setAttribute("viewBox", "" + sx + " " + sy + " " + sw + " "+ sh);
-				elem.setAttribute("preserveAspectRatio", "none");
-			}
-			
-			String ropFilter = dc.getRopFilter(rop);
-			if (ropFilter != null) {
-				elem.setAttribute("filter", ropFilter);
-			}
-	
-			elem.setAttribute("xlink:href", data);
-			parent.appendChild(elem);
+			image = ImageUtil.convert(dibToBmp(image), "png", dh < 0);
 		} catch (Exception e) {
 			UnsupportedOperationException uoe = new UnsupportedOperationException();
 			uoe.initCause(e);
 			
 			throw uoe;
 		}
+	
+		StringBuffer buffer = new StringBuffer("data:image/png;base64,");
+		buffer.append(Base64.encode(image));
+		String data = buffer.toString();
+		if (data == null || data.equals("")) {
+			return;
+		}
+
+		Element elem = doc.createElement("image");
+		if( dh < 0 ){
+			elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
+			elem.setAttribute("y", "" + dc.toAbsoluteY(dy+dh));
+			elem.setAttribute("width", "" + dc.toRelativeX(dw));
+			elem.setAttribute("height", "" + dc.toRelativeY(-dh));
+		}else{
+			elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
+			elem.setAttribute("y", "" + dc.toAbsoluteY(dy));
+			elem.setAttribute("width", "" + dc.toRelativeX(dw));
+			elem.setAttribute("height", "" + dc.toRelativeY(dh));
+		}
+
+		if (sx != 0 || sy != 0 || sw != dw || sh != dh) {
+			elem.setAttribute("viewBox", "" + sx + " " + sy + " " + sw + " "+ sh);
+			elem.setAttribute("preserveAspectRatio", "none");
+		}
+		
+		String ropFilter = dc.getRopFilter(rop);
+		if (ropFilter != null) {
+			elem.setAttribute("filter", ropFilter);
+		}
+
+		elem.setAttribute("xlink:href", data);
+		parent.appendChild(elem);
 	}
 
 	private byte[] dibToBmp(byte[] dib) {
