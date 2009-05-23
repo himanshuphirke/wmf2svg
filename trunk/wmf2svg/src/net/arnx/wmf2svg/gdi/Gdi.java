@@ -102,6 +102,9 @@ public interface Gdi {
 	
 	public static final int LAYOUT_BITMAPORIENTATIONPRESERVED = 8;
 	public static final int LAYOUT_RTL = 1;
+	
+	public static final int ABSOLUTE = 1;
+	public static final int RELATIVE = 2;
 
     public void placeableHeader(int vsx, int vsy, int vex, int vey, int dpi);
     public void header();
@@ -168,6 +171,7 @@ public interface Gdi {
     public void setPaletteEntries();
     public void setPixel(int x, int y, int color);
     public void setPolyFillMode(int mode);
+    public void setRelAbs(int mode);
     public void setROP2(int mode);
     public void setStretchBltMode(int mode);
     public void setTextAlign(int align);

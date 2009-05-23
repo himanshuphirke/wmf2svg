@@ -870,9 +870,11 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void setMapperFlags(long flag) {
+		// TODO
 	}
 
 	public void setPaletteEntries() {
+		// TODO
 	}
 
 	public void setPixel(int x, int y, int color) {
@@ -888,6 +890,10 @@ public class SvgGdi implements Gdi {
 
 	public void setPolyFillMode(int mode) {
 		dc.setPolyFillMode(mode);
+	}
+	
+	public void setRelAbs(int mode) {
+		dc.setRelAbs(mode);
 	}
 
 	public void setROP2(int mode) {
