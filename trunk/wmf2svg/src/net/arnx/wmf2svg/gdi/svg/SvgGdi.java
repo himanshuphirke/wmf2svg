@@ -904,7 +904,12 @@ public class SvgGdi implements Gdi {
 			int sy, int startscan, int scanlines, byte[] image, int colorUse) {
 		this.stretchDIBits(dx, dy, dw, dh, sx, sy, dw, dh, image, colorUse, SRCCOPY);
 	}
-
+	
+	public void setLayout(long layout) {
+		// TODO
+		log.fine("not implemented: setLayout");
+	}
+	
 	public void setMapMode(int mode) {
 		dc.setMapMode(mode);
 	}
