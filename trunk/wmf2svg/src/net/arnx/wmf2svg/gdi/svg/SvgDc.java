@@ -176,11 +176,6 @@ public class SvgDc implements Cloneable {
 	public void setMapMode(int mode) {
 		mapMode = mode;
 		switch (mode) {
-			case Gdi.MM_ANISOTROPIC:
-			case Gdi.MM_ISOTROPIC:
-				mx = 1.0;
-				my = 1.0;
-				break;
 			case Gdi.MM_HIENGLISH :
 				mx = 0.09;
 				my = -0.09;
