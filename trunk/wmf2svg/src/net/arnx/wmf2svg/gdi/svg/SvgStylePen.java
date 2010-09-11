@@ -50,6 +50,32 @@ class SvgStylePen extends SvgStyleObject implements GdiPen {
 		return color;
 	}
 
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + color;
+		result = PRIME * result + style;
+		result = PRIME * result + width;
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final SvgStylePen other = (SvgStylePen) obj;
+		if (color != other.color)
+			return false;
+		if (style != other.style)
+			return false;
+		if (width != other.width)
+			return false;
+		return true;
+	}
+
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 
@@ -106,31 +132,5 @@ class SvgStylePen extends SvgStyleObject implements GdiPen {
 
 		if (buffer.length() > 0) buffer.setLength(buffer.length()-1);
 		return buffer.toString();
-	}
-
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + color;
-		result = PRIME * result + style;
-		result = PRIME * result + width;
-		return result;
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final SvgStylePen other = (SvgStylePen) obj;
-		if (color != other.color)
-			return false;
-		if (style != other.style)
-			return false;
-		if (width != other.width)
-			return false;
-		return true;
 	}
 }

@@ -16,6 +16,10 @@
 package net.arnx.wmf2svg;
 
 import java.io.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 import org.w3c.dom.*;
@@ -23,6 +27,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
+import net.arnx.wmf2svg.gdi.Gdi;
 import net.arnx.wmf2svg.gdi.svg.*;
 import net.arnx.wmf2svg.gdi.wmf.*;
 
@@ -30,19 +35,98 @@ import net.arnx.wmf2svg.gdi.wmf.*;
  * @author Hidekatsu Izuno
  */
 public class Main {
+	private static Logger log = Logger.getLogger(Main.class.getName());
+	
 	public static void main(String[] args) {
-		if (args.length != 2) {
+		String src = null;
+		String dest = null;
+		
+		boolean debug = false;
+		
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].startsWith("-")) {
+				if (args[i].equals("-debug")) {
+					debug = true;
+				} else {
+					usage();
+					return;
+				}
+			} else if (i == args.length-2) {
+				src = args[i];
+			} else if (i == args.length-1) {
+				dest = args[i];
+			}
+		}
+		
+		if (src == null || dest == null) {
 			usage();
+			return;
 		}
 
 		try {
-			InputStream in = new FileInputStream(args[0]);
+			InputStream in = new FileInputStream(src);
 			WmfParser parser = new WmfParser();
-			SvgGdi gdi = new SvgGdi();
-			parser.parse(in, gdi);
+			final SvgGdi gdi = new SvgGdi();
+			if (debug) {
+				ClassLoader cl = gdi.getClass().getClassLoader();
+				Class[] interfaces = new Class[] { Gdi.class };
+				parser.parse(in, (Gdi)Proxy.newProxyInstance(cl, interfaces, new InvocationHandler() {
+					StringBuffer sb = new StringBuffer(1000);
+					
+					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+						sb.setLength(0);
+						sb.append(method.getName()).append("(");
+						if (args != null) {
+							for (int i = 0; i < args.length; i++) {
+								if (i > 0) sb.append(", ");
+								if (args[i] instanceof int[]) {
+									int[] array = (int[])args[i];
+									sb.append("[");
+									for (int j = 0; j < array.length; j++) {
+										if (j > 0) sb.append(", ");
+										sb.append(array[j]);
+									}
+									sb.append("]");
+								} else if (args[i] instanceof byte[]) {
+									byte[] array = (byte[])args[i];
+									sb.append("[");
+									for (int j = 0; j < array.length; j++) {
+										if (j > 0) sb.append(", ");
+										sb.append(Integer.toHexString(array[j]));
+									}
+									sb.append("]");
+								} else if (args[i] instanceof double[]) {
+									double[] array = (double[])args[i];
+									sb.append("[");
+									for (int j = 0; j < array.length; j++) {
+										if (j > 0) sb.append(", ");
+										sb.append(array[j]);
+									}
+									sb.append("]");
+								} else if (args[i] instanceof Object[]) {
+									Object[] array = (Object[])args[i];
+									sb.append("[");
+									for (int j = 0; j < array.length; j++) {
+										if (j > 0) sb.append(", ");
+										sb.append(array[j]);
+									}
+									sb.append("]");
+								} else {
+									sb.append(args[i]);
+								}
+							}
+						}
+						sb.append(")");
+						log.fine(sb.toString());
+						return method.invoke(gdi, args);
+					}
+				}));
+			} else {
+				parser.parse(in, gdi);
+			}
 		
 			Document doc = gdi.getDocument();
-			OutputStream out = new FileOutputStream(args[1]);
+			OutputStream out = new FileOutputStream(dest);
 			if (args[1].endsWith(".svgz")) {
 				out = new GZIPOutputStream(out);
 			}

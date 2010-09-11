@@ -176,6 +176,11 @@ public class SvgDc implements Cloneable {
 	public void setMapMode(int mode) {
 		mapMode = mode;
 		switch (mode) {
+			case Gdi.MM_ANISOTROPIC:
+			case Gdi.MM_ISOTROPIC:
+				mx = 1.0;
+				my = 1.0;
+				break;
 			case Gdi.MM_HIENGLISH :
 				mx = 0.09;
 				my = -0.09;
@@ -556,5 +561,21 @@ public class SvgDc implements Cloneable {
 		} catch (CloneNotSupportedException e) {
 			throw (new InternalError(e.getMessage()));
 		}
+	}
+	
+	public String toString() {
+		return "SvgDc [gdi=" + gdi + ", dpi=" + dpi + ", wx=" + wx + ", wy="
+				+ wy + ", ww=" + ww + ", wh=" + wh + ", wox=" + wox + ", woy="
+				+ woy + ", wsx=" + wsx + ", wsy=" + wsy + ", mx=" + mx
+				+ ", my=" + my + ", vx=" + vx + ", vy=" + vy + ", vw=" + vw
+				+ ", vh=" + vh + ", vox=" + vox + ", voy=" + voy + ", vsx="
+				+ vsx + ", vsy=" + vsy + ", cx=" + cx + ", cy=" + cy
+				+ ", mapMode=" + mapMode + ", bkColor=" + bkColor + ", bkMode="
+				+ bkMode + ", textColor=" + textColor + ", textSpace="
+				+ textSpace + ", textAlign=" + textAlign + ", textDx=" + textDx
+				+ ", polyFillMode=" + polyFillMode + ", relAbsMode="
+				+ relAbsMode + ", rop2Mode=" + rop2Mode + ", stretchBltMode="
+				+ stretchBltMode + ", brush=" + brush + ", font=" + font
+				+ ", pen=" + pen + "]";
 	}
 }

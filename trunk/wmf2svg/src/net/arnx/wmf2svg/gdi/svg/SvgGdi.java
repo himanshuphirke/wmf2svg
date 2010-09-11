@@ -1180,7 +1180,7 @@ public class SvgGdi implements Gdi {
 		if (ropFilter != null) {
 			elem.setAttribute("filter", ropFilter);
 		}
-
+		
 		elem.setAttribute("xlink:href", data);
 		parent.appendChild(elem);
 	}
