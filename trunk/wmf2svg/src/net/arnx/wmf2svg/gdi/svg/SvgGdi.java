@@ -183,8 +183,9 @@ public class SvgGdi implements Gdi {
 		root.appendChild(style);
 	}
 
-	public void animatePalette() {
+	public void animatePalette(GdiPalette palette, int startIndex, int entryCount, byte[] entries) {
 		// TODO
+		log.fine("not implemented: animatePalette");
 	}
 
 	public void arc(int sxr, int syr, int exr, int eyr, int sxa, int sya,
@@ -321,17 +322,17 @@ public class SvgGdi implements Gdi {
 		}
 	}
 
-	public GdiObject createPalette() {
+	public GdiPalette createPalette() {
 		// TODO
 		log.fine("not implemented: createPalette");
-		return new GdiObject() {
+		return new GdiPalette() {
 		};
 	}
 
-	public GdiObject createPatternBrush() {
+	public GdiBrush createPatternBrush() {
 		// TODO
 		log.fine("not implemented: createPatternBrush");
-		return new GdiObject() {
+		return new GdiBrush() {
 		};
 	}
 
@@ -368,10 +369,10 @@ public class SvgGdi implements Gdi {
 		this.bitBlt(image, dx, dy, dw, dh, sx, sy, rop);
 	}
 
-	public GdiObject dibCreatePatternBrush(byte[] image, int usage) {
+	public GdiBrush dibCreatePatternBrush(byte[] image, int usage) {
 		// TODO
 		log.fine("not implemented: dibCreatePatternBrush");
-		return new GdiObject() {
+		return new GdiBrush() {
 		};
 	}
 	
@@ -832,7 +833,7 @@ public class SvgGdi implements Gdi {
 		parent.appendChild(elem);
 	}
 
-	public void resizePalette(GdiObject obj) {
+	public void resizePalette(GdiPalette palette) {
 		// TODO
 		log.fine("not implemented: ResizePalette");
 	}
@@ -887,7 +888,7 @@ public class SvgGdi implements Gdi {
 		}
 	}
 
-	public void selectPalette(GdiObject obj, boolean mode) {
+	public void selectPalette(GdiPalette palette, boolean mode) {
 		// TODO
 		log.fine("not implemented: selectPalette");
 	}
@@ -919,7 +920,7 @@ public class SvgGdi implements Gdi {
 		log.fine("not implemented: setMapperFlags");
 	}
 
-	public void setPaletteEntries() {
+	public void setPaletteEntries(GdiPalette palette, int startIndex, int entryCount, byte[] entries) {
 		// TODO
 		log.fine("not implemented: setPaletteEntries");
 	}

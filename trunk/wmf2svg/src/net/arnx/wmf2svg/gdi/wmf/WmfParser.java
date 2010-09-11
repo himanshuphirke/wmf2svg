@@ -161,9 +161,12 @@ public class WmfParser {
 				switch (id) {
 					case RECORD_ANIMATE_PALETTE :
 						{
-							//TODO
-							log.fine("not implemented: AnimatePalette");
-							gdi.animatePalette();
+							int entryCount = in.readUint16();
+							int startIndex = in.readUint16();
+							int objID = in.readUint16();
+							byte[] entries = in.readBytes(size * 2 - in.getCount());
+							
+							gdi.animatePalette((GdiPalette)objs[objID], startIndex, entryCount, entries);
 						}
 						break;
 					case RECORD_ARC :
@@ -604,7 +607,7 @@ public class WmfParser {
 					case RECORD_RESIZE_PALETTE :
 						{
 							int objID = in.readUint16();
-							gdi.resizePalette(objs[objID]);
+							gdi.resizePalette((GdiPalette)objs[objID]);
 						}
 						break;
 					case RECORD_RESTORE_DC :
@@ -663,7 +666,7 @@ public class WmfParser {
 							boolean mode = (in.readInt16() != -1);
 							if ((size * 2 - in.getCount()) > 0) {
 								int objID = in.readUint16();
-								gdi.selectPalette(objs[objID], mode);
+								gdi.selectPalette((GdiPalette)objs[objID], mode);
 							}
 						}
 						break;
@@ -710,7 +713,6 @@ public class WmfParser {
 					case RECORD_SET_LAYOUT:
 						{
 							long layout = in.readUint32();
-							
 							gdi.setLayout(layout);
 						}
 						break;
@@ -728,9 +730,11 @@ public class WmfParser {
 						break;
 					case RECORD_SET_PALETTE_ENTRIES :
 						{
-							//TODO
-							log.fine("not implemented: PaletteEntries");
-							gdi.setPaletteEntries();
+							int entryCount = in.readUint16();
+							int startIndex = in.readUint16();
+							int objID = in.readUint16();
+							byte[] entries = in.readBytes(size * 2 - in.getCount());
+							gdi.setPaletteEntries((GdiPalette)objs[objID], startIndex, entryCount, entries);
 						}
 						break;
 					case RECORD_SET_PIXEL :

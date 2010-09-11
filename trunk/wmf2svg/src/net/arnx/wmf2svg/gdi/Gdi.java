@@ -108,7 +108,7 @@ public interface Gdi {
 
     public void placeableHeader(int vsx, int vsy, int vex, int vey, int dpi);
     public void header();
-    public void animatePalette();
+    public void animatePalette(GdiPalette palette, int startIndex, int entryCount, byte[] entries);
     public void arc(int sxr, int syr, int exr, int eyr,
 		    int sxa, int sya, int exa, int eya);
     public void bitBlt(byte[] bits, int dx, int dy, int width, int height, int sx, int sy, long rop);
@@ -120,14 +120,14 @@ public interface Gdi {
 				      boolean italic, boolean underline, boolean strikeout,
 				      int charset, int outPrecision, int clipPrecision,
 				      int quality, int pitchAndFamily, byte[] faceName);
-    public GdiObject createPalette();
-    public GdiObject createPatternBrush();
+    public GdiPalette createPalette();
+    public GdiBrush createPatternBrush();
     public GdiPen createPenIndirect(int style, int width, int color);
     public GdiObject createRectRgn(int sx, int sy, int ex, int ey);
     public void deleteObject(GdiObject obj);
     public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, long rop);
-    public GdiObject dibCreatePatternBrush(byte[] image, int usage);
+    public GdiBrush dibCreatePatternBrush(byte[] image, int usage);
     public void dibStretchBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, int sw, int sh, long rop);
     public void ellipse(int sx, int sy, int ex, int ey);
@@ -154,14 +154,14 @@ public interface Gdi {
     public void realizePalette();
     public void restoreDC();
     public void rectangle(int sx, int sy, int ex, int ey);
-    public void resizePalette(GdiObject palette);
+    public void resizePalette(GdiPalette palette);
     public void roundRect(int sx, int sy, int ex, int ey, int rw, int rh);
     public void seveDC();
     public void scaleViewportExtEx(int x, int xd, int y, int yd, Size old);
     public void scaleWindowExtEx(int x, int xd, int y, int yd, Size old);
     public void selectClipRgn(GdiObject rgn);
     public void selectObject(GdiObject obj);
-    public void selectPalette(GdiObject obj, boolean mode);
+    public void selectPalette(GdiPalette palette, boolean mode);
     public void setBkColor(int color);
     public void setBkMode(int mode);
     public void setDIBitsToDevice(int dx, int dy, int dw, int dh, int sx, int sy,
@@ -169,7 +169,7 @@ public interface Gdi {
     public void setLayout(long layout);
     public void setMapMode(int mode);
     public void setMapperFlags(long flag);
-    public void setPaletteEntries();
+    public void setPaletteEntries(GdiPalette palette, int startIndex, int entryCount, byte[] entries);
     public void setPixel(int x, int y, int color);
     public void setPolyFillMode(int mode);
     public void setRelAbs(int mode);
