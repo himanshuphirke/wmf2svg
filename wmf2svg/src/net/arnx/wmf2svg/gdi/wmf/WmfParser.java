@@ -36,7 +36,7 @@ public class WmfParser {
 	private static final int RECORD_CREATE_PALETTE = 0x00F7;
 	private static final int RECORD_CREATE_PATTERN_BRUSH = 0x01F9;
 	private static final int RECORD_CREATE_PEN_INDIRECT = 0x02FA;
-	private static final int RECORD_CREATE_RECT_RGN = 0x0149;
+	private static final int RECORD_CREATE_RECT_RGN = 0x06FF;
 	private static final int RECORD_DELETE_OBJECT = 0x01F0;
 	private static final int RECORD_DIB_BIT_BLT = 0x0940;
 	private static final int RECORD_DIB_CREATE_PATTERN_BRUSH = 0x0142;
@@ -76,6 +76,7 @@ public class WmfParser {
 	private static final int RECORD_SET_BK_COLOR = 0x0201;
 	private static final int RECORD_SET_BK_MODE = 0x0102;
 	private static final int RECORD_SET_DIBITS_TO_DEVICE = 0x0D33;
+	private static final int RECORD_SET_LAYOUT = 0x0149;
 	private static final int RECORD_SET_MAP_MODE = 0x0103;
 	private static final int RECORD_SET_MAPPER_FLAGS = 0x0231;
 	private static final int RECORD_SET_PALETTE_ENTRIES = 0x0037;
@@ -704,6 +705,13 @@ public class WmfParser {
 								scanlines,
 								image,
 								colorUse);
+						}
+						break;
+					case RECORD_SET_LAYOUT:
+						{
+							long layout = in.readUint32();
+							
+							gdi.setLayout(layout);
 						}
 						break;
 					case RECORD_SET_MAP_MODE :
