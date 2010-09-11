@@ -454,7 +454,7 @@ public class WmfParser {
 						{
 							int brushID = in.readUint16();
 							int rgnID = in.readUint16();
-							gdi.fillRgn(objs[rgnID], objs[brushID]);
+							gdi.fillRgn((GdiRegion)objs[rgnID], (GdiBrush)objs[brushID]);
 						}
 						break;
 					case RECORD_FLOOD_FILL :
@@ -471,7 +471,7 @@ public class WmfParser {
 							int width = in.readInt16();
 							int brushID = in.readUint16();
 							int rgnID = in.readUint16();
-							gdi.frameRgn(objs[rgnID], objs[brushID], width, height);
+							gdi.frameRgn((GdiRegion)objs[rgnID], (GdiBrush)objs[brushID], width, height);
 						}
 						break;
 					case RECORD_INTERSECT_CLIP_RECT :
@@ -486,7 +486,7 @@ public class WmfParser {
 					case RECORD_INVERT_RGN :
 						{
 							int rgnID = in.readUint16();
-							gdi.invertRgn(objs[rgnID]);
+							gdi.invertRgn((GdiRegion)objs[rgnID]);
 						}
 						break;
 					case RECORD_LINE_TO :
@@ -527,7 +527,7 @@ public class WmfParser {
 					case RECORD_PAINT_RGN :
 						{
 							int objID = in.readUint16();
-							gdi.paintRgn(objs[objID]);
+							gdi.paintRgn((GdiRegion)objs[objID]);
 						}
 						break;
 					case RECORD_PAT_BLT :
@@ -652,7 +652,7 @@ public class WmfParser {
 					case RECORD_SELECT_CLIP_RGN :
 						{
 							int objID = in.readUint16();
-							gdi.selectClipRgn(objs[objID]);
+							gdi.selectClipRgn((GdiRegion)objs[objID]);
 						}
 						break;
 					case RECORD_SELECT_OBJECT :

@@ -347,10 +347,10 @@ public class SvgGdi implements Gdi {
 		}
 	}
 	
-	public GdiObject createRectRgn(int sx, int sy, int ex, int ey) {
+	public GdiRegion createRectRgn(int sx, int sy, int ex, int ey) {
 		// TODO
 		log.fine("not implemented: createRectRgn");
-		return new GdiObject() {
+		return new GdiRegion() {
 		};		
 	}
 
@@ -594,7 +594,7 @@ public class SvgGdi implements Gdi {
 		parent.appendChild(elem);
 	}
 
-	public void fillRgn(GdiObject rgn, GdiObject brush) {
+	public void fillRgn(GdiRegion rgn, GdiBrush brush) {
 		// TODO
 		log.fine("not implemented: fillRgn");
 	}
@@ -604,7 +604,7 @@ public class SvgGdi implements Gdi {
 		log.fine("not implemented: floodFill");
 	}
 
-	public void frameRgn(GdiObject rgn, GdiObject brush, int width, int height) {
+	public void frameRgn(GdiRegion rgn, GdiBrush brush, int width, int height) {
 		// TODO
 		log.fine("not implemented: frameRgn");
 	}
@@ -614,7 +614,7 @@ public class SvgGdi implements Gdi {
 		log.fine("not implemented: intersectClipRect");
 	}
 
-	public void invertRgn(GdiObject rgn) {
+	public void invertRgn(GdiRegion rgn) {
 		// TODO
 		log.fine("not implemented: invertRgn");
 	}
@@ -653,7 +653,7 @@ public class SvgGdi implements Gdi {
 		dc.offsetWindowOrgEx(x, y, point);
 	}
 
-	public void paintRgn(GdiObject rgn) {
+	public void paintRgn(GdiRegion rgn) {
 		// TODO
 		log.fine("not implemented: paintRgn");
 	}
@@ -873,7 +873,7 @@ public class SvgGdi implements Gdi {
 		dc.scaleWindowExtEx(x, xd, y, yd, old);
 	}
 
-	public void selectClipRgn(GdiObject rgn) {
+	public void selectClipRgn(GdiRegion rgn) {
 		// TODO
 		log.fine("not implemented: selectClipRgn");
 	}

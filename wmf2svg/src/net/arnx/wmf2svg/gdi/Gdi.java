@@ -123,7 +123,7 @@ public interface Gdi {
     public GdiPalette createPalette();
     public GdiBrush createPatternBrush();
     public GdiPen createPenIndirect(int style, int width, int color);
-    public GdiObject createRectRgn(int sx, int sy, int ex, int ey);
+    public GdiRegion createRectRgn(int sx, int sy, int ex, int ey);
     public void deleteObject(GdiObject obj);
     public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, long rop);
@@ -135,17 +135,17 @@ public interface Gdi {
     public void excludeClipRect(int sx, int sy, int ex, int ey);
     public void extFloodFill(int x, int y, int color, int type);
     public void extTextOut(int x, int y, int options, int[] rect, byte[] text, int[] lpdx);
-    public void fillRgn(GdiObject rgn, GdiObject brush);
+    public void fillRgn(GdiRegion rgn, GdiBrush brush);
     public void floodFill(int x, int y, int color);
-    public void frameRgn(GdiObject rgn, GdiObject brush, int w, int h);
+    public void frameRgn(GdiRegion rgn, GdiBrush brush, int w, int h);
     public void intersectClipRect(int sx, int sy, int ex, int ey);
-    public void invertRgn(GdiObject rgn);
+    public void invertRgn(GdiRegion rgn);
     public void lineTo(int ex, int ey);
     public void moveToEx(int x, int y, Point old);
     public void offsetClipRgn(int x, int y);
     public void offsetViewportOrgEx(int x, int y, Point point);
     public void offsetWindowOrgEx(int x, int y, Point point);
-    public void paintRgn(GdiObject rgn);
+    public void paintRgn(GdiRegion rgn);
     public void patBlt(int x, int y, int width, int height, long rop);
     public void pie(int sx, int sy, int ex, int ey, int sxr, int syr, int exr, int eyr);
     public void polygon(Point[] points);
@@ -159,7 +159,7 @@ public interface Gdi {
     public void seveDC();
     public void scaleViewportExtEx(int x, int xd, int y, int yd, Size old);
     public void scaleWindowExtEx(int x, int xd, int y, int yd, Size old);
-    public void selectClipRgn(GdiObject rgn);
+    public void selectClipRgn(GdiRegion rgn);
     public void selectObject(GdiObject obj);
     public void selectPalette(GdiPalette palette, boolean mode);
     public void setBkColor(int color);
