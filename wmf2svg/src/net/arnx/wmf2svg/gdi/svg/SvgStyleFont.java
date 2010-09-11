@@ -281,6 +281,68 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 		}
 		return -height;
 	}
+
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + charset;
+		result = PRIME * result + clipPrecision;
+		result = PRIME * result + escapement;
+		result = PRIME * result + ((faceName == null) ? 0 : faceName.hashCode());
+		result = PRIME * result + height;
+		result = PRIME * result + (italic ? 1231 : 1237);
+		result = PRIME * result + orientation;
+		result = PRIME * result + outPrecision;
+		result = PRIME * result + pitchAndFamily;
+		result = PRIME * result + quality;
+		result = PRIME * result + (strikeout ? 1231 : 1237);
+		result = PRIME * result + (underline ? 1231 : 1237);
+		result = PRIME * result + weight;
+		result = PRIME * result + width;
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final SvgStyleFont other = (SvgStyleFont) obj;
+		if (charset != other.charset)
+			return false;
+		if (clipPrecision != other.clipPrecision)
+			return false;
+		if (escapement != other.escapement)
+			return false;
+		if (faceName == null) {
+			if (other.faceName != null)
+				return false;
+		} else if (!faceName.equals(other.faceName))
+			return false;
+		if (height != other.height)
+			return false;
+		if (italic != other.italic)
+			return false;
+		if (orientation != other.orientation)
+			return false;
+		if (outPrecision != other.outPrecision)
+			return false;
+		if (pitchAndFamily != other.pitchAndFamily)
+			return false;
+		if (quality != other.quality)
+			return false;
+		if (strikeout != other.strikeout)
+			return false;
+		if (underline != other.underline)
+			return false;
+		if (weight != other.weight)
+			return false;
+		if (width != other.width)
+			return false;
+		return true;
+	}
 	
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
@@ -366,68 +428,5 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 		
 		if (buffer.length() > 0) buffer.setLength(buffer.length()-1);
 		return buffer.toString();
-	}
-
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + charset;
-		result = PRIME * result + clipPrecision;
-		result = PRIME * result + escapement;
-		result = PRIME * result + ((faceName == null) ? 0 : faceName.hashCode());
-		result = PRIME * result + height;
-		result = PRIME * result + (italic ? 1231 : 1237);
-		result = PRIME * result + orientation;
-		result = PRIME * result + outPrecision;
-		result = PRIME * result + pitchAndFamily;
-		result = PRIME * result + quality;
-		result = PRIME * result + (strikeout ? 1231 : 1237);
-		result = PRIME * result + (underline ? 1231 : 1237);
-		result = PRIME * result + weight;
-		result = PRIME * result + width;
-		return result;
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final SvgStyleFont other = (SvgStyleFont) obj;
-		if (charset != other.charset)
-			return false;
-		if (clipPrecision != other.clipPrecision)
-			return false;
-		if (escapement != other.escapement)
-			return false;
-		if (faceName == null) {
-			if (other.faceName != null)
-				return false;
-		} else if (!faceName.equals(other.faceName))
-			return false;
-		if (height != other.height)
-			return false;
-		if (italic != other.italic)
-			return false;
-		if (orientation != other.orientation)
-			return false;
-		if (outPrecision != other.outPrecision)
-			return false;
-		if (pitchAndFamily != other.pitchAndFamily)
-			return false;
-		if (quality != other.quality)
-			return false;
-		if (strikeout != other.strikeout)
-			return false;
-		if (underline != other.underline)
-			return false;
-		if (weight != other.weight)
-			return false;
-		if (width != other.width)
-			return false;
-		return true;
-	}
-	
+	}	
 }

@@ -8,7 +8,9 @@ public class MainTest extends TestCase {
 	 * TestCase for 'net.arnx.wmf2svg.Main.main(String[])'
 	 */
 	public void testMain() {
-		File dir = new File(System.getProperty("user.home") + "/My Documents/My Pictures/wmf2svg");
+		System.setProperty("java.util.logging.config.file", "./logging.properties");
+		
+		File dir = new File(System.getProperty("user.home") + "/My Documents/wmf2svg");
 		File[] files = dir.listFiles(new FileFilter() {
 			public boolean accept(File file) {
 				return file.getName().endsWith(".wmf");
@@ -20,7 +22,7 @@ public class MainTest extends TestCase {
 			String name = files[i].getAbsolutePath();
 			name = name.substring(0, name.length() - 4);
 			System.out.println(name + " transforming...");
-			Main.main(new String[] {name + ".wmf", name + ".svg"});
+			Main.main(new String[] {"-debug", name + ".wmf", name + ".svg"});
 		}
 	}
 }

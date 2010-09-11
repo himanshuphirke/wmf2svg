@@ -368,8 +368,8 @@ public class WmfParser {
 							int sy = in.readInt16();
 							int dh = in.readInt16();
 							int dw = in.readInt16();
-							int dx = in.readInt16();
 							int dy = in.readInt16();
+							int dx = in.readInt16();
 							
 							byte[] image =
 								in.readBytes(size * 2 - in.getCount());

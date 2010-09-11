@@ -147,24 +147,6 @@ class SvgStyleBrush extends SvgStyleObject implements GdiBrush {
 		
 		return pattern;
 	}
-	
-	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-
-		// fill
-		switch (style) {
-			case BS_SOLID :
-				buffer.append("fill: ").append(toColor(color)).append("; ");
-				break;
-			case BS_HATCHED :
-				break;
-			default :
-				buffer.append("fill: none; ");
-		}
-		
-		if (buffer.length() > 0) buffer.setLength(buffer.length()-1);
-		return buffer.toString();
-	}
 
 	public int hashCode() {
 		final int PRIME = 31;
@@ -192,4 +174,21 @@ class SvgStyleBrush extends SvgStyleObject implements GdiBrush {
 		return true;
 	}
 	
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+
+		// fill
+		switch (style) {
+			case BS_SOLID :
+				buffer.append("fill: ").append(toColor(color)).append("; ");
+				break;
+			case BS_HATCHED :
+				break;
+			default :
+				buffer.append("fill: none; ");
+		}
+		
+		if (buffer.length() > 0) buffer.setLength(buffer.length()-1);
+		return buffer.toString();
+	}
 }
