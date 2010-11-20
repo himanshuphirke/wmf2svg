@@ -103,11 +103,6 @@ public class SvgDc implements Cloneable {
 		}
 		ww = width;
 		wh = height;
-		
-		if (mapMode == Gdi.MM_ANISOTROPIC || mapMode == Gdi.MM_ISOTROPIC) {
-			mx = (ww-wx >= 0) ? 1.0 : -1.0;
-			my = (wh-wy >= 0) ? 1.0 : -1.0;
-		}
 	}
 	
 	public void offsetWindowOrgEx(int x, int y, Point old) {
