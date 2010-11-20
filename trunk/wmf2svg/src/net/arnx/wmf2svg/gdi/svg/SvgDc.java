@@ -103,6 +103,11 @@ public class SvgDc implements Cloneable {
 		}
 		ww = width;
 		wh = height;
+		
+		if (mapMode == Gdi.MM_ANISOTROPIC || mapMode == Gdi.MM_ISOTROPIC) {
+			mx = (width >= 0) ? 1.0 : -1.0;
+			my = (height >= 0) ? 1.0 : -1.0;
+		}
 	}
 	
 	public void offsetWindowOrgEx(int x, int y, Point old) {
@@ -152,6 +157,11 @@ public class SvgDc implements Cloneable {
 		}
 		vw = width;
 		vh = height;
+		
+		if (mapMode == Gdi.MM_ANISOTROPIC || mapMode == Gdi.MM_ISOTROPIC) {
+			mx = (vw >= 0) ? 1.0 : -1.0;
+			my = (vh >= 0) ? 1.0 : -1.0;
+		}
 	}
 	
 	public void offsetViewportOrgEx(int x, int y, Point old) {

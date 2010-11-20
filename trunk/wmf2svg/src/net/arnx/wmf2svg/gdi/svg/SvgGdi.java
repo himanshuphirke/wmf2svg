@@ -438,9 +438,6 @@ public class SvgGdi implements Gdi {
 		buffer.setLength(0);
 		int align = dc.getTextAlign();
 
-		if( align == 0 ){
-			y-= dc.getFont().getHeight();	
-		}
 		if ((align & 0x0006) == TA_RIGHT) {
 			buffer.append("text-anchor: end; ");
 		} else if ((align & 0x0006) == TA_CENTER) {
@@ -510,6 +507,9 @@ public class SvgGdi implements Gdi {
 		
 		// y
 		int ay = dc.toAbsoluteY(y);
+		if( align == 0 ){
+			ay -= dc.toAbsoluteY(dc.getFont().getHeight());
+		}
 		int height = 0;
 		if (vertical) {
 			buffer.setLength(0);
