@@ -507,8 +507,8 @@ public class SvgGdi implements Gdi {
 		
 		// y
 		int ay = dc.toAbsoluteY(y);
-		if( align == 0 ){
-			ay -= dc.toAbsoluteY(dc.getFont().getHeight());
+		if( align == 0 ) {
+			ay += Math.abs(dc.toRelativeY(dc.getFont().getHeight()));
 		}
 		int height = 0;
 		if (vertical) {
