@@ -632,7 +632,7 @@ public class SvgGdi implements Gdi {
 		elem.setAttribute("fill", "none");
 
 		elem.setAttribute("x1", "" + dc.toAbsoluteX(dc.getCurrentX()));
-		elem.setAttribute("y1", "" + dc.toAbsoluteX(dc.getCurrentY()));
+		elem.setAttribute("y1", "" + dc.toAbsoluteY(dc.getCurrentY()));
 		elem.setAttribute("x2", "" + dc.toAbsoluteX(ex));
 		elem.setAttribute("y2", "" + dc.toAbsoluteY(ey));
 		parent.appendChild(elem);
