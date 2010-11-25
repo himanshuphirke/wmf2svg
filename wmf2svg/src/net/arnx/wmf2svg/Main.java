@@ -89,12 +89,18 @@ public class Main {
 									sb.append("]");
 								} else if (args[i] instanceof byte[]) {
 									byte[] array = (byte[])args[i];
-									sb.append("[");
-									for (int j = 0; j < array.length; j++) {
-										if (j > 0) sb.append(", ");
-										sb.append(Integer.toHexString(array[j]));
+									if (method.getName().equals("extTextOut") && i == 4) {
+										sb.append('"');
+										sb.append(new String(array, System.getProperty("file.encoding")));
+										sb.append('"');
+									} else {
+										sb.append("[");
+										for (int j = 0; j < array.length; j++) {
+											if (j > 0) sb.append(", ");
+											sb.append(Integer.toHexString(array[j]));
+										}
+										sb.append("]");
 									}
-									sb.append("]");
 								} else if (args[i] instanceof double[]) {
 									double[] array = (double[])args[i];
 									sb.append("[");

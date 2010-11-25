@@ -507,14 +507,14 @@ public class SvgGdi implements Gdi {
 		
 		// y
 		int ay = dc.toAbsoluteY(y);
-		if( align == 0 ) {
-			ay += Math.abs(dc.toRelativeY(dc.getFont().getHeight()));
-		}
 		int height = 0;
 		if (vertical) {
 			buffer.setLength(0);
-			buffer.append(ay);
-			
+			if( align == 0 ) {
+				buffer.append(ay + Math.abs(dc.toRelativeY(dc.getFont().getHeight())));
+			} else {
+				buffer.append(ay);
+			}
 			if (dc.getFont() != null) {
 				dx = dc.getFont().validateDx(text, dx);
 			}
@@ -535,7 +535,11 @@ public class SvgGdi implements Gdi {
 			}
 			elem.setAttribute("y", buffer.toString());
 		} else {
-			elem.setAttribute("y", Integer.toString(ay));
+			if( align == 0 ) {
+				elem.setAttribute("y", Integer.toString(ay + Math.abs(dc.toRelativeY(dc.getFont().getHeight()))));
+			} else {
+				elem.setAttribute("y", Integer.toString(ay));
+			}
 			if (dc.getFont() != null) height = dc.getFont().getFontSize();
 		}
 
