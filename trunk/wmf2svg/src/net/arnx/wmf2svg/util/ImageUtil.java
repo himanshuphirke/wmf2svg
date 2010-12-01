@@ -16,61 +16,42 @@ import com.google.appengine.api.images.Transform;
 import com.google.appengine.api.images.ImagesService.OutputEncoding;
 
 public class ImageUtil {
-	private static final int API_TYPE_NONE = -1;
-	private static final int API_TYPE_IMAGEIO = 0;
-	private static final int API_TYPE_GAE = 1;
-	
-	private static int apiType = API_TYPE_NONE;
+	private static Converter converter;
 	
 	static {
-		if (apiType == API_TYPE_NONE) {
+		try {
+			Class.forName("com.google.appengine.api.images.Image");
+			converter = new GAEConverter();
+		} catch (ClassNotFoundException e) {
 			try {
 				Class.forName("javax.imageio.ImageIO");
-				apiType = API_TYPE_IMAGEIO;
-			} catch (ClassNotFoundException e) {
-				// no handle
-			}
-		}
-		
-		if (apiType == API_TYPE_NONE) {
-			try {
-				Class.forName("com.google.appengine.api.images.Image");
-				apiType = API_TYPE_GAE;
-			} catch (ClassNotFoundException e) {
+				converter = new ImageIOConverter();
+			} catch (ClassNotFoundException e2) {
 				// no handle
 			}
 		}
 	}
 	
 	public static byte[] convert(byte[] image, String destType, boolean reverse) {
-		if (destType == null) {
-			throw new IllegalArgumentException("dest type is null.");
-		} else {
-			destType = destType.toLowerCase();
-		}
-		
-		if (apiType == API_TYPE_NONE) {
+		if (converter == null) {
 			throw new UnsupportedOperationException("Image Conversion API(Image IO or GAE Image API) is missing.");
 		}
-		
-		byte[] outimage = null;
-		
-		if (apiType == API_TYPE_GAE) {
-			ImagesService.OutputEncoding encoding = null;
-			if ("png".equals(destType)) {
-				encoding = OutputEncoding.PNG;
-			} else if ("jpeg".equals(destType)) {
-				encoding = OutputEncoding.JPEG;
+		return converter.convert(image, destType, reverse);
+	}
+	
+	private static interface Converter {
+		public byte[] convert(byte[] image, String destType, boolean reverse);
+	}
+	
+	private static class ImageIOConverter implements Converter {
+		public byte[] convert(byte[] image, String destType, boolean reverse) {
+			if (destType == null) {
+				throw new IllegalArgumentException("dest type is null.");
 			} else {
-				throw new UnsupportedOperationException("unsupported image encoding: " + destType);
+				destType = destType.toLowerCase();
 			}
 			
-			ImagesService imagesService = ImagesServiceFactory.getImagesService();
-			Image bmp = ImagesServiceFactory.makeImage(image);
-			
-			Transform t = (reverse) ? ImagesServiceFactory.makeVerticalFlip() : null;			
-			outimage = imagesService.applyTransform(t, bmp, encoding).getImageData();
-		} else {
+			byte[] outimage = null;
 			try {
 				// convert to 24bit color
 				BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(image));
@@ -98,9 +79,33 @@ public class ImageUtil {
 			} catch (IOException e) {
 				// never occurred.
 			}
-		}
 		
-		return outimage;
+			return outimage;
+		}
 	}
 	
+	private static class GAEConverter implements Converter {
+		public byte[] convert(byte[] image, String destType, boolean reverse) {
+			if (destType == null) {
+				throw new IllegalArgumentException("dest type is null.");
+			} else {
+				destType = destType.toLowerCase();
+			}
+			
+			ImagesService.OutputEncoding encoding = null;
+			if ("png".equals(destType)) {
+				encoding = OutputEncoding.PNG;
+			} else if ("jpeg".equals(destType)) {
+				encoding = OutputEncoding.JPEG;
+			} else {
+				throw new UnsupportedOperationException("unsupported image encoding: " + destType);
+			}
+			
+			ImagesService imagesService = ImagesServiceFactory.getImagesService();
+			Image bmp = ImagesServiceFactory.makeImage(image);
+			
+			Transform t = (reverse) ? ImagesServiceFactory.makeVerticalFlip() : null;
+			return imagesService.applyTransform(t, bmp, encoding).getImageData();
+		}		
+	}
 }
