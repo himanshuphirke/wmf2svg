@@ -17,6 +17,7 @@ package net.arnx.wmf2svg;
 
 import java.io.*;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.logging.Logger;
@@ -124,7 +125,11 @@ public class Main {
 						}
 						sb.append(")");
 						log.fine(sb.toString());
-						return method.invoke(gdi, args);
+						try {
+							return method.invoke(gdi, args);							
+						} catch (InvocationTargetException e) {
+							throw e.getTargetException();
+						}
 					}
 				}));
 			} else {
