@@ -222,11 +222,13 @@ public class SvgGdi implements Gdi {
 			if (ba < 0) ba += 2.0 * Math.PI;
 			double ca = Math.atan2(cy-sya, cx-sxa);
 			if (ca < 0) ca += 2.0 * Math.PI;
+			double a = ca - ba;
+			if (a > Math.PI) a -= 2.0 * Math.PI;
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sxa) + "," + dc.toAbsoluteY(sya)
 					+ " A " + dc.toRelativeX(rx) + "," + dc.toRelativeY(ry)
-					+ " 0 " + (ca - ba > 0 ? "1" : "0") + " 0"
+					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
 					+ " " + dc.toAbsoluteX(exa) + "," + dc.toAbsoluteY(eya));
 		}
 		
@@ -276,11 +278,13 @@ public class SvgGdi implements Gdi {
 			if (ba < 0) ba += 2.0 * Math.PI;
 			double ca = Math.atan2(cy-sya, cx-sxa);
 			if (ca < 0) ca += 2.0 * Math.PI;
+			double a = ca - ba;
+			if (a > Math.PI) a -= 2.0 * Math.PI;
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sxa) + "," + dc.toAbsoluteY(sya)
 					+ " A " + dc.toRelativeX(rx) + "," + dc.toRelativeY(ry)
-					+ " 0 " + (ca - ba > 0 ? "1" : "0") + " 0"
+					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
 					+ " " + dc.toAbsoluteX(exa) + "," + dc.toAbsoluteY(eya) + " z");
 		}
 
@@ -704,12 +708,14 @@ public class SvgGdi implements Gdi {
 			if (ba < 0) ba += 2.0 * Math.PI;
 			double ca = Math.atan2(cy-sya, cx-sxa);
 			if (ca < 0) ca += 2.0 * Math.PI;
+			double a = ca - ba;
+			if (a > Math.PI) a -= 2.0 * Math.PI;
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " +  + dc.toAbsoluteX(cx) + "," + dc.toAbsoluteY(cy) 
 					+ " L " + dc.toAbsoluteX(sxa) + "," + dc.toAbsoluteY(sya)
 					+ " A " + dc.toRelativeX(rx) + "," + dc.toRelativeY(ry)
-					+ " 0 " + (ca - ba > 0 ? "1" : "0") + " 0"
+					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
 					+ " " + dc.toAbsoluteX(exa) + "," + dc.toAbsoluteY(eya) + " z");
 		}
 
