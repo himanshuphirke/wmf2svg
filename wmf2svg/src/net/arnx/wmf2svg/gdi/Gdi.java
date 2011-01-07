@@ -105,7 +105,9 @@ public interface Gdi {
 	
 	public static final int ABSOLUTE = 1;
 	public static final int RELATIVE = 2;
-
+	
+	public static final int ASPECT_FILTERING = 1;
+	
     public void placeableHeader(int vsx, int vsy, int vex, int vey, int dpi);
     public void header();
     public void animatePalette(GdiPalette palette, int startIndex, int entryCount, byte[] entries);
@@ -123,7 +125,7 @@ public interface Gdi {
     public GdiPalette createPalette();
     public GdiBrush createPatternBrush();
     public GdiPen createPenIndirect(int style, int width, int color);
-    public GdiRegion createRectRgn(int sx, int sy, int ex, int ey);
+    public GdiRegion createRectRgn(int left, int top, int right, int bottom);
     public void deleteObject(GdiObject obj);
     public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, long rop);
@@ -132,13 +134,13 @@ public interface Gdi {
 			int sx, int sy, int sw, int sh, long rop);
     public void ellipse(int sx, int sy, int ex, int ey);
     public void escape(byte[] data);
-    public void excludeClipRect(int sx, int sy, int ex, int ey);
+    public int excludeClipRect(int left, int top, int right, int bottom);
     public void extFloodFill(int x, int y, int color, int type);
     public void extTextOut(int x, int y, int options, int[] rect, byte[] text, int[] lpdx);
     public void fillRgn(GdiRegion rgn, GdiBrush brush);
     public void floodFill(int x, int y, int color);
     public void frameRgn(GdiRegion rgn, GdiBrush brush, int w, int h);
-    public void intersectClipRect(int sx, int sy, int ex, int ey);
+    public void intersectClipRect(int left, int top, int right, int bottom);
     public void invertRgn(GdiRegion rgn);
     public void lineTo(int ex, int ey);
     public void moveToEx(int x, int y, Point old);
@@ -168,7 +170,7 @@ public interface Gdi {
         			int startscan, int scanlines, byte[] image, int colorUse);
     public void setLayout(long layout);
     public void setMapMode(int mode);
-    public void setMapperFlags(long flag);
+    public void setMapperFlags(long flags);
     public void setPaletteEntries(GdiPalette palette, int startIndex, int entryCount, byte[] entries);
     public void setPixel(int x, int y, int color);
     public void setPolyFillMode(int mode);

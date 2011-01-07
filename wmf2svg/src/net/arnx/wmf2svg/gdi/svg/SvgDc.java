@@ -62,7 +62,11 @@ public class SvgDc implements Cloneable {
 	// current location
 	private int cx = 0;
 	private int cy = 0;
-
+	
+	// clip offset
+	private int cox = 0;
+	private int coy = 0;
+	
 	private int mapMode = Gdi.MM_TEXT;
 	private int bkColor = 0x00FFFFFF;
 	private int bkMode = Gdi.OPAQUE;
@@ -74,6 +78,8 @@ public class SvgDc implements Cloneable {
 	private int relAbsMode = 0;
 	private int rop2Mode = Gdi.R2_COPYPEN;
 	private int stretchBltMode = Gdi.STRETCH_ANDSCANS;
+	private long layout = 0;
+	private long mapperFlags = 0;
 	
 	private SvgStyleBrush brush = null;
 	private SvgStyleFont font = null;
@@ -167,6 +173,11 @@ public class SvgDc implements Cloneable {
 		// TODO
 		vsx = (vsx * x)/xd;
 		vsy = (vsy * y)/yd;
+	}
+	
+	public void offsetClipRgn(int x, int y) {
+		cox = x;
+		coy = y;
 	}
 	
 	public int getMapMode() {
@@ -323,6 +334,22 @@ public class SvgDc implements Cloneable {
 		textDx = extra;
 	}
 	
+	public long getLayout() {
+		return layout;
+	}
+	
+	public void setLayout(long layout) {
+		this.layout = layout;
+	}
+	
+	public long getMapperFlags() {
+		return mapperFlags;
+	}
+	
+	public void setMapperFlags(long flags) {
+		mapperFlags = flags;
+	}
+	
 	public SvgStyleBrush getBrush() {
 		return brush;
 	}
@@ -373,6 +400,7 @@ public class SvgDc implements Cloneable {
 				filter.setIdAttribute("id", true);
 				
 				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("type", "matrix");
 				feColorMatrix.setAttribute("in", "SourceGraphic");
 				feColorMatrix.setAttribute("values", "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0");
 				filter.appendChild(feColorMatrix);
@@ -411,6 +439,7 @@ public class SvgDc implements Cloneable {
 				filter.setIdAttribute("id", true);
 				
 				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("type", "matrix");
 				feColorMatrix.setAttribute("in", "SourceGraphic");
 				feColorMatrix.setAttribute("values", "-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0");
 				filter.appendChild(feColorMatrix);
@@ -426,6 +455,7 @@ public class SvgDc implements Cloneable {
 				filter.setIdAttribute("id", true);
 
 				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("type", "matrix");
 				feColorMatrix.setAttribute("in", "BackgroundImage");
 				feColorMatrix.setAttribute("values", "-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0");
 				feColorMatrix.setAttribute("result", "result0");
@@ -454,6 +484,7 @@ public class SvgDc implements Cloneable {
 				filter.setIdAttribute("id", true);
 				
 				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("type", "matrix");
 				feColorMatrix.setAttribute("in", "BackgroundImage");
 				feColorMatrix.setAttribute("values", "-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0");
 				filter.appendChild(feColorMatrix);
@@ -486,6 +517,7 @@ public class SvgDc implements Cloneable {
 				filter.setIdAttribute("id", true);
 
 				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("type", "matrix");
 				feColorMatrix.setAttribute("in", "SourceGraphic");
 				feColorMatrix.setAttribute("values", "-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0");
 				feColorMatrix.setAttribute("result", "result0");
@@ -533,6 +565,7 @@ public class SvgDc implements Cloneable {
 				filter.setIdAttribute("id", true);
 				
 				Element feColorMatrix = doc.createElement("feColorMatrix");
+				feColorMatrix.setAttribute("type", "matrix");
 				feColorMatrix.setAttribute("in", "SourceGraphic");
 				feColorMatrix.setAttribute("values", "1 0 0 0 1 0 1 0 0 1 0 0 1 0 1 0 0 0 1 0");
 				filter.appendChild(feColorMatrix);

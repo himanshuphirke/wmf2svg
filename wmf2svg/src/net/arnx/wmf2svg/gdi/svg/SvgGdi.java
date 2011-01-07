@@ -53,6 +53,8 @@ public class SvgGdi implements Gdi {
 
 	private int penNo = 0;
 
+	private int rgnNo = 0;
+
 	private int patternNo = 0;
 
 	private Map nameMap = new HashMap();
@@ -346,7 +348,7 @@ public class SvgGdi implements Gdi {
 	public GdiPen createPenIndirect(int style, int width, int color) {
 		SvgStylePen pen = new SvgStylePen(this, style, width, color);
 		if (objectMap.containsKey(pen)) {
-			return (SvgStylePen) objectMap.get(pen);
+			return (GdiPen) objectMap.get(pen);
 		} else {
 			nameMap.put(pen, "pen" + (penNo++));
 			objectMap.put(pen, pen);
@@ -354,11 +356,15 @@ public class SvgGdi implements Gdi {
 		}
 	}
 	
-	public GdiRegion createRectRgn(int sx, int sy, int ex, int ey) {
-		// TODO
-		log.fine("not implemented: createRectRgn");
-		return new GdiRegion() {
-		};		
+	public GdiRegion createRectRgn(int left, int top, int right, int bottom) {
+		SvgStyleRegion rgn = new SvgStyleRectRegion(this, left, top, right, bottom);
+		if (objectMap.containsKey(rgn)) {
+			return (GdiRegion) objectMap.get(rgn);
+		} else {
+			nameMap.put(rgn, "rgn" + (rgnNo++));
+			objectMap.put(rgn, rgn);
+			return rgn;
+		}
 	}
 
 	public void deleteObject(GdiObject obj) {
@@ -413,9 +419,10 @@ public class SvgGdi implements Gdi {
 	public void escape(byte[] data) {
 	}
 
-	public void excludeClipRect(int sx, int sy, int ex, int ey) {
+	public int excludeClipRect(int left, int top, int right, int bottom) {
 		// TODO
 		log.fine("not implemented: excludeClipRect");
+		return GdiRegion.NULLREGION;
 	}
 
 	public void extFloodFill(int x, int y, int color, int type) {
@@ -460,7 +467,7 @@ public class SvgGdi implements Gdi {
 			buffer.append("dominant-baseline: text-bottom; ");
 		}
 
-		if ((align & 0x0100) == TA_RTLREADING) {
+		if ((align & 0x0100) == TA_RTLREADING || (options | ETO_RTLREADING) != 0) {
 			buffer.append("unicode-bidi: bidi-override; direction: rtl; ");
 		}
 
@@ -550,7 +557,7 @@ public class SvgGdi implements Gdi {
 			if (dc.getFont() != null) height = dc.getFont().getFontSize();
 		}
 
-		if (dc.getBkMode() == OPAQUE) {
+		if (dc.getBkMode() == OPAQUE || (options | ETO_OPAQUE) != 0) {
 			if (rect == null && dc.getFont() != null) {
 				rect = new int[4];
 				if (vertical) {
@@ -606,8 +613,15 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void fillRgn(GdiRegion rgn, GdiBrush brush) {
-		// TODO
-		log.fine("not implemented: fillRgn");
+		Element elem = ((SvgStyleRegion)rgn).createRegion();
+		elem.setAttribute("class", getClassString(brush));
+		SvgStyleBrush sbrush = (SvgStyleBrush)brush;
+		if(sbrush.getStyle() == GdiBrush.BS_HATCHED) {
+			String id = "pattern" + (patternNo++);
+			elem.setAttribute("fill", "url(#" + id + ")");
+			defs.appendChild(sbrush.createFillPattern(id));
+		}
+		parent.appendChild(elem);
 	}
 
 	public void floodFill(int x, int y, int color) {
@@ -620,14 +634,18 @@ public class SvgGdi implements Gdi {
 		log.fine("not implemented: frameRgn");
 	}
 
-	public void intersectClipRect(int sx, int sy, int ex, int ey) {
+	public void intersectClipRect(int left, int top, int right, int bottom) {
 		// TODO
 		log.fine("not implemented: intersectClipRect");
 	}
 
 	public void invertRgn(GdiRegion rgn) {
-		// TODO
-		log.fine("not implemented: invertRgn");
+		Element elem = ((SvgStyleRegion)rgn).createRegion();
+		String ropFilter = dc.getRopFilter(DSTINVERT);
+		if (ropFilter != null) {
+			elem.setAttribute("filter", ropFilter);
+		}
+		parent.appendChild(elem);
 	}
 
 	public void lineTo(int ex, int ey) {
@@ -652,8 +670,7 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void offsetClipRgn(int x, int y) {
-		// TODO
-		log.fine("not implemented: offsetClipRgn (x=" + x + ", y=" + y + ")");
+		dc.offsetClipRgn(x, y);
 	}
 
 	public void offsetViewportOrgEx(int x, int y, Point point) {
@@ -665,8 +682,7 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void paintRgn(GdiRegion rgn) {
-		// TODO
-		log.fine("not implemented: paintRgn");
+		fillRgn(rgn, dc.getBrush());
 	}
 
 	public void patBlt(int x, int y, int width, int height, long rop) {
@@ -922,17 +938,15 @@ public class SvgGdi implements Gdi {
 	}
 	
 	public void setLayout(long layout) {
-		// TODO
-		log.fine("not implemented: setLayout");
+		dc.setLayout(layout);
 	}
 	
 	public void setMapMode(int mode) {
 		dc.setMapMode(mode);
 	}
 
-	public void setMapperFlags(long flag) {
-		// TODO
-		log.fine("not implemented: setMapperFlags");
+	public void setMapperFlags(long flags) {
+		dc.setMapperFlags(flags);
 	}
 
 	public void setPaletteEntries(GdiPalette palette, int startIndex, int entryCount, byte[] entries) {
@@ -1008,7 +1022,7 @@ public class SvgGdi implements Gdi {
 
 	public void stretchDIBits(int dx, int dy, int dw, int dh, int sx, int sy,
 			int sw, int sh, byte[] image, int usage, long rop) {
-		bmpToSvg(image, dx, dy, dw, dh, sx, sy, sw, sh, usage,rop);
+		bmpToSvg(image, dx, dy, dw, dh, sx, sy, sw, sh, usage, rop);
 	}
 
 	public void textOut(int x, int y, byte[] text) {
@@ -1133,7 +1147,7 @@ public class SvgGdi implements Gdi {
 		}
 	}
 
-	private String getClassString(SvgStyleObject obj1, SvgStyleObject obj2) {
+	private String getClassString(GdiObject obj1, GdiObject obj2) {
 		String name1 = getClassString(obj1);
 		String name2 = getClassString(obj2);
 		if (name1 != null && name2 != null) {
@@ -1148,7 +1162,7 @@ public class SvgGdi implements Gdi {
 		return null;
 	}
 
-	private String getClassString(SvgStyleObject style) {
+	private String getClassString(GdiObject style) {
 		if (style == null) {
 			return "";
 		}
