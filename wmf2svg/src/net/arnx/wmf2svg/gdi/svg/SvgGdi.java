@@ -467,7 +467,7 @@ public class SvgGdi implements Gdi {
 			buffer.append("dominant-baseline: text-bottom; ");
 		}
 
-		if ((align & 0x0100) == TA_RTLREADING || (options | ETO_RTLREADING) != 0) {
+		if ((align & 0x0100) == TA_RTLREADING) {
 			buffer.append("unicode-bidi: bidi-override; direction: rtl; ");
 		}
 
@@ -557,7 +557,7 @@ public class SvgGdi implements Gdi {
 			if (dc.getFont() != null) height = dc.getFont().getFontSize();
 		}
 
-		if (dc.getBkMode() == OPAQUE || (options | ETO_OPAQUE) != 0) {
+		if (dc.getBkMode() == OPAQUE) {
 			if (rect == null && dc.getFont() != null) {
 				rect = new int[4];
 				if (vertical) {
