@@ -391,19 +391,6 @@ public class SvgDc implements Cloneable {
 	public Element getMask() {
 		return mask;
 	}
-
-	public Element createFillBk(int[] rect) {
-		Element bk = null;
-		if (getBkMode() == Gdi.OPAQUE) {
-			bk = gdi.getDocument().createElement("rect");
-			bk.setAttribute("fill", SvgStyleObject.toColor(getBkColor()));
-			bk.setAttribute("x", Integer.toString(toAbsoluteX(rect[0])));
-			bk.setAttribute("y", Integer.toString(toAbsoluteY(rect[1])));
-			bk.setAttribute("width", Integer.toString(toRelativeX(rect[2])));
-			bk.setAttribute("height", Integer.toString(toRelativeY(rect[3])));
-		}
-		return bk;
-	}
 	
 	public String getRopFilter(long rop) {
 		String name = null;
