@@ -57,6 +57,8 @@ public class SvgGdi implements Gdi {
 	
 	private int rgnNo = 0;
 	
+	private int clipPathNo = 0;
+	
 	private int maskNo = 0;
 	
 	private Map nameMap = new HashMap();
@@ -446,7 +448,6 @@ public class SvgGdi implements Gdi {
 	public void extTextOut(int x, int y, int options, int[] rect, byte[] text,
 			int[] dx) {
 		Element elem = doc.createElement("text");
-		Element bk = null;
 
 		int escapement = 0;
 		boolean vertical = false;
@@ -480,7 +481,7 @@ public class SvgGdi implements Gdi {
 			buffer.append("dominant-baseline: text-bottom; ");
 		}
 
-		if ((align & 0x0100) == TA_RTLREADING) {
+		if ((align & 0x0100) == TA_RTLREADING  || (options & ETO_RTLREADING) > 0) {
 			buffer.append("unicode-bidi: bidi-override; direction: rtl; ");
 		}
 
@@ -569,8 +570,9 @@ public class SvgGdi implements Gdi {
 			}
 			if (dc.getFont() != null) height = dc.getFont().getFontSize();
 		}
-
-		if (dc.getBkMode() == OPAQUE) {
+		
+		Element bk = null;
+		if (dc.getBkMode() == OPAQUE || (options & ETO_OPAQUE) > 0) {
 			if (rect == null && dc.getFont() != null) {
 				rect = new int[4];
 				if (vertical) {
@@ -595,14 +597,29 @@ public class SvgGdi implements Gdi {
 				rect[2] = width;
 				rect[3] = height;
 			}
-			bk = dc.createFillBk(rect);
+			bk = doc.createElement("rect");
+			bk.setAttribute("x", Integer.toString(dc.toAbsoluteX(rect[0])));
+			bk.setAttribute("y", Integer.toString(dc.toAbsoluteY(rect[1])));
+			bk.setAttribute("width", Integer.toString(dc.toRelativeX(rect[2] - rect[0])));
+			bk.setAttribute("height", Integer.toString(dc.toRelativeY(rect[3] - rect[1])));
+			bk.setAttribute("fill", SvgStyleObject.toColor(dc.getBkColor()));
 		}
 		
-		if (escapement != 0)  {
-			if (bk != null) {
-				bk.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
-			}
-			elem.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
+		Element clip = null;
+		if ((options & ETO_CLIPPED) > 0) {
+			String name = "clipPath" + (clipPathNo++);
+			clip = doc.createElement("clipPath");
+			clip.setAttribute("id", name);
+			clip.setIdAttribute("id", true);
+			
+			Element clipRect = doc.createElement("rect");
+			clipRect.setAttribute("x", Integer.toString(dc.toAbsoluteX(rect[0])));
+			clipRect.setAttribute("y", Integer.toString(dc.toAbsoluteY(rect[1])));
+			clipRect.setAttribute("width", Integer.toString(dc.toRelativeX(rect[2] - rect[0])));
+			clipRect.setAttribute("height", Integer.toString(dc.toRelativeY(rect[3] - rect[1])));
+			
+			clip.appendChild(clipRect);
+			elem.setAttribute("clip-path", "url(#" + name + ")");
 		}
 		
 		String str = null;
@@ -620,8 +637,19 @@ public class SvgGdi implements Gdi {
 			elem.setAttribute("xml:lang", dc.getFont().getLang());
 		}
 		
-		if (bk != null) parentNode.appendChild(bk);
 		elem.appendChild(doc.createTextNode(str));
+		
+		if (bk != null || clip != null) {
+			Element g = doc.createElement("g");
+			if (bk != null) g.appendChild(bk);
+			if (clip != null) g.appendChild(clip);
+			g.appendChild(elem);
+			elem = g;
+		}
+		
+		if (escapement != 0)  {
+			elem.setAttribute("transform", "rotate(" + (-escapement/10.0) + ", " + ax + ", " + ay + ")");
+		}
 		parentNode.appendChild(elem);
 	}
 
