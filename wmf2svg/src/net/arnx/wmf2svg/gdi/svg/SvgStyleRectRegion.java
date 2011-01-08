@@ -32,7 +32,7 @@ class SvgStyleRectRegion extends SvgStyleRegion {
 		return bottom;
 	}
 	
-	public Element createRegion() {
+	public Element createElement() {
 		Element elem = getGDI().getDocument().createElement("rect");
 		elem.setAttribute("x", "" + getGDI().getDC().toAbsoluteX(getLeft()));
 		elem.setAttribute("y", "" + getGDI().getDC().toAbsoluteY(getTop()));
