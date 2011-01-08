@@ -1116,7 +1116,7 @@ public class SvgGdi implements Gdi {
 			int sw, int sh, byte[] image, int usage, long rop) {
 		bmpToSvg(image, dx, dy, dw, dh, sx, sy, sw, sh, usage, rop);
 	}
-
+	
 	public void textOut(int x, int y, byte[] text) {
 		Element elem = doc.createElement("text");
 		
