@@ -174,6 +174,10 @@ class SvgStyleBrush extends SvgStyleObject implements GdiBrush {
 		return true;
 	}
 	
+	public Text createTextNode(String id) {
+		return getGDI().getDocument().createTextNode("." + id + " { " + toString() + " }\n");
+	}
+	
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 

@@ -15,6 +15,8 @@
  */
 package net.arnx.wmf2svg.gdi.svg;
 
+import org.w3c.dom.Text;
+
 import net.arnx.wmf2svg.gdi.*;
 
 /**
@@ -74,6 +76,10 @@ class SvgStylePen extends SvgStyleObject implements GdiPen {
 		if (width != other.width)
 			return false;
 		return true;
+	}
+	
+	public Text createTextNode(String id) {
+		return getGDI().getDocument().createTextNode("." + id + " { " + toString() + " }\n");
 	}
 
 	public String toString() {

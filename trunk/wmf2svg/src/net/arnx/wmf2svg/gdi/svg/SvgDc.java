@@ -85,6 +85,8 @@ public class SvgDc implements Cloneable {
 	private SvgStyleFont font = null;
 	private SvgStylePen pen = null;
 	
+	private Element mask = null;
+	
 	public SvgDc(SvgGdi gdi) {
 		this.gdi = gdi;
 	}
@@ -380,6 +382,14 @@ public class SvgDc implements Cloneable {
 	
 	public void setPen(SvgStylePen pen) {
 		this.pen = pen;
+	}
+	
+	public void setMask(Element mask) {
+		this.mask = mask;
+	}
+	
+	public Element getMask() {
+		return mask;
 	}
 
 	public Element createFillBk(int[] rect) {
