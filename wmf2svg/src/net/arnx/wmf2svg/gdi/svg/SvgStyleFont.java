@@ -17,6 +17,8 @@ package net.arnx.wmf2svg.gdi.svg;
 
 import java.util.*;
 
+import org.w3c.dom.Text;
+
 import net.arnx.wmf2svg.gdi.*;
 
 /**
@@ -342,6 +344,10 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 		if (width != other.width)
 			return false;
 		return true;
+	}
+	
+	public Text createTextNode(String id) {
+		return getGDI().getDocument().createTextNode("." + id + " { " + toString() + " }\n");
 	}
 	
 	public String toString() {
