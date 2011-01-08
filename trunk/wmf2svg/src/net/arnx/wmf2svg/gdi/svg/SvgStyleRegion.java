@@ -9,5 +9,5 @@ abstract class SvgStyleRegion extends SvgStyleObject implements GdiRegion {
 		super(gdi);
 	}
 	
-	public abstract Element createRegion();
+	public abstract Element createElement();
 }

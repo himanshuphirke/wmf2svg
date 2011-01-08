@@ -84,7 +84,7 @@ public class SvgDc implements Cloneable {
 	private SvgStyleBrush brush = null;
 	private SvgStyleFont font = null;
 	private SvgStylePen pen = null;
-
+	
 	public SvgDc(SvgGdi gdi) {
 		this.gdi = gdi;
 	}
@@ -219,6 +219,14 @@ public class SvgDc implements Cloneable {
 	
 	public int getCurrentY() {
 		return cy;
+	}
+	
+	public int getOffsetClipX() {
+		return cox;
+	}
+	
+	public int getOffsetClipY() {
+		return coy;
 	}
 
 	public void moveToEx(int x, int y, Point old) {

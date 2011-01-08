@@ -40,12 +40,14 @@ public class SvgGdi implements Gdi {
 	private SvgDc saveDC;
 
 	private Document doc = null;
-
+	
 	private Element parent = null;
 	
 	private Element defs = null;
 	
 	private Element style = null;
+	
+	private Element mask = null;
 
 	private int brushNo = 0;
 
@@ -53,13 +55,11 @@ public class SvgGdi implements Gdi {
 
 	private int penNo = 0;
 
-	private int rgnNo = 0;
-
 	private int patternNo = 0;
-
-	private Map nameMap = new HashMap();
-
-	private Map objectMap = new LinkedHashMap();
+	
+	private int maskNo = 0;
+	
+	private Map nameMap = new LinkedHashMap();
 
 	private StringBuffer buffer = new StringBuffer();
 
@@ -80,7 +80,7 @@ public class SvgGdi implements Gdi {
 
 		DOMImplementation dom = builder.getDOMImplementation();
 		doc = dom.createDocument("http://www.w3.org/2000/svg", "svg", null);
-
+		
 		try {
 			Properties ps = new Properties();
 			ps.load(getClass().getResourceAsStream("SvgGdi.properties"));
@@ -175,14 +175,16 @@ public class SvgGdi implements Gdi {
 		Element root = doc.getDocumentElement();
 		root.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 		root.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-		parent = root;
-
+		
 		defs = doc.createElement("defs");
 		root.appendChild(defs);
 
 		style = doc.createElement("style");
 		style.setAttribute("type", "text/css");
 		root.appendChild(style);
+		
+		parent = doc.createElement("g");
+		doc.getDocumentElement().appendChild(parent);
 	}
 
 	public void animatePalette(GdiPalette palette, int startIndex, int entryCount, byte[] entries) {
@@ -305,14 +307,10 @@ public class SvgGdi implements Gdi {
 
 	public GdiBrush createBrushIndirect(int style, int color, int hatch) {
 		SvgStyleBrush brush = new SvgStyleBrush(this, style, color, hatch);
-		if (objectMap.containsKey(brush)) {
-			return (SvgStyleBrush) objectMap.get(brush);
-		} else {
+		if (!nameMap.containsKey(brush)) {
 			nameMap.put(brush, "brush" + (brushNo++));
-			objectMap.put(brush, brush);
-
-			return brush;
 		}
+		return brush;
 	}
 
 	public GdiFont createFontIndirect(int height, int width, int escapement,
@@ -322,13 +320,10 @@ public class SvgGdi implements Gdi {
 		SvgStyleFont font = new SvgStyleFont(this, height, width, escapement,
 				orientation, weight, italic, underline, strikeout, charset,
 				outPrecision, clipPrecision, quality, pitchAndFamily, faceName);
-		if (objectMap.containsKey(font)) {
-			return (SvgStyleFont) objectMap.get(font);
-		} else {
+		if (!nameMap.containsKey(font)) {
 			nameMap.put(font, "font" + (fontNo++));
-			objectMap.put(font, font);
-			return font;
 		}
+		return font;
 	}
 
 	public GdiPalette createPalette() {
@@ -347,24 +342,14 @@ public class SvgGdi implements Gdi {
 
 	public GdiPen createPenIndirect(int style, int width, int color) {
 		SvgStylePen pen = new SvgStylePen(this, style, width, color);
-		if (objectMap.containsKey(pen)) {
-			return (GdiPen) objectMap.get(pen);
-		} else {
+		if (!nameMap.containsKey(pen)) {
 			nameMap.put(pen, "pen" + (penNo++));
-			objectMap.put(pen, pen);
-			return pen;
 		}
+		return pen;
 	}
 	
 	public GdiRegion createRectRgn(int left, int top, int right, int bottom) {
-		SvgStyleRegion rgn = new SvgStyleRectRegion(this, left, top, right, bottom);
-		if (objectMap.containsKey(rgn)) {
-			return (GdiRegion) objectMap.get(rgn);
-		} else {
-			nameMap.put(rgn, "rgn" + (rgnNo++));
-			objectMap.put(rgn, rgn);
-			return rgn;
-		}
+		return new SvgStyleRectRegion(this, left, top, right, bottom);
 	}
 
 	public void deleteObject(GdiObject obj) {
@@ -379,7 +364,7 @@ public class SvgGdi implements Gdi {
 	
 	public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, long rop) {
-		this.bitBlt(image, dx, dy, dw, dh, sx, sy, rop);
+		bitBlt(image, dx, dy, dw, dh, sx, sy, rop);
 	}
 
 	public GdiBrush dibCreatePatternBrush(byte[] image, int usage) {
@@ -420,9 +405,19 @@ public class SvgGdi implements Gdi {
 	}
 
 	public int excludeClipRect(int left, int top, int right, int bottom) {
-		// TODO
-		log.fine("not implemented: excludeClipRect");
-		return GdiRegion.NULLREGION;
+		if (mask != null) {
+			Element unclip = doc.createElement("rect");
+			unclip.setAttribute("x", "" + dc.toAbsoluteX(left));
+			unclip.setAttribute("y", "" + dc.toAbsoluteY(top));
+			unclip.setAttribute("width", "" + dc.toRelativeX(right - left));
+			unclip.setAttribute("height", "" + dc.toRelativeY(bottom - top));
+			unclip.setAttribute("fill", "black");
+			mask.appendChild(unclip);
+			
+			return GdiRegion.COMPLEXREGION;
+		} else {
+			return GdiRegion.NULLREGION;
+		}
 	}
 
 	public void extFloodFill(int x, int y, int color, int type) {
@@ -613,7 +608,7 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void fillRgn(GdiRegion rgn, GdiBrush brush) {
-		Element elem = ((SvgStyleRegion)rgn).createRegion();
+		Element elem = ((SvgStyleRegion)rgn).createElement();
 		elem.setAttribute("class", getClassString(brush));
 		SvgStyleBrush sbrush = (SvgStyleBrush)brush;
 		if(sbrush.getStyle() == GdiBrush.BS_HATCHED) {
@@ -640,7 +635,7 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void invertRgn(GdiRegion rgn) {
-		Element elem = ((SvgStyleRegion)rgn).createRegion();
+		Element elem = ((SvgStyleRegion)rgn).createElement();
 		String ropFilter = dc.getRopFilter(DSTINVERT);
 		if (ropFilter != null) {
 			elem.setAttribute("filter", ropFilter);
@@ -840,7 +835,11 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void restoreDC() {
-		if(saveDC != null) dc = saveDC;
+		if(saveDC != null) {
+			dc = saveDC;
+			parent = doc.createElement("g");
+			doc.getDocumentElement().appendChild(parent);
+		}
 	}
 
 	public void rectangle(int sx, int sy, int ex, int ey) {
@@ -905,8 +904,29 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void selectClipRgn(GdiRegion rgn) {
-		// TODO
-		log.fine("not implemented: selectClipRgn");
+		parent = doc.createElement("g");
+		
+		if (rgn != null) {
+			mask = doc.createElement("mask");
+			mask.setAttribute("id", "mask" + (maskNo++));
+			mask.setIdAttribute("id", true);
+			
+			if (dc.getOffsetClipX() > 0 || dc.getOffsetClipY() > 0) {
+				mask.setAttribute("transform", "translate(" + dc.getOffsetClipX() + "," + dc.getOffsetClipY() + ")");
+			}
+			
+			Element clip = ((SvgStyleRegion)rgn).createElement();
+			clip.setAttribute("fill", "white");
+			
+			mask.appendChild(clip);
+			defs.appendChild(mask);
+			
+			parent.setAttribute("mask", "url(#" + mask.getAttribute("id") + ")");
+		} else {
+			mask = null;
+		}
+		
+		doc.getDocumentElement().appendChild(parent);
 	}
 
 	public void selectObject(GdiObject obj) {
@@ -934,7 +954,7 @@ public class SvgGdi implements Gdi {
 
 	public void setDIBitsToDevice(int dx, int dy, int dw, int dh, int sx,
 			int sy, int startscan, int scanlines, byte[] image, int colorUse) {
-		this.stretchDIBits(dx, dy, dw, dh, sx, sy, dw, dh, image, colorUse, SRCCOPY);
+		stretchDIBits(dx, dy, dw, dh, sx, sy, dw, dh, image, colorUse, SRCCOPY);
 	}
 	
 	public void setLayout(long layout) {
@@ -1017,7 +1037,7 @@ public class SvgGdi implements Gdi {
 
 	public void stretchBlt(byte[] image, int dx, int dy, int dw, int dh, int sx, int sy,
 			int sw, int sh, long rop) {
-		this.dibStretchBlt(image, dx, dy, dw, dh, sx, sy, sw, sh, rop);
+		dibStretchBlt(image, dx, dy, dw, dh, sx, sy, sw, sh, rop);
 	}
 
 	public void stretchDIBits(int dx, int dy, int dw, int dh, int sx, int sy,
@@ -1128,18 +1148,18 @@ public class SvgGdi implements Gdi {
 		}
 		root.setAttribute("stroke-linecap", "round");
 		root.setAttribute("fill-rule", "evenodd");
-
-		if (objectMap.isEmpty()) {
-			root.removeChild(style);
+		
+		buffer.setLength(0);
+		for (Iterator i = nameMap.keySet().iterator(); i.hasNext();) {
+			SvgStyleObject so = (SvgStyleObject) i.next();
+			buffer.append("\n.").append(nameMap.get(so)).append(" { ").append(so).append(" }");
+		}
+		
+		if (buffer.length() > 0) {
+			buffer.append('\n');
+			style.appendChild(doc.createTextNode(buffer.toString()));			
 		} else {
-			buffer.setLength(0);
-			buffer.append("\n");
-			for (Iterator i = objectMap.keySet().iterator(); i.hasNext();) {
-				SvgStyleObject so = (SvgStyleObject) i.next();
-				buffer.append(".").append(nameMap.get(so)).append(" { ").append(
-						so).append(" }\n");
-			}
-			style.appendChild(doc.createTextNode(buffer.toString()));
+			root.removeChild(style);
 		}
 
 		if (!defs.hasChildNodes()) {
