@@ -738,9 +738,11 @@ public class SvgGdi implements Gdi {
 			}
 			defsNode.appendChild(mask);
 			
+			if (!parentNode.hasChildNodes()) {
+				doc.getDocumentElement().removeChild(parentNode);
+			}
 			parentNode = doc.createElement("g");
 			parentNode.setAttribute("mask", name);
-			
 			doc.getDocumentElement().appendChild(parentNode);
 			
 			dc.setMask(mask);
@@ -921,6 +923,9 @@ public class SvgGdi implements Gdi {
 	public void restoreDC() {
 		if(saveDC != null) {
 			dc = saveDC;
+			if (!parentNode.hasChildNodes()) {
+				doc.getDocumentElement().removeChild(parentNode);
+			}
 			parentNode = doc.createElement("g");
 			Element mask = dc.getMask();
 			if (mask != null) {
@@ -992,6 +997,9 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void selectClipRgn(GdiRegion rgn) {
+		if (!parentNode.hasChildNodes()) {
+			doc.getDocumentElement().removeChild(parentNode);
+		}
 		parentNode = doc.createElement("g");
 		
 		if (rgn != null) {
