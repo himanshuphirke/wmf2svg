@@ -1289,14 +1289,7 @@ public class SvgGdi implements Gdi {
 			return;
 		}
 		
-		try {
-			image = ImageUtil.convert(dibToBmp(image), "png", dh < 0);
-		} catch (Exception e) {
-			UnsupportedOperationException uoe = new UnsupportedOperationException();
-			uoe.initCause(e);
-			
-			throw uoe;
-		}
+		image = ImageUtil.convert(dibToBmp(image), "png", dh < 0);
 	
 		StringBuffer buffer = new StringBuffer("data:image/png;base64,");
 		buffer.append(Base64.encode(image));
