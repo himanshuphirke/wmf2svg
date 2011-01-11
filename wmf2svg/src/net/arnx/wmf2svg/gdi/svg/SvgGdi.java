@@ -226,7 +226,7 @@ public class SvgGdi implements Gdi {
 			
 			double ba = Math.atan2(eya2-sya2, exa2-sxa2);
 			if (ba < 0) ba += 2.0 * Math.PI;
-			double ca = Math.atan2(sya2, sxa2);
+			double ca = Math.atan2(-sya2, -sxa2);
 			if (ca < 0) ca += 2.0 * Math.PI;
 			double a = ca - ba;
 			if (a > Math.PI) a -= 2.0 * Math.PI;
@@ -287,7 +287,7 @@ public class SvgGdi implements Gdi {
 			
 			double ba = Math.atan2(eya2-sya2, exa2-sxa2);
 			if (ba < 0) ba += 2.0 * Math.PI;
-			double ca = Math.atan2(sya2, sxa2);
+			double ca = Math.atan2(-sya2, -sxa2);
 			if (ca < 0) ca += 2.0 * Math.PI;
 			double a = ca - ba;
 			if (a > Math.PI) a -= 2.0 * Math.PI;
@@ -796,7 +796,7 @@ public class SvgGdi implements Gdi {
 			
 			double ba = Math.atan2(eya2-sya2, exa2-sxa2);
 			if (ba < 0) ba += 2.0 * Math.PI;
-			double ca = Math.atan2(sya2, sxa2);
+			double ca = Math.atan2(-sya2, -sxa2);
 			if (ca < 0) ca += 2.0 * Math.PI;
 			double a = ca - ba;
 			if (a > Math.PI) a -= 2.0 * Math.PI;
