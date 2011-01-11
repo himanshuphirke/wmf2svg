@@ -19,10 +19,9 @@ public class ImageUtil {
 	private static Converter converter;
 	
 	static {
-		try {
-			Class.forName("com.google.appengine.api.images.Image");
-			converter = new GAEConverter();
-		} catch (ClassNotFoundException e) {
+		if ("Production".equals(System.getProperty("com.google.appengine.runtime.environment"))) {
+			converter = new GAEConverter();			
+		} else {
 			try {
 				Class.forName("javax.imageio.ImageIO");
 				converter = new ImageIOConverter();
@@ -104,8 +103,8 @@ public class ImageUtil {
 			ImagesService imagesService = ImagesServiceFactory.getImagesService();
 			Image bmp = ImagesServiceFactory.makeImage(image);
 			
-			Transform t = (reverse) ? ImagesServiceFactory.makeVerticalFlip() : null;
+			Transform t = (reverse) ? ImagesServiceFactory.makeVerticalFlip() : ImagesServiceFactory.makeCompositeTransform();
 			return imagesService.applyTransform(t, bmp, encoding).getImageData();
-		}		
+		}
 	}
 }
