@@ -217,8 +217,7 @@ public class WmfParser {
 							int hatch = in.readUint16();
 							for (int i = 0; i < objs.length; i++) {
 								if (objs[i] == null) {
-									objs[i] =
-										gdi.createBrushIndirect(style, color, hatch);
+									objs[i] = gdi.createBrushIndirect(style, color, hatch);
 									break;
 								}
 							}
@@ -295,8 +294,7 @@ public class WmfParser {
 							int color = in.readInt32();
 							for (int i = 0; i < objs.length; i++) {
 								if (objs[i] == null) {
-									objs[i] =
-										gdi.createPenIndirect(style, width, color);
+									objs[i] = gdi.createPenIndirect(style, width, color);
 									break;
 								}
 							}
@@ -652,7 +650,8 @@ public class WmfParser {
 					case RECORD_SELECT_CLIP_RGN :
 						{
 							int objID = in.readUint16();
-							gdi.selectClipRgn((GdiRegion)objs[objID]);
+							GdiRegion rgn = (objID > 0) ? (GdiRegion)objs[objID] : null;
+							gdi.selectClipRgn(rgn);
 						}
 						break;
 					case RECORD_SELECT_OBJECT :
