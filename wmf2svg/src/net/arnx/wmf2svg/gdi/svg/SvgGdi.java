@@ -485,10 +485,12 @@ public class SvgGdi implements Gdi {
 		if (vertical) {
 			elem.setAttribute("writing-mode", "tb");
 			buffer.append("dominant-baseline: ideographic; baseline-shift: -15%;");
-		} else if ((align & 0x0018) == TA_TOP) {
-			buffer.append("dominant-baseline: text-top; ");
-		} else if ((align & 0x0018) == TA_BOTTOM) {
-			buffer.append("dominant-baseline: text-bottom; ");
+		} else {
+			if ((align & 0x0018) == TA_BASELINE) {
+				buffer.append("dominant-baseline: baseline; ");
+			} else {
+				buffer.append("dominant-baseline: text-before-edge; ");				
+			}
 		}
 
 		if ((align & 0x0100) == TA_RTLREADING  || (options & ETO_RTLREADING) > 0) {
@@ -573,8 +575,8 @@ public class SvgGdi implements Gdi {
 			}
 			elem.setAttribute("y", buffer.toString());
 		} else {
-			if( align == 0 ) {
-				elem.setAttribute("y", Integer.toString(ay + Math.abs(dc.toRelativeY(dc.getFont().getHeight()))));
+			if((align & 0x0018) == TA_BOTTOM && rect != null) {
+				elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] - Math.abs(dc.toRelativeY(dc.getFont().getHeight()))));
 			} else {
 				elem.setAttribute("y", Integer.toString(ay));
 			}
@@ -1169,10 +1171,12 @@ public class SvgGdi implements Gdi {
 		if (vertical) {
 			elem.setAttribute("writing-mode", "tb");
 			buffer.append("dominant-baseline: ideographic; ");
-		} else if ((align & 0x0018) == TA_TOP) {
-			buffer.append("dominant-baseline: text-top; ");
-		} else if ((align & 0x0018) == TA_BOTTOM) {
-			buffer.append("dominant-baseline: text-bottom; ");
+		} else {
+			if ((align & 0x0018) == TA_BASELINE) {
+				buffer.append("dominant-baseline: baseline; ");
+			} else {
+				buffer.append("dominant-baseline: text-before-edge; ");				
+			}
 		}
 
 		if ((align & 0x0100) == TA_RTLREADING) {
