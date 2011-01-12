@@ -348,7 +348,7 @@ public class SvgGdi implements Gdi {
 		return new GdiPalette() {
 		};
 	}
-
+	
 	public GdiBrush createPatternBrush(byte[] image) {
 		return new SvgPatternBrush(this, image);
 	}
