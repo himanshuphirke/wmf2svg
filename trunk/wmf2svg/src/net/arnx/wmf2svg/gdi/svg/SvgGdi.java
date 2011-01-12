@@ -196,10 +196,12 @@ public class SvgGdi implements Gdi {
 
 	public void arc(int sxr, int syr, int exr, int eyr, int sxa, int sya,
 			int exa, int eya) {
-		int rx = Math.abs(exr - sxr)/2;
-		int ry = Math.abs(eyr - syr)/2;
-		int cx = Math.min(sxr, exr) + rx;
-		int cy = Math.min(syr, eyr) + ry;
+		double rx = (Math.abs(exr - sxr)-1)/2.0;
+		double ry = (Math.abs(eyr - syr)-1)/2.0;
+		if (rx <= 0 || ry <= 0) return;
+		
+		double cx = Math.min(sxr, exr) + rx;
+		double cy = Math.min(syr, eyr) + ry;
 		
 		Element elem = null;
 		if (sxa == exa && sya == eya) {
@@ -217,30 +219,25 @@ public class SvgGdi implements Gdi {
 			}
 		} else {
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
-			double sxa2 = rx * Math.cos(sa);
-			double sya2 = ry * Math.sin(sa);
+			double sx = rx * Math.cos(sa);
+			double sy = ry * Math.sin(sa);
 			
 			double ea = Math.atan2((eya - cy) * rx, (exa - cx) * ry);
-			double exa2 = rx * Math.cos(ea);
-			double eya2 = ry * Math.sin(ea);
+			double ex = rx * Math.cos(ea);
+			double ey = ry * Math.sin(ea);
 			
-			double ba = Math.atan2(eya2-sya2, exa2-sxa2);
+			double ba = Math.atan2(ey-sy, ex-sx);
 			if (ba < 0) ba += 2.0 * Math.PI;
-			double ca = Math.atan2(-sya2, -sxa2);
+			double ca = Math.atan2(-sy, -sx);
 			if (ca < 0) ca += 2.0 * Math.PI;
 			double a = ca - ba;
 			if (a > Math.PI) a -= 2.0 * Math.PI;
 			
-			sxa = dc.toAbsoluteX((int)Math.round(sxa2) + cx);
-			sya = dc.toAbsoluteY((int)Math.round(sya2) + cy);
-			exa = dc.toAbsoluteX((int)Math.round(exa2) + cx);
-			eya = dc.toAbsoluteY((int)Math.round(eya2) + cy);
-			
 			elem = doc.createElement("path");
-			elem.setAttribute("d", "M " + sxa + "," + sya
+			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
 					+ " A " + dc.toRelativeX(rx) + "," + dc.toRelativeY(ry)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
-					+ " " + exa + "," + eya);
+					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy));
 		}
 		
 		if (dc.getPen() != null) {
@@ -257,10 +254,12 @@ public class SvgGdi implements Gdi {
 
 	public void chord(int sxr, int syr, int exr, int eyr, int sxa, int sya,
 			int exa, int eya) {
-		int rx = Math.abs(exr - sxr)/2;
-		int ry = Math.abs(eyr - syr)/2;
-		int cx = Math.min(sxr, exr) + rx;
-		int cy = Math.min(syr, eyr) + ry;
+		double rx = (Math.abs(exr - sxr)-1)/2.0;
+		double ry = (Math.abs(eyr - syr)-1)/2.0;
+		if (rx <= 0 || ry <= 0) return;
+		
+		double cx = Math.min(sxr, exr) + rx;
+		double cy = Math.min(syr, eyr) + ry;
 		
 		Element elem = null;
 		if (sxa == exa && sya == eya) {
@@ -278,30 +277,25 @@ public class SvgGdi implements Gdi {
 			}
 		} else {
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
-			double sxa2 = rx * Math.cos(sa);
-			double sya2 = ry * Math.sin(sa);
+			double sx = rx * Math.cos(sa);
+			double sy = ry * Math.sin(sa);
 			
 			double ea = Math.atan2((eya - cy) * rx, (exa - cx) * ry);
-			double exa2 = rx * Math.cos(ea);
-			double eya2 = ry * Math.sin(ea);
+			double ex = rx * Math.cos(ea);
+			double ey = ry * Math.sin(ea);
 			
-			double ba = Math.atan2(eya2-sya2, exa2-sxa2);
+			double ba = Math.atan2(ey-sy, ex-sx);
 			if (ba < 0) ba += 2.0 * Math.PI;
-			double ca = Math.atan2(-sya2, -sxa2);
+			double ca = Math.atan2(-sy, -sx);
 			if (ca < 0) ca += 2.0 * Math.PI;
 			double a = ca - ba;
 			if (a > Math.PI) a -= 2.0 * Math.PI;
 			
-			sxa = dc.toAbsoluteX((int)Math.round(sxa2) + cx);
-			sya = dc.toAbsoluteY((int)Math.round(sya2) + cy);
-			exa = dc.toAbsoluteX((int)Math.round(exa2) + cx);
-			eya = dc.toAbsoluteY((int)Math.round(eya2) + cy);
-			
 			elem = doc.createElement("path");
-			elem.setAttribute("d", "M " + sxa + "," + sya
+			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
 					+ " A " + dc.toRelativeX(rx) + "," + dc.toRelativeY(ry)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
-					+ " " + exa + "," + eya + " z");
+					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy) + " z");
 		}
 
 		if (dc.getPen() != null || dc.getBrush() != null) {
@@ -767,10 +761,12 @@ public class SvgGdi implements Gdi {
 
 	public void pie(int sxr, int syr, int exr, int eyr, int sxa, int sya,
 			int exa, int eya) {
-		int rx = Math.abs(exr - sxr)/2;
-		int ry = Math.abs(eyr - syr)/2;
-		int cx = Math.min(sxr, exr) + rx;
-		int cy = Math.min(syr, eyr) + ry;
+		double rx = (Math.abs(exr - sxr)-1)/2.0;
+		double ry = (Math.abs(eyr - syr)-1)/2.0;
+		if (rx <= 0 || ry <= 0) return;
+		
+		double cx = Math.min(sxr, exr) + rx;
+		double cy = Math.min(syr, eyr) + ry;
 		
 		Element elem = null;
 		if (sxa == exa && sya == eya) {
@@ -788,31 +784,26 @@ public class SvgGdi implements Gdi {
 			}
 		} else {
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
-			double sxa2 = rx * Math.cos(sa);
-			double sya2 = ry * Math.sin(sa);
+			double sx = rx * Math.cos(sa);
+			double sy = ry * Math.sin(sa);
 			
 			double ea = Math.atan2((eya - cy) * rx, (exa - cx) * ry);
-			double exa2 = rx * Math.cos(ea);
-			double eya2 = ry * Math.sin(ea);
+			double ex = rx * Math.cos(ea);
+			double ey = ry * Math.sin(ea);
 			
-			double ba = Math.atan2(eya2-sya2, exa2-sxa2);
+			double ba = Math.atan2(ey-sy, ex-sx);
 			if (ba < 0) ba += 2.0 * Math.PI;
-			double ca = Math.atan2(-sya2, -sxa2);
+			double ca = Math.atan2(-sy, -sx);
 			if (ca < 0) ca += 2.0 * Math.PI;
 			double a = ca - ba;
 			if (a > Math.PI) a -= 2.0 * Math.PI;
 			
-			sxa = dc.toAbsoluteX((int)Math.round(sxa2) + cx);
-			sya = dc.toAbsoluteY((int)Math.round(sya2) + cy);
-			exa = dc.toAbsoluteX((int)Math.round(exa2) + cx);
-			eya = dc.toAbsoluteY((int)Math.round(eya2) + cy);
-			
 			elem = doc.createElement("path");
-			elem.setAttribute("d", "M " + sxa + "," + sya 
-					+ " L " + sxa + "," + sya
+			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
+					+ " L " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
 					+ " A " + dc.toRelativeX(rx) + "," + dc.toRelativeY(ry)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
-					+ " " + exa + "," + eya + " z");
+					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy) + " z");
 		}
 
 		if (dc.getPen() != null || dc.getBrush() != null) {
