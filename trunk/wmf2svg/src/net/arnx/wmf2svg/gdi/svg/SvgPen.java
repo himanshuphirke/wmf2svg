@@ -93,6 +93,9 @@ class SvgPen extends SvgObject implements GdiPen {
 
 			// stroke-width
 			buffer.append("stroke-width: " + width + "; ");
+			
+			// stroke-linejoin
+			buffer.append("stroke-linejoin: round; ");
 
 			// stroke-dasharray
 			if (width == 1 && PS_DASH <= style && style <= PS_DASHDOTDOT) {
