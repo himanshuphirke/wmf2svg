@@ -18,10 +18,10 @@ package net.arnx.wmf2svg.gdi.svg;
 /**
  * @author Hidekatsu Izuno
  */
-abstract class SvgStyleObject {
+abstract class SvgObject {
 	private SvgGdi gdi;
 
-	public SvgStyleObject(SvgGdi gdi) {
+	public SvgObject(SvgGdi gdi) {
 		this.gdi = gdi;
 	}
 

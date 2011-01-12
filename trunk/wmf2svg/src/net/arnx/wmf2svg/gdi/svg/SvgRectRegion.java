@@ -2,13 +2,13 @@ package net.arnx.wmf2svg.gdi.svg;
 
 import org.w3c.dom.Element;
 
-class SvgStyleRectRegion extends SvgStyleRegion {
+class SvgRectRegion extends SvgRegion {
 	private int left;
 	private int top;
 	private int right;
 	private int bottom;
 	
-	public SvgStyleRectRegion(SvgGdi gdi, int left, int top, int right, int bottom) {
+	public SvgRectRegion(SvgGdi gdi, int left, int top, int right, int bottom) {
 		super(gdi);
 		this.left = left;
 		this.top = top;
@@ -58,7 +58,7 @@ class SvgStyleRectRegion extends SvgStyleRegion {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SvgStyleRectRegion other = (SvgStyleRectRegion) obj;
+		SvgRectRegion other = (SvgRectRegion) obj;
 		if (bottom != other.bottom)
 			return false;
 		if (left != other.left)
