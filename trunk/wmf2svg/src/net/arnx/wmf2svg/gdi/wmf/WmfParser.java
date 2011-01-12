@@ -278,9 +278,11 @@ public class WmfParser {
 						break;
 					case RECORD_CREATE_PATTERN_BRUSH :
 						{
+							byte[] image = in.readBytes(size * 2 - in.getCount());
+							
 							for (int i = 0; i < objs.length; i++) {
 								if (objs[i] == null) {
-									objs[i] = gdi.createPatternBrush();
+									objs[i] = gdi.createPatternBrush(image);
 									break;
 								}
 							}
@@ -311,8 +313,7 @@ public class WmfParser {
 									objs[i] = gdi.createRectRgn(sx, sy, ex, ey);
 									break;
 								}
-							}
-							
+							}							
 						}
 						break;
 					case RECORD_DELETE_OBJECT :

@@ -349,11 +349,8 @@ public class SvgGdi implements Gdi {
 		};
 	}
 
-	public GdiBrush createPatternBrush() {
-		// TODO
-		log.fine("not implemented: createPatternBrush");
-		return new GdiBrush() {
-		};
+	public GdiBrush createPatternBrush(byte[] image) {
+		return new SvgPatternBrush(this, image);
 	}
 
 	public GdiPen createPenIndirect(int style, int width, int color) {
