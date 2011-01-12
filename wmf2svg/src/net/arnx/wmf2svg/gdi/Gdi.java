@@ -123,7 +123,7 @@ public interface Gdi {
 				      int charset, int outPrecision, int clipPrecision,
 				      int quality, int pitchAndFamily, byte[] faceName);
     public GdiPalette createPalette();
-    public GdiBrush createPatternBrush();
+    public GdiBrush createPatternBrush(byte[] image);
     public GdiPen createPenIndirect(int style, int width, int color);
     public GdiRegion createRectRgn(int left, int top, int right, int bottom);
     public void deleteObject(GdiObject obj);
