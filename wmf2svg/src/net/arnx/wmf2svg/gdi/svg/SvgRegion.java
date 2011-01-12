@@ -4,8 +4,8 @@ import org.w3c.dom.Element;
 
 import net.arnx.wmf2svg.gdi.GdiRegion;
 
-abstract class SvgStyleRegion extends SvgStyleObject implements GdiRegion {
-	public SvgStyleRegion(SvgGdi gdi) {
+abstract class SvgRegion extends SvgObject implements GdiRegion {
+	public SvgRegion(SvgGdi gdi) {
 		super(gdi);
 	}
 	

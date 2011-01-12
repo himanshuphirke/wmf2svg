@@ -22,13 +22,13 @@ import net.arnx.wmf2svg.gdi.*;
 /**
  * @author Hidekatsu Izuno
  */
-class SvgStylePen extends SvgStyleObject implements GdiPen {
+class SvgPen extends SvgObject implements GdiPen {
 	
 	private int style;
 	private int width;
 	private int color;
 
-	public SvgStylePen(
+	public SvgPen(
 		SvgGdi gdi,
 		int style,
 		int width,
@@ -68,7 +68,7 @@ class SvgStylePen extends SvgStyleObject implements GdiPen {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final SvgStylePen other = (SvgStylePen) obj;
+		final SvgPen other = (SvgPen) obj;
 		if (color != other.color)
 			return false;
 		if (style != other.style)

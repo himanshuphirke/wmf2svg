@@ -24,7 +24,7 @@ import net.arnx.wmf2svg.gdi.*;
 /**
  * @author Hidekatsu Izuno
  */
-class SvgStyleFont extends SvgStyleObject implements GdiFont {
+class SvgFont extends SvgObject implements GdiFont {
 	private int height;
 	private int width;
 	private int escapement;
@@ -42,7 +42,7 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 	private String faceName;
 	private String lang;
 
-	public SvgStyleFont(
+	public SvgFont(
 		SvgGdi gdi,
 		int height,
 		int width,
@@ -311,7 +311,7 @@ class SvgStyleFont extends SvgStyleObject implements GdiFont {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final SvgStyleFont other = (SvgStyleFont) obj;
+		final SvgFont other = (SvgFont) obj;
 		if (charset != other.charset)
 			return false;
 		if (clipPrecision != other.clipPrecision)

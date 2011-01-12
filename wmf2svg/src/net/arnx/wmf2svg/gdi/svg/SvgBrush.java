@@ -22,12 +22,12 @@ import net.arnx.wmf2svg.gdi.*;
 /**
  * @author Hidekatsu Izuno
  */
-class SvgStyleBrush extends SvgStyleObject implements GdiBrush {
+class SvgBrush extends SvgObject implements GdiBrush {
 	private int style;
 	private int color;
 	private int hatch;
 
-	public SvgStyleBrush(
+	public SvgBrush(
 		SvgGdi gdi,
 		int style,
 		int color,
@@ -164,7 +164,7 @@ class SvgStyleBrush extends SvgStyleObject implements GdiBrush {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final SvgStyleBrush other = (SvgStyleBrush) obj;
+		final SvgBrush other = (SvgBrush) obj;
 		if (color != other.color)
 			return false;
 		if (hatch != other.hatch)

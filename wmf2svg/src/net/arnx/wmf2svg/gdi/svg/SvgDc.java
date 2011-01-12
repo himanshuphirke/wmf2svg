@@ -81,9 +81,9 @@ public class SvgDc implements Cloneable {
 	private long layout = 0;
 	private long mapperFlags = 0;
 	
-	private SvgStyleBrush brush = null;
-	private SvgStyleFont font = null;
-	private SvgStylePen pen = null;
+	private SvgBrush brush = null;
+	private SvgFont font = null;
+	private SvgPen pen = null;
 	
 	private Element mask = null;
 	
@@ -360,27 +360,27 @@ public class SvgDc implements Cloneable {
 		mapperFlags = flags;
 	}
 	
-	public SvgStyleBrush getBrush() {
+	public SvgBrush getBrush() {
 		return brush;
 	}
 	
-	public void setBrush(SvgStyleBrush brush) {
+	public void setBrush(SvgBrush brush) {
 		this.brush = brush;
 	}
 
-	public SvgStyleFont getFont() {
+	public SvgFont getFont() {
 		return font;
 	}
 	
-	public void setFont(SvgStyleFont font) {
+	public void setFont(SvgFont font) {
 		this.font = font;
 	}
 
-	public SvgStylePen getPen() {
+	public SvgPen getPen() {
 		return pen;
 	}
 	
-	public void setPen(SvgStylePen pen) {
+	public void setPen(SvgPen pen) {
 		this.pen = pen;
 	}
 	
