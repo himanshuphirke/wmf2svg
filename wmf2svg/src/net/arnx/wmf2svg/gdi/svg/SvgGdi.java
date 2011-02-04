@@ -196,8 +196,8 @@ public class SvgGdi implements Gdi {
 
 	public void arc(int sxr, int syr, int exr, int eyr, int sxa, int sya,
 			int exa, int eya) {
-		double rx = (Math.abs(exr - sxr)-1)/2.0;
-		double ry = (Math.abs(eyr - syr)-1)/2.0;
+		double rx = Math.abs(exr - sxr)/2.0;
+		double ry = Math.abs(eyr - syr)/2.0;
 		if (rx <= 0 || ry <= 0) return;
 		
 		double cx = Math.min(sxr, exr) + rx;
@@ -207,15 +207,15 @@ public class SvgGdi implements Gdi {
 		if (sxa == exa && sya == eya) {
 			if (rx == ry) {
 				elem = doc.createElement("circle");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX(cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY(cy));
-				elem.setAttribute("r", "" + dc.toRelativeX(rx));
+				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
+				elem.setAttribute("r", "" + dc.toRelativeX((int)rx));
 			} else {
 				elem = doc.createElement("ellipse");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX(cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY(cy));
-				elem.setAttribute("rx", "" + dc.toRelativeX(rx));
-				elem.setAttribute("ry", "" + dc.toRelativeY(ry));
+				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
+				elem.setAttribute("rx", "" + dc.toRelativeX((int)rx));
+				elem.setAttribute("ry", "" + dc.toRelativeY((int)ry));
 			}
 		} else {
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
@@ -265,15 +265,15 @@ public class SvgGdi implements Gdi {
 		if (sxa == exa && sya == eya) {
 			if (rx == ry) {
 				elem = doc.createElement("circle");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX(cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY(cy));
-				elem.setAttribute("r", "" + dc.toRelativeX(rx));
+				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
+				elem.setAttribute("r", "" + dc.toRelativeX((int)rx));
 			} else {
 				elem = doc.createElement("ellipse");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX(cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY(cy));
-				elem.setAttribute("rx", "" + dc.toRelativeX(rx));
-				elem.setAttribute("ry", "" + dc.toRelativeY(ry));
+				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
+				elem.setAttribute("rx", "" + dc.toRelativeX((int)rx));
+				elem.setAttribute("ry", "" + dc.toRelativeY((int)ry));
 			}
 		} else {
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
@@ -772,15 +772,15 @@ public class SvgGdi implements Gdi {
 		if (sxa == exa && sya == eya) {
 			if (rx == ry) {
 				elem = doc.createElement("circle");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX(cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY(cy));
-				elem.setAttribute("r", "" + dc.toRelativeX(rx));
+				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
+				elem.setAttribute("r", "" + dc.toRelativeX((int)rx));
 			} else {
 				elem = doc.createElement("ellipse");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX(cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY(cy));
-				elem.setAttribute("rx", "" + dc.toRelativeX(rx));
-				elem.setAttribute("ry", "" + dc.toRelativeY(ry));
+				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
+				elem.setAttribute("rx", "" + dc.toRelativeX((int)rx));
+				elem.setAttribute("ry", "" + dc.toRelativeY((int)ry));
 			}
 		} else {
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
