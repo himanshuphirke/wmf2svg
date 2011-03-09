@@ -226,12 +226,7 @@ public class SvgGdi implements Gdi {
 			double ex = rx * Math.cos(ea);
 			double ey = ry * Math.sin(ea);
 			
-			double ba = Math.atan2(ey-sy, ex-sx);
-			if (ba < 0) ba += 2.0 * Math.PI;
-			double ca = Math.atan2(-sy, -sx);
-			if (ca < 0) ca += 2.0 * Math.PI;
-			double a = ca - ba;
-			if (a > Math.PI) a -= 2.0 * Math.PI;
+			double a = Math.atan2((ex-sx) * (-sy) - (ey-sy) * (-sx), (ex-sx) * (-sx) + (ey-sy) * (-sy));
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
@@ -284,12 +279,7 @@ public class SvgGdi implements Gdi {
 			double ex = rx * Math.cos(ea);
 			double ey = ry * Math.sin(ea);
 			
-			double ba = Math.atan2(ey-sy, ex-sx);
-			if (ba < 0) ba += 2.0 * Math.PI;
-			double ca = Math.atan2(-sy, -sx);
-			if (ca < 0) ca += 2.0 * Math.PI;
-			double a = ca - ba;
-			if (a > Math.PI) a -= 2.0 * Math.PI;
+			double a = Math.atan2((ex-sx) * (-sy) - (ey-sy) * (-sx), (ex-sx) * (-sx) + (ey-sy) * (-sy));
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
@@ -791,12 +781,7 @@ public class SvgGdi implements Gdi {
 			double ex = rx * Math.cos(ea);
 			double ey = ry * Math.sin(ea);
 			
-			double ba = Math.atan2(ey-sy, ex-sx);
-			if (ba < 0) ba += 2.0 * Math.PI;
-			double ca = Math.atan2(-sy, -sx);
-			if (ca < 0) ca += 2.0 * Math.PI;
-			double a = ca - ba;
-			if (a > Math.PI) a -= 2.0 * Math.PI;
+			double a = Math.atan2((ex-sx) * (-sy) - (ey-sy) * (-sx), (ex-sx) * (-sx) + (ey-sy) * (-sy));
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
