@@ -242,7 +242,7 @@ public class SvgDc implements Cloneable {
 	
 	public int toAbsoluteX(double x) {
 		// TODO Handle Viewport
-		return (int)(((ww >= 0) ? 1 : -1) * (mx * x - (wx + wox)) / wsy);
+		return (int)(((ww >= 0) ? 1 : -1) * (mx * x - (wx + wox)) / wsx);
 	}
 	
 	public int toAbsoluteY(double y) {

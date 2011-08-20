@@ -9,4 +9,8 @@ public class SvgPatternBrush extends SvgObject implements GdiBrush {
 		super(gdi);
 		this.bmp = bmp;
 	}
+	
+	public byte[] getPattern() {
+		return bmp;
+	}
 }

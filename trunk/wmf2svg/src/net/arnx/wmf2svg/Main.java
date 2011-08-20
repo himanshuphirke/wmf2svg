@@ -43,11 +43,14 @@ public class Main {
 		String dest = null;
 		
 		boolean debug = false;
+		boolean compatible = false;
 		
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].startsWith("-")) {
 				if (args[i].equals("-debug")) {
 					debug = true;
+				} else if (args[i].equals("-compatible")) {
+					compatible = true;
 				} else {
 					usage();
 					return;
@@ -67,7 +70,7 @@ public class Main {
 		try {
 			InputStream in = new FileInputStream(src);
 			WmfParser parser = new WmfParser();
-			final SvgGdi gdi = new SvgGdi();
+			final SvgGdi gdi = new SvgGdi(compatible);
 			if (debug) {
 				ClassLoader cl = gdi.getClass().getClassLoader();
 				Class[] interfaces = new Class[] { Gdi.class };

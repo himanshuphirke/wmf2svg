@@ -26,76 +26,7 @@ import net.arnx.wmf2svg.io.DataInput;
  * @author Hidekatsu Izuno
  * @author Shunsuke Mori
  */
-public class WmfParser {
-	private static final int RECORD_ANIMATE_PALETTE = 0x0436;
-	private static final int RECORD_ARC = 0x0817;
-	private static final int RECORD_BIT_BLT = 0x0922;
-	private static final int RECORD_CHORD = 0x0830;
-	private static final int RECORD_CREATE_BRUSH_INDIRECT = 0x02FC;
-	private static final int RECORD_CREATE_FONT_INDIRECT = 0x02FB;
-	private static final int RECORD_CREATE_PALETTE = 0x00F7;
-	private static final int RECORD_CREATE_PATTERN_BRUSH = 0x01F9;
-	private static final int RECORD_CREATE_PEN_INDIRECT = 0x02FA;
-	private static final int RECORD_CREATE_RECT_RGN = 0x06FF;
-	private static final int RECORD_DELETE_OBJECT = 0x01F0;
-	private static final int RECORD_DIB_BIT_BLT = 0x0940;
-	private static final int RECORD_DIB_CREATE_PATTERN_BRUSH = 0x0142;
-	private static final int RECORD_DIB_STRETCH_BLT = 0x0B41;
-	private static final int RECORD_ELLIPSE = 0x0418;
-	private static final int RECORD_ESCAPE = 0x0626;
-	private static final int RECORD_EXCLUDE_CLIP_RECT = 0x0415;
-	private static final int RECORD_EXT_FLOOD_FILL = 0x0548;
-	private static final int RECORD_EXT_TEXT_OUT = 0x0A32;
-	private static final int RECORD_FILL_RGN = 0x0228;
-	private static final int RECORD_FLOOD_FILL = 0x0419;
-	private static final int RECORD_FRAME_RGN = 0x0429;
-	private static final int RECORD_INTERSECT_CLIP_RECT = 0x0416;
-	private static final int RECORD_INVERT_RGN = 0x012A;
-	private static final int RECORD_LINE_TO = 0x0213;
-	private static final int RECORD_MOVE_TO_EX = 0x0214;
-	private static final int RECORD_OFFSET_CLIP_RGN = 0x0220;
-	private static final int RECORD_OFFSET_VIEWPORT_ORG_EX = 0x0211;
-	private static final int RECORD_OFFSET_WINDOW_ORG_EX = 0x020F;
-	private static final int RECORD_PAINT_RGN = 0x012B;
-	private static final int RECORD_PAT_BLT = 0x061D;
-	private static final int RECORD_PIE = 0x081A;
-	private static final int RECORD_POLYGON = 0x0324;
-	private static final int RECORD_POLYLINE = 0x0325;
-	private static final int RECORD_POLY_POLYGON = 0x0538;
-	private static final int RECORD_REALIZE_PALETTE = 0x0035;
-	private static final int RECORD_RECTANGLE = 0x041B;
-	private static final int RECORD_RESIZE_PALETTE = 0x0139;
-	private static final int RECORD_RESTORE_DC = 0x0127;
-	private static final int RECORD_ROUND_RECT = 0x061C;
-	private static final int RECORD_SAVE_DC = 0x001E;
-	private static final int RECORD_SCALE_VIEWPORT_EXT_EX = 0x0412;
-	private static final int RECORD_SCALE_WINDOW_EXT_EX = 0x0410;
-	private static final int RECORD_SELECT_CLIP_RGN = 0x012C;
-	private static final int RECORD_SELECT_OBJECT = 0x012D;
-	private static final int RECORD_SELECT_PALETTE = 0x0234;
-	private static final int RECORD_SET_BK_COLOR = 0x0201;
-	private static final int RECORD_SET_BK_MODE = 0x0102;
-	private static final int RECORD_SET_DIBITS_TO_DEVICE = 0x0D33;
-	private static final int RECORD_SET_LAYOUT = 0x0149;
-	private static final int RECORD_SET_MAP_MODE = 0x0103;
-	private static final int RECORD_SET_MAPPER_FLAGS = 0x0231;
-	private static final int RECORD_SET_PALETTE_ENTRIES = 0x0037;
-	private static final int RECORD_SET_PIXEL = 0x041F;
-	private static final int RECORD_SET_POLY_FILL_MODE = 0x0106;
-	private static final int RECORD_SET_REL_ABS = 0x0105;
-	private static final int RECORD_SET_ROP2 = 0x0104;
-	private static final int RECORD_SET_STRETCH_BLT_MODE = 0x0107;
-	private static final int RECORD_SET_TEXT_ALIGN = 0x012E;
-	private static final int RECORD_SET_TEXT_CHARACTER_EXTRA = 0x0108;
-	private static final int RECORD_SET_TEXT_COLOR = 0x0209;
-	private static final int RECORD_SET_TEXT_JUSTIFICATION = 0x020A;
-	private static final int RECORD_SET_VIEWPORT_EXT_EX = 0x020E;
-	private static final int RECORD_SET_VIEWPORT_ORG_EX = 0x020D;
-	private static final int RECORD_SET_WINDOW_EXT_EX = 0x020C;
-	private static final int RECORD_SET_WINDOW_ORG_EX = 0x020B;
-	private static final int RECORD_STRETCH_BLT = 0x0B23;
-	private static final int RECORD_STRETCH_DIBITS = 0x0F43;
-	private static final int RECORD_TEXT_OUT = 0x0521;
+public class WmfParser implements WmfConstants {
 	
 	private static Logger log = Logger.getLogger(WmfParser.class.getName());
 	
