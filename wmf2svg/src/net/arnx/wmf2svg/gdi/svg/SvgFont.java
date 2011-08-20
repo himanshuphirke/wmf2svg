@@ -149,7 +149,7 @@ class SvgFont extends SvgObject implements GdiFont {
 		if (encoding == null) {
 			encoding = "Cp1252";
 		}
-
+		
 		try {
 			str = new String(chars, 0, length, encoding);
 		} catch (java.io.UnsupportedEncodingException e) {

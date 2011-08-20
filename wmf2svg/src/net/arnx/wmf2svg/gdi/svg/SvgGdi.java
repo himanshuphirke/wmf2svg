@@ -33,6 +33,8 @@ import net.arnx.wmf2svg.util.ImageUtil;
 public class SvgGdi implements Gdi {
 	private static Logger log = Logger.getLogger(SvgGdi.class.getName());
 	
+	private boolean compatible;
+	
 	private Map props = new HashMap();
 
 	private SvgDc dc;
@@ -70,8 +72,14 @@ public class SvgGdi implements Gdi {
 	private SvgPen defaultPen;
 
 	private SvgFont defaultFont;
-
+	
 	public SvgGdi() throws SvgGdiException {
+		this(false);
+	}
+	
+	public SvgGdi(boolean compatible) throws SvgGdiException {
+		this.compatible = compatible;
+		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		try {
@@ -196,6 +204,7 @@ public class SvgGdi implements Gdi {
 
 	public void arc(int sxr, int syr, int exr, int eyr, int sxa, int sya,
 			int exa, int eya) {
+		
 		double rx = Math.abs(exr - sxr)/2.0;
 		double ry = Math.abs(eyr - syr)/2.0;
 		if (rx <= 0 || ry <= 0) return;
@@ -229,10 +238,10 @@ public class SvgGdi implements Gdi {
 			double a = Math.atan2((ex-sx) * (-sy) - (ey-sy) * (-sx), (ex-sx) * (-sx) + (ey-sy) * (-sy));
 			
 			elem = doc.createElement("path");
-			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " A " + dc.toRelativeX(rx) + "," + dc.toRelativeY(ry)
+			elem.setAttribute("d", "M " + dc.toAbsoluteX(Math.round(sx + cx)) + "," + dc.toAbsoluteY(Math.round(sy + cy))
+					+ " A " + dc.toRelativeX((int)rx) + "," + dc.toRelativeY((int)ry)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
-					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy));
+					+ " " + dc.toAbsoluteX(Math.round(ex + cx)) + "," + dc.toAbsoluteY(Math.round(ey + cy)));
 		}
 		
 		if (dc.getPen() != null) {
@@ -282,10 +291,10 @@ public class SvgGdi implements Gdi {
 			double a = Math.atan2((ex-sx) * (-sy) - (ey-sy) * (-sx), (ex-sx) * (-sx) + (ey-sy) * (-sy));
 			
 			elem = doc.createElement("path");
-			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " A " + dc.toRelativeX(rx) + "," + dc.toRelativeY(ry)
+			elem.setAttribute("d", "M " + dc.toAbsoluteX(Math.round(sx + cx)) + "," + dc.toAbsoluteY(Math.round(sy + cy))
+					+ " A " + dc.toRelativeX((int)rx) + "," + dc.toRelativeY((int)ry)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
-					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy) + " z");
+					+ " " + dc.toAbsoluteX(Math.round(ex + cx)) + "," + dc.toAbsoluteY(Math.round(ey + cy)) + " z");
 		}
 
 		if (dc.getPen() != null || dc.getBrush() != null) {
@@ -436,8 +445,7 @@ public class SvgGdi implements Gdi {
 		log.fine("not implemented: extFloodFill");
 	}
 
-	public void extTextOut(int x, int y, int options, int[] rect, byte[] text,
-			int[] dx) {
+	public void extTextOut(int x, int y, int options, int[] rect, byte[] text, int[] dx) {
 		Element elem = doc.createElement("text");
 
 		int escapement = 0;
@@ -457,24 +465,27 @@ public class SvgGdi implements Gdi {
 		buffer.setLength(0);
 		int align = dc.getTextAlign();
 
-		if ((align & 0x0006) == TA_RIGHT) {
+		if ((align & (TA_LEFT|TA_CENTER|TA_RIGHT)) == TA_RIGHT) {
 			buffer.append("text-anchor: end; ");
-		} else if ((align & 0x0006) == TA_CENTER) {
+		} else if ((align & (TA_LEFT|TA_CENTER|TA_RIGHT)) == TA_CENTER) {
 			buffer.append("text-anchor: middle; ");
 		}
-
-		if (vertical) {
-			elem.setAttribute("writing-mode", "tb");
-			buffer.append("dominant-baseline: ideographic; baseline-shift: -15%;");
+		
+		if (compatible) {
+			buffer.append("dominant-baseline: baseline; ");
 		} else {
-			if ((align & 0x0018) == TA_BASELINE) {
-				buffer.append("dominant-baseline: baseline; ");
+			if (vertical) {
+				elem.setAttribute("writing-mode", "tb");
 			} else {
-				buffer.append("dominant-baseline: text-before-edge; ");				
+				if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BASELINE) {
+					buffer.append("dominant-baseline: baseline; ");
+				} else {
+					buffer.append("dominant-baseline: text-before-edge; ");				
+				}
 			}
 		}
 
-		if ((align & 0x0100) == TA_RTLREADING  || (options & ETO_RTLREADING) > 0) {
+		if ((align & TA_RTLREADING) == TA_RTLREADING  || (options & ETO_RTLREADING) > 0) {
 			buffer.append("unicode-bidi: bidi-override; direction: rtl; ");
 		}
 
@@ -489,7 +500,7 @@ public class SvgGdi implements Gdi {
 
 		elem.setAttribute("stroke", "none");
 
-		if ((align & 0x0001) == TA_UPDATECP) {
+		if ((align & (TA_NOUPDATECP|TA_UPDATECP)) == TA_UPDATECP) {
 			x = dc.getCurrentX();
 			y = dc.getCurrentY();
 		}
@@ -501,67 +512,97 @@ public class SvgGdi implements Gdi {
 			elem.setAttribute("x", Integer.toString(ax));
 			if (dc.getFont() != null) width = dc.getFont().getFontSize();
 		} else {
-			buffer.setLength(0);
-			buffer.append(ax);
-
 			if (dc.getFont() != null) {
 				dx = dc.getFont().validateDx(text, dx);
 			}
 			
-			if (dx != null) {
-				for (int i = 0; i < dx.length - 1; i++) {
-					x += dx[i];
-					buffer.append(" ").append(dc.toAbsoluteX(x));
+			if (dx != null && dx.length > 0) {
+				for (int i = 0; i < dx.length; i++) {
 					width += dx[i];
 				}
-	
-				if ((align & 0x0001) == TA_UPDATECP) {
-					dc.moveToEx(x + dx[dx.length - 1], y, null);
+
+				int tx = x;
+
+				if ((align & (TA_LEFT|TA_CENTER|TA_RIGHT)) == TA_RIGHT) {
+					tx -= (width-dx[dx.length-1]);
+				} else if ((align & (TA_LEFT|TA_CENTER|TA_RIGHT)) == TA_CENTER) {
+					tx -= (width-dx[dx.length-1]) / 2;
 				}
-				width += dx[dx.length - 1];
+				
+				buffer.setLength(0);
+				for (int i = 0; i < dx.length; i++) {
+					if (i > 0) buffer.append(" ");
+					buffer.append(dc.toAbsoluteX(tx));
+					tx += dx[i];
+				}
+				if ((align & (TA_NOUPDATECP|TA_UPDATECP)) == TA_UPDATECP) {
+					dc.moveToEx(tx, y, null);
+				}
+				elem.setAttribute("x", buffer.toString());
 			} else {
 				if (dc.getFont() != null) width = (dc.getFont().getFontSize() * text.length)/2;
+				elem.setAttribute("x", Integer.toString(ax));				
 			}
-			
-			elem.setAttribute("x", buffer.toString());
 		}
 		
 		// y
 		int ay = dc.toAbsoluteY(y);
 		int height = 0;
 		if (vertical) {
-			buffer.setLength(0);
-			if( align == 0 ) {
-				buffer.append(ay + Math.abs(dc.toRelativeY(dc.getFont().getHeight())));
-			} else {
-				buffer.append(ay);
-			}
 			if (dc.getFont() != null) {
 				dx = dc.getFont().validateDx(text, dx);
 			}
 			
-			if (dx != null) {
+			buffer.setLength(0);
+			if(align == 0) {
+				buffer.append(ay + Math.abs(dc.toRelativeY(dc.getFont().getHeight())));
+			} else {
+				buffer.append(ay);
+			}
+			
+			if (dx != null && dx.length > 0) {
 				for (int i = 0; i < dx.length - 1; i++) {
-					y += dx[i];
-					buffer.append(" ").append(dc.toAbsoluteY(y));
 					height += dx[i];
 				}
-	
-				if ((align & 0x0001) == TA_UPDATECP) {
-					dc.moveToEx(x, y + dx[dx.length - 1], null);
+				
+				int ty = y;
+
+				if ((align & (TA_LEFT|TA_CENTER|TA_RIGHT)) == TA_RIGHT) {
+					ty -= (height-dx[dx.length-1]);
+				} else if ((align & (TA_LEFT|TA_CENTER|TA_RIGHT)) == TA_CENTER) {
+					ty -= (height-dx[dx.length-1]) / 2;
 				}
-				height += dx[dx.length - 1];
+				
+				for (int i = 0; i < dx.length; i++) {
+					buffer.append(" ");
+					buffer.append(dc.toAbsoluteY(ty));
+					ty += dx[i];
+				}
+	
+				if ((align & (TA_NOUPDATECP|TA_UPDATECP)) == TA_UPDATECP) {
+					dc.moveToEx(x, ty, null);
+				}
 			} else {
 				if (dc.getFont() != null) height = (dc.getFont().getFontSize() * text.length)/2;
 			}
 			elem.setAttribute("y", buffer.toString());
 		} else {
-			if((align & 0x0018) == TA_BOTTOM && rect != null) {
-				elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] - Math.abs(dc.toRelativeY(dc.getFont().getHeight()))));
-			} else {
-				elem.setAttribute("y", Integer.toString(ay));
-			}
 			if (dc.getFont() != null) height = dc.getFont().getFontSize();
+			if (compatible) {
+				if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_TOP) {
+					elem.setAttribute("y", Integer.toString(ay + Math.abs(dc.toRelativeY(height*0.88))));	
+				} else if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BOTTOM) {
+					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] + Math.abs(dc.toRelativeY(height*0.88))));					
+				} else {
+					elem.setAttribute("y", Integer.toString(ay));
+				}
+			} else {
+				if((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BOTTOM && rect != null) {
+					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] - Math.abs(dc.toRelativeY(height))));
+				} else {
+					elem.setAttribute("y", Integer.toString(ay));
+				}				
+			}
 		}
 		
 		Element bk = null;
@@ -570,18 +611,18 @@ public class SvgGdi implements Gdi {
 				rect = new int[4];
 				if (vertical) {
 					rect[0] = x-(int)(width * 0.85);
-					if ((align & 0x0006) == TA_RIGHT) {
+					if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_RIGHT) {
 						rect[0] = y-height;
-					} else if ((align & 0x0006) == TA_CENTER) {
+					} else if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_CENTER) {
 						rect[0] = y-height/2;
 					} else {
 						rect[0] = y;
 					}
 				} else {
-					if ((align & 0x0006) == TA_RIGHT) {
+					if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_RIGHT) {
 						rect[0] = x-width;						
-					} else if ((align & 0x0006) == TA_CENTER) {
-						rect[0] = x-width/2;						
+					} else if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_CENTER) {
+						rect[0] = x-width/2;
 					} else {
 						rect[0] = x;
 					}
@@ -630,6 +671,10 @@ public class SvgGdi implements Gdi {
 			elem.setAttribute("xml:lang", dc.getFont().getLang());
 		}
 		
+		elem.setAttribute("xml:space", "preserve");
+		if (compatible) {
+			str = str.replaceAll("\\r\\n|[\\t\\r\\n ]", "\u00A0");
+		}
 		elem.appendChild(doc.createTextNode(str));
 		
 		if (bk != null || clip != null) {
@@ -784,11 +829,11 @@ public class SvgGdi implements Gdi {
 			double a = Math.atan2((ex-sx) * (-sy) - (ey-sy) * (-sx), (ex-sx) * (-sx) + (ey-sy) * (-sy));
 			
 			elem = doc.createElement("path");
-			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " L " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " A " + dc.toRelativeX(rx) + "," + dc.toRelativeY(ry)
+			elem.setAttribute("d", "M " + dc.toAbsoluteX(Math.round(sx + cx)) + "," + dc.toAbsoluteY(Math.round(sy + cy))
+					+ " L " + dc.toAbsoluteX(Math.round(sx + cx)) + "," + dc.toAbsoluteY(Math.round(sy + cy))
+					+ " A " + dc.toRelativeX((int)rx) + "," + dc.toRelativeY((int)ry)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
-					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy) + " z");
+					+ " " + dc.toAbsoluteX(Math.round(ex + cx)) + "," + dc.toAbsoluteY(Math.round(ey + cy)) + " z");
 		}
 
 		if (dc.getPen() != null || dc.getBrush() != null) {
@@ -1135,9 +1180,9 @@ public class SvgGdi implements Gdi {
 		buffer.setLength(0);
 		int align = dc.getTextAlign();
 
-		if ((align & 0x0006) == TA_RIGHT) {
+		if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_RIGHT) {
 			buffer.append("text-anchor: end; ");
-		} else if ((align & 0x0006) == TA_CENTER) {
+		} else if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_CENTER) {
 			buffer.append("text-anchor: middle; ");
 		}
 
@@ -1145,14 +1190,14 @@ public class SvgGdi implements Gdi {
 			elem.setAttribute("writing-mode", "tb");
 			buffer.append("dominant-baseline: ideographic; ");
 		} else {
-			if ((align & 0x0018) == TA_BASELINE) {
+			if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BASELINE) {
 				buffer.append("dominant-baseline: baseline; ");
 			} else {
 				buffer.append("dominant-baseline: text-before-edge; ");				
 			}
 		}
 
-		if ((align & 0x0100) == TA_RTLREADING) {
+		if ((align & TA_RTLREADING) == TA_RTLREADING) {
 			buffer.append("unicode-bidi: bidi-override; direction: rtl; ");
 		}
 
@@ -1203,6 +1248,10 @@ public class SvgGdi implements Gdi {
 		if (dc.getFont() != null && dc.getFont().getLang() != null) {
 			elem.setAttribute("xml:lang", dc.getFont().getLang());
 		}
+		elem.setAttribute("xml:space", "preserve");
+		if (compatible) {
+			str = str.replaceAll("\\r\\n|[\\t\\r\\n ]", "\u00A0");
+		}
 		elem.appendChild(doc.createTextNode(str));
 		parentNode.appendChild(elem);
 	}
@@ -1217,6 +1266,7 @@ public class SvgGdi implements Gdi {
 		}
 		if (dc.getWindowWidth() != 0 && dc.getWindowHeight() != 0) {
 			root.setAttribute("viewBox", "0 0 " + Math.abs(dc.getWindowWidth()) + " " + Math.abs(dc.getWindowHeight()));
+			root.setAttribute("preserveAspectRatio", "none");
 		}
 		root.setAttribute("stroke-linecap", "round");
 		root.setAttribute("fill-rule", "evenodd");
