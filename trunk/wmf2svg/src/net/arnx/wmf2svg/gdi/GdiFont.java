@@ -64,6 +64,7 @@ public interface GdiFont extends GdiObject {
     public static final int OUT_RASTER_PRECIS = 6;
     public static final int OUT_TT_ONLY_PRECIS = 7;
     public static final int OUT_OUTLINE_PRECIS = 8;
+    public static final int OUT_SCREEN_OUTLINE_PRECIS = 9; 
 
     public static final int CLIP_DEFAULT_PRECIS = 0;
     public static final int CLIP_CHARACTER_PRECIS = 1;
