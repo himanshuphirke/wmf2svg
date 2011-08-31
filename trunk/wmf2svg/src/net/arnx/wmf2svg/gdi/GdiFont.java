@@ -91,4 +91,32 @@ public interface GdiFont extends GdiObject {
     public static final int FF_MODERN = 48;
     public static final int FF_SCRIPT = 64;
     public static final int FF_DECORATIVE = 80;
+    
+	public int getHeight();
+	
+	public int getWidth();
+	
+	public int getEscapement();
+	
+	public int getOrientation();
+	
+	public int getWeight();
+	
+	public boolean isItalic();
+	
+	public boolean isUnderlined();
+	
+	public boolean isStrikedOut();
+	
+	public int getCharset();
+	
+	public int getOutPrecision();
+	
+	public int getClipPrecision();
+	
+	public int getQuality();
+	
+	public int getPitchAndFamily();
+	
+	public String getFaceName();
 }

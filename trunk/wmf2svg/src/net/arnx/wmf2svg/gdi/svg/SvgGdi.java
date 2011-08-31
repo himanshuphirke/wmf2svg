@@ -15,7 +15,6 @@
  */
 package net.arnx.wmf2svg.gdi.svg;
 
-import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -658,13 +657,9 @@ public class SvgGdi implements Gdi {
 		
 		String str = null;
 		if (dc.getFont() != null) {
-			str = dc.getFont().convertEncoding(text);
+			str = GdiUtils.convertString(text, dc.getFont().getCharset());
 		} else {
-			try {
-				str = new String(text, "ASCII");
-			} catch (UnsupportedEncodingException e) {
-				// no handle
-			}
+			str = GdiUtils.convertString(text, GdiFont.DEFAULT_CHARSET);
 		}
 
 		if (dc.getFont() != null && dc.getFont().getLang() != null) {
@@ -1223,13 +1218,9 @@ public class SvgGdi implements Gdi {
 
 		String str = null;
 		if (dc.getFont() != null) {
-			str = dc.getFont().convertEncoding(text);
+			str = GdiUtils.convertString(text, dc.getFont().getCharset());
 		} else {
-			try {
-				str = new String(text, "ASCII");
-			} catch (UnsupportedEncodingException e) {
-				// no handle
-			}
+			str = GdiUtils.convertString(text, GdiFont.DEFAULT_CHARSET);
 		}
 
 		if (dc.getTextCharacterExtra() != 0) {
