@@ -77,10 +77,20 @@ public class WmfGdi implements Gdi, WmfConstants {
 
 	}
 
-	public void arc(int sxr, int syr, int exr, int eyr, int sxa, int sya,
-			int exa, int eya) {
-		// TODO Auto-generated method stub
-
+	public void arc(int sxr, int syr, int exr, int eyr, int sxa, int sya, int exa, int eya) {
+		byte[] record = new byte[22];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_ARC);
+		pos = setInt16(record, pos, eya);
+		pos = setInt16(record, pos, exa);
+		pos = setInt16(record, pos, sya);
+		pos = setInt16(record, pos, sxa);
+		pos = setInt16(record, pos, eyr);
+		pos = setInt16(record, pos, exr);
+		pos = setInt16(record, pos, syr);
+		pos = setInt16(record, pos, sxr);
+		records.add(record);
 	}
 
 	public void bitBlt(byte[] bits, int dx, int dy, int width, int height,
@@ -89,10 +99,20 @@ public class WmfGdi implements Gdi, WmfConstants {
 
 	}
 
-	public void chord(int sxr, int syr, int exr, int eyr, int sxa, int sya,
-			int exa, int eya) {
-		// TODO Auto-generated method stub
-
+	public void chord(int sxr, int syr, int exr, int eyr, int sxa, int sya, int exa, int eya) {
+		byte[] record = new byte[22];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_CHORD);
+		pos = setInt16(record, pos, eya);
+		pos = setInt16(record, pos, exa);
+		pos = setInt16(record, pos, sya);
+		pos = setInt16(record, pos, sxa);
+		pos = setInt16(record, pos, eyr);
+		pos = setInt16(record, pos, exr);
+		pos = setInt16(record, pos, syr);
+		pos = setInt16(record, pos, sxr);
+		records.add(record);
 	}
 
 	public GdiBrush createBrushIndirect(int style, int color, int hatch) {
@@ -115,7 +135,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 			boolean strikeout, int charset, int outPrecision,
 			int clipPrecision, int quality, int pitchAndFamily, byte[] faceName) {
 
-		byte[] record = new byte[24 + faceName.length];
+		byte[] record = new byte[24 + (faceName.length + faceName.length%2)];
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_CREATE_FONT_INDIRECT);
@@ -133,9 +153,12 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setByte(record, pos, quality);
 		pos = setByte(record, pos, pitchAndFamily);
 		pos = setBytes(record, pos, faceName);
+		if (faceName.length%2 == 1) pos = setByte(record, pos, 0);
 		records.add(record);
 		
-		WmfGdiFont font = new WmfGdiFont(objects.size());
+		WmfGdiFont font = new WmfGdiFont(objects.size(), height, width, escapement,
+				orientation, weight, italic, underline, strikeout, charset, outPrecision,
+				clipPrecision, quality, pitchAndFamily, faceName);
 		objects.add(font);
 		return font;
 	}
@@ -210,8 +233,29 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void extTextOut(int x, int y, int options, int[] rect, byte[] text, int[] lpdx) {
-		// TODO Auto-generated method stub
-
+		if (rect != null && rect.length != 4) {
+			throw new IllegalArgumentException("rect must be 4 length.");
+		}
+		byte[] record = new byte[14 + ((rect != null) ? 8 : 0) + (text.length + text.length%2) + (lpdx.length * 2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_EXT_TEXT_OUT);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		pos = setInt16(record, pos, text.length);
+		pos = setInt16(record, pos, options);
+		if (rect != null) {
+			pos = setInt16(record, pos, rect[0]);
+			pos = setInt16(record, pos, rect[1]);
+			pos = setInt16(record, pos, rect[2]);
+			pos = setInt16(record, pos, rect[3]);				
+		}
+		pos = setBytes(record, pos, text);
+		if (text.length%2 == 1) pos = setByte(record, pos, 0);
+		for (int i = 0; i < lpdx.length; i++) {
+			pos = setInt16(record, pos, lpdx[i]);
+		}
+		records.add(record);
 	}
 
 	public void fillRgn(GdiRegion rgn, GdiBrush brush) {
@@ -284,10 +328,20 @@ public class WmfGdi implements Gdi, WmfConstants {
 
 	}
 
-	public void pie(int sx, int sy, int ex, int ey, int sxr, int syr, int exr,
-			int eyr) {
-		// TODO Auto-generated method stub
-
+	public void pie(int sx, int sy, int ex, int ey, int sxr, int syr, int exr, int eyr) {
+		byte[] record = new byte[22];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_PIE);
+		pos = setInt16(record, pos, eyr);
+		pos = setInt16(record, pos, exr);
+		pos = setInt16(record, pos, syr);
+		pos = setInt16(record, pos, sxr);
+		pos = setInt16(record, pos, ey);
+		pos = setInt16(record, pos, ex);
+		pos = setInt16(record, pos, sy);
+		pos = setInt16(record, pos, sx);
+		records.add(record);
 	}
 
 	public void polygon(Point[] points) {
@@ -462,13 +516,22 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void setViewportExtEx(int x, int y, Size old) {
-		// TODO Auto-generated method stub
-
-	}
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_VIEWPORT_EXT_EX);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		records.add(record);	}
 
 	public void setViewportOrgEx(int x, int y, Point old) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_VIEWPORT_ORG_EX);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		records.add(record);
 	}
 
 	public void setWindowExtEx(int width, int height, Size old) {
@@ -504,8 +567,16 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void textOut(int x, int y, byte[] text) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10 + text.length + text.length%2];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_TEXT_OUT);
+		pos = setInt16(record, pos, text.length);
+		pos = setBytes(record, pos, text);
+		if (text.length%2 == 1) pos = setByte(record, pos, 0);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		records.add(record);
 	}
 
 	public void footer() {

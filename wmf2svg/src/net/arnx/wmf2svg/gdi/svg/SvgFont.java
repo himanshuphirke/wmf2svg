@@ -73,11 +73,10 @@ class SvgFont extends SvgObject implements GdiFont {
 		this.clipPrecision = clipPrecision;
 		this.quality = quality;
 		this.pitchAndFamily = pitchAndFamily;
-		this.faceName = convertEncoding(faceName);
+		this.faceName = GdiUtils.convertString(faceName, charset);
 		
 		// xml:lang
-		this.lang = (String)getGDI().getProperty("lang." + getCharsetString());
-		if (this.lang != null && this.lang.trim().length() == 0) this.lang = null;
+		this.lang = GdiUtils.getLanguage(charset);
 	}
 	
 	public int getHeight() {
@@ -135,77 +134,9 @@ class SvgFont extends SvgObject implements GdiFont {
 	public String getFaceName() {
 		return faceName;
 	}
-	
-	public String convertEncoding(byte[] chars) {
-		String str = null;
-		String encoding = null;
-
-		int length = 0;
-		while (length < chars.length && chars[length] != 0) {
-			length++;
-		}
-
-		encoding = (String)getGDI().getProperty("charset." + getCharsetString());
-		if (encoding == null) {
-			encoding = "Cp1252";
-		}
-		
-		try {
-			str = new String(chars, 0, length, encoding);
-		} catch (java.io.UnsupportedEncodingException e) {
-			try {
-				str = new String(chars, 0, length, "Cp1252");
-			} catch (java.io.UnsupportedEncodingException e2) {
-			}
-		}
-		return str;
-	}
 
 	public String getLang() {
 		return lang;
-	}
-
-	private String getCharsetString() {
-		switch (charset) {
-			case ANSI_CHARSET :
-				return "ANSI_CHARSET";
-			case SYMBOL_CHARSET :
-				return "SYMBOL_CHARSET";
-			case MAC_CHARSET :
-				return "MAC_CHARSET";
-			case SHIFTJIS_CHARSET :
-				return "SHIFTJIS_CHARSET";
-			case HANGUL_CHARSET :
-				return "HANGUL_CHARSET";
-			case JOHAB_CHARSET :
-				return "JOHAB_CHARSET";
-			case GB2312_CHARSET :
-				return "GB2312_CHARSET";
-			case CHINESEBIG5_CHARSET :
-				return "CHINESEBIG5_CHARSET";
-			case GREEK_CHARSET :
-				return "GREEK_CHARSET";
-			case TURKISH_CHARSET :
-				return "TURKISH_CHARSET";
-			case VIETNAMESE_CHARSET :
-				return "VIETNAMESE_CHARSET";
-			case HEBREW_CHARSET :
-				return "HEBREW_CHARSET";
-			case ARABIC_CHARSET :
-				return "ARABIC_CHARSET";
-			case BALTIC_CHARSET :
-				return "BALTIC_CHARSET";
-			case RUSSIAN_CHARSET :
-				return "RUSSIAN_CHARSET";
-			case THAI_CHARSET :
-				return "THAI_CHARSET";
-			case EASTEUROPE_CHARSET :
-				return "EASTEUROPE_CHARSET";
-			case OEM_CHARSET :
-				return "OEM_CHARSET";
-			default :
-				return "DEFAULT_CHARSET";
-		}
 	}
 
 	private String getPitchString() {
@@ -243,8 +174,8 @@ class SvgFont extends SvgObject implements GdiFont {
 			return null;
 		}
 
-		List list = (List)getGDI().getProperty("first-byte-area." + getCharsetString());
-		if (list == null || list.isEmpty()) {
+		int[][] area = GdiUtils.getFirstByteArea(charset);
+		if (area == null) {
 			return dx;
 		}
 
@@ -260,9 +191,8 @@ class SvgFont extends SvgObject implements GdiFont {
 				continue;
 			}
 
-			for (int j = 0; j < list.size(); j++) {
-				int[] area = (int[]) list.get(j);
-				if (area[0] <= c && c <= area[1]) {
+			for (int j = 0; j < area.length; j++) {
+				if (area[j][0] <= c && c <= area[j][1]) {
 					skip = true;
 					break;
 				}
