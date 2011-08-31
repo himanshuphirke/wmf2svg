@@ -20,7 +20,7 @@ public class MainTest extends TestCase {
 		File dir = new File(System.getProperty("user.home") + "/My Documents/wmf2svg");
 		File[] files = dir.listFiles(new FileFilter() {
 			public boolean accept(File file) {
-				return file.getName().endsWith("abcdef.wmf");
+				return file.getName().endsWith(".wmf");
 			}
 			
 		});
@@ -38,9 +38,9 @@ public class MainTest extends TestCase {
 		Graphics g = image.getGraphics();
 		
 		List list = new ArrayList();
-		list.add(new Font("Arial", Font.PLAIN, 72));
-		list.add(new Font("Courier New", Font.PLAIN, 72));
-		list.add(new Font("Lucida Console", Font.PLAIN, 72));
+		list.add(new Font("Arial", Font.PLAIN, 72000));
+		list.add(new Font("Courier New", Font.PLAIN, 72000));
+		list.add(new Font("Lucida Console", Font.PLAIN, 72000));
 		
 		for (int i = 0; i < list.size(); i++) {
 			FontMetrics font = g.getFontMetrics((Font)list.get(i));
