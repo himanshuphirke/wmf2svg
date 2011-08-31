@@ -15,6 +15,8 @@
  */
 package net.arnx.wmf2svg.gdi.svg;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -90,41 +92,20 @@ public class SvgGdi implements Gdi {
 		DOMImplementation dom = builder.getDOMImplementation();
 		doc = dom.createDocument("http://www.w3.org/2000/svg", "svg", null);
 		
+		InputStream in = null;
 		try {
+			in = getClass().getResourceAsStream("SvgGdi.properties");
 			Properties ps = new Properties();
-			ps.load(getClass().getResourceAsStream("SvgGdi.properties"));
-
-			for (Iterator i = ps.entrySet().iterator(); i.hasNext();) {
-				Map.Entry entry = (Map.Entry) i.next();
-				String key = (String) entry.getKey();
-				Object value = entry.getValue();
-				if (key.startsWith("first-byte-area.")) {
-					List list = new ArrayList();
-					StringTokenizer st = new StringTokenizer((String) value);
-					while (st.hasMoreTokens()) {
-						String token = st.nextToken();
-						int[] area = new int[2];
-						int index = token.indexOf("-");
-						if (index != -1) {
-							area[0] = Integer.parseInt(token
-									.substring(0, index), 16);
-							area[1] = Integer.parseInt(token.substring(
-									index + 1, token.length()), 16);
-						} else {
-							area[0] = Integer.parseInt(token, 16);
-							area[1] = area[0];
-						}
-						list.add(area);
-					}
-					value = list;
-				}
-				props.put(key, value);
-			}
+			ps.load(in);
 		} catch (Exception e) {
-			throw new SvgGdiException(
-					"properties format error: SvgGDI.properties");
+			throw new SvgGdiException("properties format error: SvgGDI.properties");
+		} finally {
+			try {
+				if (in != null) in.close();
+			} catch (IOException e) {
+				// no handle
+			}
 		}
-
 	}
 
 	public SvgDc getDC() {
