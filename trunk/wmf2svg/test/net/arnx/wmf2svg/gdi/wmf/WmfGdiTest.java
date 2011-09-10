@@ -48,7 +48,7 @@ public class WmfGdiTest extends TestCase {
 		
 		GdiBrush brush1 = gdi.createBrushIndirect(1, 0, 0);
 		gdi.selectObject(brush1);
-		gdi.rectangle(0, 0, 200, 200);
+		gdi.rectangle(0, 0, 200, 72);
 		gdi.moveToEx(10, 10, null);
 		gdi.lineTo(100, 100);
 
