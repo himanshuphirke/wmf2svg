@@ -485,22 +485,18 @@ public class WmfParser implements WmfConstants {
 						break;
 					case RECORD_POLYGON :
 						{
-							int count = in.readInt16();
-							Point[] points = new Point[count];
-							for (int i = 0; i < count; i++) {
-								points[i] =
-									new Point(in.readInt16(), in.readInt16());
+							Point[] points = new Point[in.readInt16()];
+							for (int i = 0; i < points.length; i++) {
+								points[i] = new Point(in.readInt16(), in.readInt16());
 							}
 							gdi.polygon(points);
 						}
 						break;
 					case RECORD_POLYLINE :
 						{
-							int count = in.readInt16();
-							Point[] points = new Point[count];
-							for (int i = 0; i < count; i++) {
-								points[i] =
-									new Point(in.readInt16(), in.readInt16());
+							Point[] points = new Point[in.readInt16()];
+							for (int i = 0; i < points.length; i++) {
+								points[i] = new Point(in.readInt16(), in.readInt16());
 							}
 							gdi.polyline(points);
 						}
@@ -513,8 +509,7 @@ public class WmfParser implements WmfConstants {
 							}
 							for (int i = 0; i < points.length; i++) {
 								for (int j = 0; j < points[i].length; j++) {
-									points[i][j] =
-										new Point(in.readInt16(), in.readInt16());
+									points[i][j] = new Point(in.readInt16(), in.readInt16());
 								}
 							}
 							gdi.polyPolygon(points);
