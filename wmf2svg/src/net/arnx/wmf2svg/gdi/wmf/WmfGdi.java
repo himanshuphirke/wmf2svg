@@ -11,6 +11,7 @@ import net.arnx.wmf2svg.gdi.GdiBrush;
 import net.arnx.wmf2svg.gdi.GdiFont;
 import net.arnx.wmf2svg.gdi.GdiObject;
 import net.arnx.wmf2svg.gdi.GdiPalette;
+import net.arnx.wmf2svg.gdi.GdiPatternBrush;
 import net.arnx.wmf2svg.gdi.GdiPen;
 import net.arnx.wmf2svg.gdi.GdiRegion;
 import net.arnx.wmf2svg.gdi.Point;
@@ -125,7 +126,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setUint16(record, pos, hatch);
 		records.add(record);
 		
-		WmfGdiBrush brush = new WmfGdiBrush(objects.size());
+		WmfGdiBrush brush = new WmfGdiBrush(objects.size(), style, color, hatch);
 		objects.add(brush);
 		return brush;
 	}
@@ -168,14 +169,25 @@ public class WmfGdi implements Gdi, WmfConstants {
 		return null;
 	}
 
-	public GdiBrush createPatternBrush(byte[] image) {
+	public GdiPatternBrush createPatternBrush(byte[] image) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public GdiPen createPenIndirect(int style, int width, int color) {
-		// TODO Auto-generated method stub
-		return null;
+		byte[] record = new byte[16];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_CREATE_PEN_INDIRECT);
+		pos = setUint16(record, pos, style);
+		pos = setInt16(record, pos, width);
+		pos = setInt16(record, pos, 0);
+		pos = setInt32(record, pos, color);
+		records.add(record);
+		
+		WmfGdiPen pen = new WmfGdiPen(objects.size(), style, width, color);
+		objects.add(pen);
+		return pen;
 	}
 
 	public GdiRegion createRectRgn(int left, int top, int right, int bottom) {
@@ -184,8 +196,14 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void deleteObject(GdiObject obj) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_DELETE_OBJECT);
+		pos = setUint16(record, pos, ((WmfGdiObject)obj).getID());
+		records.add(record);
+		
+		objects.set(((WmfGdiObject)obj).getID(), null);
 	}
 
 	public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh, int sx,
@@ -194,7 +212,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 
 	}
 
-	public GdiBrush dibCreatePatternBrush(byte[] image, int usage) {
+	public GdiPatternBrush dibCreatePatternBrush(byte[] image, int usage) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -223,13 +241,30 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public int excludeClipRect(int left, int top, int right, int bottom) {
-		// TODO Auto-generated method stub
-		return 0;
+		byte[] record = new byte[14];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_EXCLUDE_CLIP_RECT);
+		pos = setInt16(record, pos, bottom);
+		pos = setInt16(record, pos, right);
+		pos = setInt16(record, pos, top);
+		pos = setInt16(record, pos, left);
+		records.add(record);
+		
+		// TODO
+		return GdiRegion.COMPLEXREGION;
 	}
 
 	public void extFloodFill(int x, int y, int color, int type) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[16];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_EXT_FLOOD_FILL);
+		pos = setUint16(record, pos, type);
+		pos = setInt32(record, pos, color);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		records.add(record);
 	}
 
 	public void extTextOut(int x, int y, int options, int[] rect, byte[] text, int[] lpdx) {
@@ -264,8 +299,14 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void floodFill(int x, int y, int color) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[16];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_FLOOD_FILL);
+		pos = setInt32(record, pos, color);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		records.add(record);
 	}
 
 	public void frameRgn(GdiRegion rgn, GdiBrush brush, int w, int h) {
@@ -274,13 +315,24 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void intersectClipRect(int left, int top, int right, int bottom) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[16];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_INTERSECT_CLIP_RECT);
+		pos = setInt16(record, pos, bottom);
+		pos = setInt16(record, pos, right);
+		pos = setInt16(record, pos, top);
+		pos = setInt16(record, pos, left);
+		records.add(record);
 	}
 
 	public void invertRgn(GdiRegion rgn) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_INVERT_RGN);
+		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		records.add(record);
 	}
 
 	public void lineTo(int ex, int ey) {
@@ -300,32 +352,62 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setUint16(record, pos, RECORD_MOVE_TO_EX);
 		pos = setInt16(record, pos, y);
 		pos = setInt16(record, pos, x);
+		//TODO old
 		records.add(record);
 	}
 
 	public void offsetClipRgn(int x, int y) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_OFFSET_CLIP_RGN);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		records.add(record);
 	}
 
 	public void offsetViewportOrgEx(int x, int y, Point point) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_OFFSET_VIEWPORT_ORG_EX);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		// TODO
+		records.add(record);
 	}
 
 	public void offsetWindowOrgEx(int x, int y, Point point) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_OFFSET_WINDOW_ORG_EX);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		// TODO
+		records.add(record);
 	}
 
 	public void paintRgn(GdiRegion rgn) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_PAINT_RGN);
+		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		records.add(record);
 	}
 
 	public void patBlt(int x, int y, int width, int height, long rop) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[18];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_PAT_BLT);
+		pos = setUint32(record, pos, rop);
+		pos = setInt16(record, pos, height);
+		pos = setInt16(record, pos, width);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		records.add(record);
 	}
 
 	public void pie(int sx, int sy, int ex, int ey, int sxr, int syr, int exr, int eyr) {
@@ -360,13 +442,17 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void realizePalette() {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[6];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_REALIZE_PALETTE);
 	}
-
+	
 	public void restoreDC() {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[6];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_RESTORE_DC);
 	}
 
 	public void rectangle(int sx, int sy, int ex, int ey) {
@@ -382,33 +468,69 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void resizePalette(GdiPalette palette) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_REALIZE_PALETTE);
+		pos = setUint16(record, pos, ((WmfGdiPalette)palette).getID());
+		records.add(record);
 	}
 
 	public void roundRect(int sx, int sy, int ex, int ey, int rw, int rh) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[18];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_ROUND_RECT);
+		pos = setInt16(record, pos, rh);
+		pos = setInt16(record, pos, rw);
+		pos = setInt16(record, pos, ey);
+		pos = setInt16(record, pos, ex);
+		pos = setInt16(record, pos, sy);
+		pos = setInt16(record, pos, sx);
+		records.add(record);
 	}
 
 	public void seveDC() {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[6];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SAVE_DC);
+		records.add(record);
 	}
 
 	public void scaleViewportExtEx(int x, int xd, int y, int yd, Size old) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[14];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SCALE_VIEWPORT_EXT_EX);
+		pos = setInt16(record, pos, yd);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, xd);
+		pos = setInt16(record, pos, x);
+		// TODO
+		records.add(record);
 	}
 
 	public void scaleWindowExtEx(int x, int xd, int y, int yd, Size old) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[14];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SCALE_WINDOW_EXT_EX);
+		pos = setInt16(record, pos, yd);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, xd);
+		pos = setInt16(record, pos, x);
+		// TODO
+		records.add(record);
 	}
 
 	public void selectClipRgn(GdiRegion rgn) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SELECT_CLIP_RGN);
+		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		records.add(record);
 	}
 
 	public void selectObject(GdiObject obj) {
@@ -421,8 +543,13 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void selectPalette(GdiPalette palette, boolean mode) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SELECT_PALETTE);
+		pos = setInt16(record, pos, mode ? 1 : 0);
+		pos = setUint16(record, pos, ((WmfGdiPalette)palette).getID());
+		records.add(record);
 	}
 
 	public void setBkColor(int color) {
@@ -435,7 +562,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void setBkMode(int mode) {
-		byte[] record = new byte[10];
+		byte[] record = new byte[8];
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_SET_BK_MODE);
@@ -450,18 +577,30 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void setLayout(long layout) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_LAYOUT);
+		pos = setUint32(record, pos, layout);
+		records.add(record);
 	}
 
 	public void setMapMode(int mode) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_MAP_MODE);
+		pos = setInt16(record, pos, mode);
+		records.add(record);
 	}
 
 	public void setMapperFlags(long flags) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_MAPPER_FLAGS);
+		pos = setUint32(record, pos, flags);
+		records.add(record);
 	}
 
 	public void setPaletteEntries(GdiPalette palette, int startIndex,
@@ -471,48 +610,87 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void setPixel(int x, int y, int color) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[14];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_PIXEL);
+		pos = setInt32(record, pos, color);
+		pos = setInt16(record, pos, y);
+		pos = setInt16(record, pos, x);
+		records.add(record);
 	}
 
 	public void setPolyFillMode(int mode) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_POLY_FILL_MODE);
+		pos = setInt16(record, pos, mode);
+		records.add(record);
 	}
 
 	public void setRelAbs(int mode) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_REL_ABS);
+		pos = setInt16(record, pos, mode);
+		records.add(record);
 	}
 
 	public void setROP2(int mode) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_ROP2);
+		pos = setInt16(record, pos, mode);
+		records.add(record);
 	}
 
 	public void setStretchBltMode(int mode) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_STRETCH_BLT_MODE);
+		pos = setInt16(record, pos, mode);
+		records.add(record);
 	}
 
 	public void setTextAlign(int align) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_TEXT_ALIGN);
+		pos = setInt16(record, pos, align);
+		records.add(record);
 	}
 
 	public void setTextCharacterExtra(int extra) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_TEXT_CHARACTER_EXTRA);
+		pos = setInt16(record, pos, extra);
+		records.add(record);
 	}
 
 	public void setTextColor(int color) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_TEXT_COLOR);
+		pos = setInt32(record, pos, color);
+		records.add(record);
 	}
 
 	public void setTextJustification(int breakExtra, int breakCount) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_TEXT_COLOR);
+		pos = setInt16(record, pos, breakCount);
+		pos = setInt16(record, pos, breakExtra);
+		records.add(record);
 	}
 
 	public void setViewportExtEx(int x, int y, Size old) {
@@ -522,7 +700,8 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setUint16(record, pos, RECORD_SET_VIEWPORT_EXT_EX);
 		pos = setInt16(record, pos, y);
 		pos = setInt16(record, pos, x);
-		records.add(record);	}
+		records.add(record);
+	}
 
 	public void setViewportOrgEx(int x, int y, Point old) {
 		byte[] record = new byte[10];

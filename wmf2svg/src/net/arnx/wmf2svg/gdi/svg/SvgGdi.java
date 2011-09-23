@@ -322,7 +322,7 @@ public class SvgGdi implements Gdi {
 		};
 	}
 	
-	public GdiBrush createPatternBrush(byte[] image) {
+	public GdiPatternBrush createPatternBrush(byte[] image) {
 		return new SvgPatternBrush(this, image);
 	}
 
@@ -360,10 +360,10 @@ public class SvgGdi implements Gdi {
 		bitBlt(image, dx, dy, dw, dh, sx, sy, rop);
 	}
 
-	public GdiBrush dibCreatePatternBrush(byte[] image, int usage) {
+	public GdiPatternBrush dibCreatePatternBrush(byte[] image, int usage) {
 		// TODO
 		log.fine("not implemented: dibCreatePatternBrush");
-		return new GdiBrush() {
+		return new GdiPatternBrush() {
 		};
 	}
 	
@@ -414,6 +414,7 @@ public class SvgGdi implements Gdi {
 			mask.appendChild(unclip);
 			dc.setMask(mask);
 			
+			// TODO
 			return GdiRegion.COMPLEXREGION;
 		} else {
 			return GdiRegion.NULLREGION;
