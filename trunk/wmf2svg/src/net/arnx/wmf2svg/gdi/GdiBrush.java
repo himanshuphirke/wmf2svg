@@ -38,4 +38,8 @@ public interface GdiBrush extends GdiObject {
 	public static final int HS_BDIAGONAL = 3;
 	public static final int HS_CROSS = 4;
 	public static final int HS_DIAGCROSS = 5;
+	
+	public int getStyle();
+	public int getColor();
+	public int getHatch();
 }

@@ -594,7 +594,7 @@ public class WmfParser implements WmfConstants {
 						break;
 					case RECORD_SELECT_PALETTE :
 						{
-							boolean mode = (in.readInt16() != -1);
+							boolean mode = (in.readInt16() != 0);
 							if ((size * 2 - in.getCount()) > 0) {
 								int objID = in.readUint16();
 								gdi.selectPalette((GdiPalette)objs[objID], mode);
