@@ -170,8 +170,17 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public GdiPatternBrush createPatternBrush(byte[] image) {
-		// TODO Auto-generated method stub
-		return null;
+		byte[] record = new byte[6 + (image.length + image.length%2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_CREATE_PATTERN_BRUSH);
+		pos = setBytes(record, pos, image);
+		if (image.length%2 == 1) pos = setByte(record, pos, 0);
+		records.add(record);
+		
+		GdiPatternBrush brush = new WmfGdiPatternBrush(objects.size(), image);
+		objects.add(brush);
+		return brush;
 	}
 
 	public GdiPen createPenIndirect(int style, int width, int color) {
@@ -191,8 +200,19 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public GdiRegion createRectRgn(int left, int top, int right, int bottom) {
-		// TODO Auto-generated method stub
-		return null;
+		byte[] record = new byte[14];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_CREATE_RECT_RGN);
+		pos = setInt16(record, pos, bottom);
+		pos = setInt16(record, pos, right);
+		pos = setInt16(record, pos, top);
+		pos = setInt16(record, pos, left);
+		records.add(record);
+		
+		WmfGdiRectRegion rgn = new WmfGdiRectRegion(objects.size(), left, top, right, bottom);
+		objects.add(rgn);
+		return rgn;
 	}
 
 	public void deleteObject(GdiObject obj) {
@@ -213,8 +233,19 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public GdiPatternBrush dibCreatePatternBrush(byte[] image, int usage) {
-		// TODO Auto-generated method stub
-		return null;
+		byte[] record = new byte[10 + (image.length + image.length%2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_DIB_CREATE_PATTERN_BRUSH);
+		pos = setInt32(record, pos, usage);
+		pos = setBytes(record, pos, image);
+		if (image.length%2 == 1) pos = setByte(record, pos, 0);
+		records.add(record);
+		
+		// TODO usage
+		GdiPatternBrush brush = new WmfGdiPatternBrush(objects.size(), image);
+		objects.add(brush);
+		return brush;
 	}
 
 	public void dibStretchBlt(byte[] image, int dx, int dy, int dw, int dh,
@@ -236,8 +267,13 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void escape(byte[] data) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10 + (data.length + data.length%2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_ESCAPE);
+		pos = setBytes(record, pos, data);
+		if (data.length%2 == 1) pos = setByte(record, pos, 0);
+		records.add(record);
 	}
 
 	public int excludeClipRect(int left, int top, int right, int bottom) {
@@ -294,10 +330,15 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void fillRgn(GdiRegion rgn, GdiBrush brush) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[10];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_FLOOD_FILL);
+		pos = setUint16(record, pos, ((WmfGdiBrush)brush).getID());
+		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		records.add(record);
 	}
-
+	
 	public void floodFill(int x, int y, int color) {
 		byte[] record = new byte[16];
 		int pos = 0;
@@ -310,8 +351,15 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void frameRgn(GdiRegion rgn, GdiBrush brush, int w, int h) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[14];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_FRAME_RGN);
+		pos = setInt16(record, pos, h);
+		pos = setInt16(record, pos, w);
+		pos = setUint16(record, pos, ((WmfGdiBrush)brush).getID());
+		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		records.add(record);
 	}
 
 	public void intersectClipRect(int left, int top, int right, int bottom) {
@@ -427,18 +475,51 @@ public class WmfGdi implements Gdi, WmfConstants {
 	}
 
 	public void polygon(Point[] points) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8 + points.length * 4];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_POLYGON);
+		pos = setInt16(record, pos, points.length);
+		for (int i = 0; i < points.length; i++) {
+			pos = setInt16(record, pos, points[i].x);
+			pos = setInt16(record, pos, points[i].y);
+		}
+		records.add(record);
 	}
 
 	public void polyline(Point[] points) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[8 + points.length * 4];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_POLYLINE);
+		pos = setInt16(record, pos, points.length);
+		for (int i = 0; i < points.length; i++) {
+			pos = setInt16(record, pos, points[i].x);
+			pos = setInt16(record, pos, points[i].y);
+		}
+		records.add(record);
 	}
 
 	public void polyPolygon(Point[][] points) {
-		// TODO Auto-generated method stub
-
+		int length = 8;
+		for (int i = 0; i < points.length; i++) {
+			length += 2 + points[i].length * 4;
+		}
+		byte[] record = new byte[length];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_POLYLINE);
+		pos = setInt16(record, pos, points.length);
+		for (int i = 0; i < points.length; i++) {
+			pos = setInt16(record, pos, points[i].length);
+		}
+		for (int i = 0; i < points.length; i++) {
+			for (int j = 0; j < points[i].length; j++) {
+				pos = setInt16(record, pos, points[i][j].x);
+				pos = setInt16(record, pos, points[i][j].y);
+			}
+		}
+		records.add(record);
 	}
 
 	public void realizePalette() {

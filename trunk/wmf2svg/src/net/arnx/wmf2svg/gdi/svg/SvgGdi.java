@@ -361,10 +361,8 @@ public class SvgGdi implements Gdi {
 	}
 
 	public GdiPatternBrush dibCreatePatternBrush(byte[] image, int usage) {
-		// TODO
-		log.fine("not implemented: dibCreatePatternBrush");
-		return new GdiPatternBrush() {
-		};
+		// TODO usage
+		return new SvgPatternBrush(this, image);
 	}
 	
     public void dibStretchBlt(byte[] image, int dx, int dy, int dw, int dh,
