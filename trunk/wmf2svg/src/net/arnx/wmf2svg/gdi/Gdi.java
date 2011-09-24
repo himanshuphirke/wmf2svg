@@ -113,7 +113,7 @@ public interface Gdi {
     public void animatePalette(GdiPalette palette, int startIndex, int entryCount, byte[] entries);
     public void arc(int sxr, int syr, int exr, int eyr,
 		    int sxa, int sya, int exa, int eya);
-    public void bitBlt(byte[] bits, int dx, int dy, int width, int height, int sx, int sy, long rop);
+    public void bitBlt(byte[] image, int dx, int dy, int dw, int dh, int sx, int sy, long rop);
     public void chord(int sxr, int syr, int exr, int eyr,
 		      int sxa, int sya, int exa, int eya);
     public GdiBrush createBrushIndirect(int style, int color, int hatch);
