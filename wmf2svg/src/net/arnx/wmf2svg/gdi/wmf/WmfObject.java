@@ -2,10 +2,10 @@ package net.arnx.wmf2svg.gdi.wmf;
 
 import net.arnx.wmf2svg.gdi.GdiObject;
 
-class WmfGdiObject implements GdiObject {
+class WmfObject implements GdiObject {
 	public int id;
 	
-	public WmfGdiObject(int id) {
+	public WmfObject(int id) {
 		this.id = id;
 	}
 	

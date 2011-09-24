@@ -3,7 +3,7 @@ package net.arnx.wmf2svg.gdi.wmf;
 import net.arnx.wmf2svg.gdi.GdiFont;
 import net.arnx.wmf2svg.gdi.GdiUtils;
 
-class WmfGdiFont extends WmfGdiObject implements GdiFont {
+class WmfFont extends WmfObject implements GdiFont {
 	private int height;
 	private int width;
 	private int escapement;
@@ -20,7 +20,7 @@ class WmfGdiFont extends WmfGdiObject implements GdiFont {
 	
 	private String faceName;
 	
-	public WmfGdiFont(int id,
+	public WmfFont(int id,
 		int height,
 		int width,
 		int escapement,
