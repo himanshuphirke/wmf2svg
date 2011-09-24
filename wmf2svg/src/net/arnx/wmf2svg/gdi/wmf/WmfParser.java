@@ -305,8 +305,7 @@ public class WmfParser implements WmfConstants {
 							int dy = in.readInt16();
 							int dx = in.readInt16();
 							
-							byte[] image =
-								in.readBytes(size * 2 - in.getCount());
+							byte[] image = in.readBytes(size * 2 - in.getCount());
 							
 							gdi.dibStretchBlt(image, dx, dy, dw, dh, sx, sy, sw, sh, rop);
 						}
@@ -620,8 +619,7 @@ public class WmfParser implements WmfConstants {
 							int dy = in.readInt16();
 							int dx = in.readInt16();
 
-							byte[] image =
-								in.readBytes(size * 2 - in.getCount());
+							byte[] image = in.readBytes(size * 2 - in.getCount());
 							
 							gdi.setDIBitsToDevice(
 								dx,
@@ -779,8 +777,7 @@ public class WmfParser implements WmfConstants {
 							int dy = in.readInt16();
 							int dx = in.readInt16();
 
-							byte[] image =
-								in.readBytes(size * 2 - in.getCount());
+							byte[] image = in.readBytes(size * 2 - in.getCount());
 
 							gdi.stretchDIBits(dx, dy, dw, dh, sx, sy, sw, sh, image, usage, rop);
 						}

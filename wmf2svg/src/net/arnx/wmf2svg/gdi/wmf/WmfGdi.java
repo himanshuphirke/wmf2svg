@@ -93,10 +93,21 @@ public class WmfGdi implements Gdi, WmfConstants {
 		records.add(record);
 	}
 
-	public void bitBlt(byte[] bits, int dx, int dy, int width, int height,
-			int sx, int sy, long rop) {
-		// TODO Auto-generated method stub
-
+	public void bitBlt(byte[] image, int dx, int dy, int dw, int dh, int sx, int sy, long rop) {
+		byte[] record = new byte[22 + (image.length + image.length%2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_BIT_BLT);
+		pos = setUint32(record, pos, rop);
+		pos = setInt16(record, pos, sy);
+		pos = setInt16(record, pos, sx);
+		pos = setInt16(record, pos, dw);
+		pos = setInt16(record, pos, dh);
+		pos = setInt16(record, pos, dy);
+		pos = setInt16(record, pos, dx);
+		pos = setBytes(record, pos, image);
+		if (image.length%2 == 1) pos = setByte(record, pos, 0);
+		records.add(record);
 	}
 
 	public void chord(int sxr, int syr, int exr, int eyr, int sxa, int sya, int exa, int eya) {
@@ -225,10 +236,21 @@ public class WmfGdi implements Gdi, WmfConstants {
 		objects.set(((WmfGdiObject)obj).getID(), null);
 	}
 
-	public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh, int sx,
-			int sy, long rop) {
-		// TODO Auto-generated method stub
-
+	public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh, int sx, int sy, long rop) {
+		byte[] record = new byte[22 + (image.length + image.length%2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_DIB_BIT_BLT);
+		pos = setUint32(record, pos, rop);
+		pos = setInt16(record, pos, sy);
+		pos = setInt16(record, pos, sx);
+		pos = setInt16(record, pos, dw);
+		pos = setInt16(record, pos, dh);
+		pos = setInt16(record, pos, dy);
+		pos = setInt16(record, pos, dx);
+		pos = setBytes(record, pos, image);
+		if (image.length%2 == 1) pos = setByte(record, pos, 0);
+		records.add(record);
 	}
 
 	public GdiPatternBrush dibCreatePatternBrush(byte[] image, int usage) {
@@ -249,8 +271,22 @@ public class WmfGdi implements Gdi, WmfConstants {
 
 	public void dibStretchBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, int sw, int sh, long rop) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[26 + (image.length + image.length%2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_DIB_STRETCH_BLT);
+		pos = setUint32(record, pos, rop);
+		pos = setInt16(record, pos, sh);
+		pos = setInt16(record, pos, sw);
+		pos = setInt16(record, pos, sy);
+		pos = setInt16(record, pos, sx);
+		pos = setInt16(record, pos, dw);
+		pos = setInt16(record, pos, dh);
+		pos = setInt16(record, pos, dy);
+		pos = setInt16(record, pos, dx);
+		pos = setBytes(record, pos, image);
+		if (image.length%2 == 1) pos = setByte(record, pos, 0);
+		records.add(record);
 	}
 
 	public void ellipse(int sx, int sy, int ex, int ey) {
@@ -652,8 +688,22 @@ public class WmfGdi implements Gdi, WmfConstants {
 
 	public void setDIBitsToDevice(int dx, int dy, int dw, int dh, int sx,
 			int sy, int startscan, int scanlines, byte[] image, int colorUse) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[24 + (image.length + image.length%2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_DIBITS_TO_DEVICE);
+		pos = setUint16(record, pos, colorUse);
+		pos = setUint16(record, pos, scanlines);
+		pos = setUint16(record, pos, startscan);
+		pos = setInt16(record, pos, sy);
+		pos = setInt16(record, pos, sx);
+		pos = setInt16(record, pos, dw);
+		pos = setInt16(record, pos, dh);
+		pos = setInt16(record, pos, dy);
+		pos = setInt16(record, pos, dx);
+		pos = setBytes(record, pos, image);
+		if (image.length%2 == 1) pos = setByte(record, pos, 0);
+		records.add(record);
 	}
 
 	public void setLayout(long layout) {
@@ -815,14 +865,43 @@ public class WmfGdi implements Gdi, WmfConstants {
 
 	public void stretchBlt(byte[] image, int dx, int dy, int dw, int dh,
 			int sx, int sy, int sw, int sh, long rop) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[26 + (image.length + image.length%2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_STRETCH_BLT);
+		pos = setUint32(record, pos, rop);
+		pos = setInt16(record, pos, sh);
+		pos = setInt16(record, pos, sw);
+		pos = setInt16(record, pos, sy);
+		pos = setInt16(record, pos, sx);
+		pos = setInt16(record, pos, dw);
+		pos = setInt16(record, pos, dh);
+		pos = setInt16(record, pos, dy);
+		pos = setInt16(record, pos, dx);
+		pos = setBytes(record, pos, image);
+		if (image.length%2 == 1) pos = setByte(record, pos, 0);
+		records.add(record);
 	}
 
 	public void stretchDIBits(int dx, int dy, int dw, int dh, int sx, int sy,
 			int sw, int sh, byte[] image, int usage, long rop) {
-		// TODO Auto-generated method stub
-
+		byte[] record = new byte[26 + (image.length + image.length%2)];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_STRETCH_DIBITS);
+		pos = setUint32(record, pos, rop);
+		pos = setUint16(record, pos, usage);
+		pos = setInt16(record, pos, sh);
+		pos = setInt16(record, pos, sw);
+		pos = setInt16(record, pos, sy);
+		pos = setInt16(record, pos, sx);
+		pos = setInt16(record, pos, dw);
+		pos = setInt16(record, pos, dh);
+		pos = setInt16(record, pos, dy);
+		pos = setInt16(record, pos, dx);
+		pos = setBytes(record, pos, image);
+		if (image.length%2 == 1) pos = setByte(record, pos, 0);
+		records.add(record);
 	}
 
 	public void textOut(int x, int y, byte[] text) {
