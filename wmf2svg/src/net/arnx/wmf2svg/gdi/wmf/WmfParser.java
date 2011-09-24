@@ -92,12 +92,13 @@ public class WmfParser implements WmfConstants {
 				switch (id) {
 					case RECORD_ANIMATE_PALETTE :
 						{
-							int entryCount = in.readUint16();
+							int[] entries = new int[in.readUint16()];
 							int startIndex = in.readUint16();
 							int objID = in.readUint16();
-							byte[] entries = in.readBytes(size * 2 - in.getCount());
-							
-							gdi.animatePalette((GdiPalette)objs[objID], startIndex, entryCount, entries);
+							for (int i = 0; i < entries.length; i++) {
+								entries[i] = in.readInt32();
+							}
+							gdi.animatePalette((GdiPalette)objs[objID], startIndex, entries);
 						}
 						break;
 					case RECORD_ARC :
@@ -199,9 +200,15 @@ public class WmfParser implements WmfConstants {
 						break;
 					case RECORD_CREATE_PALETTE :
 						{
+							int version = in.readUint16();
+							int[] entries = new int[in.readUint16()];
+							for (int i = 0; i < entries.length; i++) {
+								entries[i] = in.readInt32();
+							}
+							
 							for (int i = 0; i < objs.length; i++) {
 								if (objs[i] == null) {
-									objs[i] = gdi.createPalette();
+									objs[i] = gdi.createPalette(version, entries);
 									break;
 								}
 							}
@@ -654,11 +661,13 @@ public class WmfParser implements WmfConstants {
 						break;
 					case RECORD_SET_PALETTE_ENTRIES :
 						{
-							int entryCount = in.readUint16();
+							int[] entries = new int[in.readUint16()];
 							int startIndex = in.readUint16();
 							int objID = in.readUint16();
-							byte[] entries = in.readBytes(size * 2 - in.getCount());
-							gdi.setPaletteEntries((GdiPalette)objs[objID], startIndex, entryCount, entries);
+							for (int i = 0; i < entries.length; i++) {
+								entries[i] = in.readInt32();
+							}
+							gdi.setPaletteEntries((GdiPalette)objs[objID], startIndex, entries);
 						}
 						break;
 					case RECORD_SET_PIXEL :
