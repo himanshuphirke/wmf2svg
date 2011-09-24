@@ -1,22 +1,23 @@
 <?xml version="1.0"?>
 
 <project name="wmf2svg" default="dist">
-	<property name="version" value="0.9.0" />
+	<xmlproperty file="pom.xml"/>
+	
+	<property name="version" value="${project.version}" />
 	<property name="debug" value="off" />
 
 	<property name="src" location="src"/>
 	<property name="lib" location="lib"/>
 	<property name="build" location="build"/>
-	<property name="dist" location="release"/>
-	<property name="lib.appengine" value="http://mvnsearch.org/maven2/com/google/appengine/appengine-api-1.0-sdk/1.2.1/appengine-api-1.0-sdk-1.2.1.jar"/>
-
+	<property name="dist" location="dist"/>
+	
 	<target name="init">
 		<tstamp />
 	</target>
 	
 	<target name="build" depends="init">
 		<mkdir dir="${build}" />
-		<javac source="1.4" target="1.4" srcdir="${src}" destdir="${build}">
+		<javac source="1.4" target="1.4" srcdir="${src}" destdir="${build}" includeantruntime="false">
 			<classpath>
 				<fileset dir="${lib}" includes="*.jar" />
 			</classpath>
