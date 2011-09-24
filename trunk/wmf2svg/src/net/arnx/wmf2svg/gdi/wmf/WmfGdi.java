@@ -79,7 +79,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setUint16(record, pos, RECORD_ANIMATE_PALETTE);
 		pos = setUint16(record, pos, entries.length);
 		pos = setUint16(record, pos, startIndex);
-		pos = setUint16(record, pos, ((WmfGdiPalette)palette).getID());
+		pos = setUint16(record, pos, ((WmfPalette)palette).getID());
 		for (int i = 0; i < entries.length; i++) {
 			pos = setInt32(record, pos, entries[i]);
 		}
@@ -145,7 +145,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setUint16(record, pos, hatch);
 		records.add(record);
 		
-		WmfGdiBrush brush = new WmfGdiBrush(objects.size(), style, color, hatch);
+		WmfBrush brush = new WmfBrush(objects.size(), style, color, hatch);
 		objects.add(brush);
 		return brush;
 	}
@@ -176,7 +176,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		if (faceName.length%2 == 1) pos = setByte(record, pos, 0);
 		records.add(record);
 		
-		WmfGdiFont font = new WmfGdiFont(objects.size(), height, width, escapement,
+		WmfFont font = new WmfFont(objects.size(), height, width, escapement,
 				orientation, weight, italic, underline, strikeout, charset, outPrecision,
 				clipPrecision, quality, pitchAndFamily, faceName);
 		objects.add(font);
@@ -195,7 +195,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		}
 		records.add(record);
 		
-		GdiPalette palette = new WmfGdiPalette(objects.size(), version, entries);
+		GdiPalette palette = new WmfPalette(objects.size(), version, entries);
 		objects.add(palette);
 		return palette;
 	}
@@ -209,7 +209,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		if (image.length%2 == 1) pos = setByte(record, pos, 0);
 		records.add(record);
 		
-		GdiPatternBrush brush = new WmfGdiPatternBrush(objects.size(), image);
+		GdiPatternBrush brush = new WmfPatternBrush(objects.size(), image);
 		objects.add(brush);
 		return brush;
 	}
@@ -225,7 +225,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setInt32(record, pos, color);
 		records.add(record);
 		
-		WmfGdiPen pen = new WmfGdiPen(objects.size(), style, width, color);
+		WmfPen pen = new WmfPen(objects.size(), style, width, color);
 		objects.add(pen);
 		return pen;
 	}
@@ -241,7 +241,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setInt16(record, pos, left);
 		records.add(record);
 		
-		WmfGdiRectRegion rgn = new WmfGdiRectRegion(objects.size(), left, top, right, bottom);
+		WmfRectRegion rgn = new WmfRectRegion(objects.size(), left, top, right, bottom);
 		objects.add(rgn);
 		return rgn;
 	}
@@ -251,10 +251,10 @@ public class WmfGdi implements Gdi, WmfConstants {
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_DELETE_OBJECT);
-		pos = setUint16(record, pos, ((WmfGdiObject)obj).getID());
+		pos = setUint16(record, pos, ((WmfObject)obj).getID());
 		records.add(record);
 		
-		objects.set(((WmfGdiObject)obj).getID(), null);
+		objects.set(((WmfObject)obj).getID(), null);
 	}
 
 	public void dibBitBlt(byte[] image, int dx, int dy, int dw, int dh, int sx, int sy, long rop) {
@@ -285,7 +285,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		records.add(record);
 		
 		// TODO usage
-		GdiPatternBrush brush = new WmfGdiPatternBrush(objects.size(), image);
+		GdiPatternBrush brush = new WmfPatternBrush(objects.size(), image);
 		objects.add(brush);
 		return brush;
 	}
@@ -390,8 +390,8 @@ public class WmfGdi implements Gdi, WmfConstants {
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_FLOOD_FILL);
-		pos = setUint16(record, pos, ((WmfGdiBrush)brush).getID());
-		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		pos = setUint16(record, pos, ((WmfBrush)brush).getID());
+		pos = setUint16(record, pos, ((WmfRegion)rgn).getID());
 		records.add(record);
 	}
 	
@@ -413,8 +413,8 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setUint16(record, pos, RECORD_FRAME_RGN);
 		pos = setInt16(record, pos, h);
 		pos = setInt16(record, pos, w);
-		pos = setUint16(record, pos, ((WmfGdiBrush)brush).getID());
-		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		pos = setUint16(record, pos, ((WmfBrush)brush).getID());
+		pos = setUint16(record, pos, ((WmfRegion)rgn).getID());
 		records.add(record);
 	}
 
@@ -435,7 +435,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_INVERT_RGN);
-		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		pos = setUint16(record, pos, ((WmfRegion)rgn).getID());
 		records.add(record);
 	}
 
@@ -497,7 +497,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_PAINT_RGN);
-		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		pos = setUint16(record, pos, ((WmfRegion)rgn).getID());
 		records.add(record);
 	}
 
@@ -609,7 +609,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_REALIZE_PALETTE);
-		pos = setUint16(record, pos, ((WmfGdiPalette)palette).getID());
+		pos = setUint16(record, pos, ((WmfPalette)palette).getID());
 		records.add(record);
 	}
 
@@ -666,7 +666,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_SELECT_CLIP_RGN);
-		pos = setUint16(record, pos, ((WmfGdiRegion)rgn).getID());
+		pos = setUint16(record, pos, ((WmfRegion)rgn).getID());
 		records.add(record);
 	}
 
@@ -675,7 +675,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_SELECT_OBJECT);
-		pos = setUint16(record, pos, ((WmfGdiObject)obj).getID());
+		pos = setUint16(record, pos, ((WmfObject)obj).getID());
 		records.add(record);
 	}
 
@@ -685,7 +685,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_SELECT_PALETTE);
 		pos = setInt16(record, pos, mode ? 1 : 0);
-		pos = setUint16(record, pos, ((WmfGdiPalette)palette).getID());
+		pos = setUint16(record, pos, ((WmfPalette)palette).getID());
 		records.add(record);
 	}
 
@@ -759,7 +759,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_SET_PALETTE_ENTRIES);
-		pos = setUint16(record, pos, ((WmfGdiPalette)palette).getID());
+		pos = setUint16(record, pos, ((WmfPalette)palette).getID());
 		pos = setUint16(record, pos, entries.length);
 		pos = setUint16(record, pos, startIndex);
 		for (int i = 0; i < entries.length; i++) {

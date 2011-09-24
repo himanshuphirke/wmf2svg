@@ -2,13 +2,13 @@ package net.arnx.wmf2svg.gdi.wmf;
 
 import net.arnx.wmf2svg.gdi.GdiRegion;
 
-class WmfGdiRectRegion extends WmfGdiObject implements GdiRegion {
+class WmfRectRegion extends WmfObject implements GdiRegion {
 	private int left;
 	private int top;
 	private int right;
 	private int bottom;
 	
-	public WmfGdiRectRegion(int id, int left, int top, int right, int bottom) {
+	public WmfRectRegion(int id, int left, int top, int right, int bottom) {
 		super(id);
 		this.left = left;
 		this.top = top;
