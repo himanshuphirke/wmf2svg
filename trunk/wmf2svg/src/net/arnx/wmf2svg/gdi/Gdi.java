@@ -110,7 +110,7 @@ public interface Gdi {
 	
     public void placeableHeader(int vsx, int vsy, int vex, int vey, int dpi);
     public void header();
-    public void animatePalette(GdiPalette palette, int startIndex, int entryCount, byte[] entries);
+    public void animatePalette(GdiPalette palette, int startIndex, int[] entries);
     public void arc(int sxr, int syr, int exr, int eyr,
 		    int sxa, int sya, int exa, int eya);
     public void bitBlt(byte[] image, int dx, int dy, int dw, int dh, int sx, int sy, long rop);
@@ -122,7 +122,7 @@ public interface Gdi {
 				      boolean italic, boolean underline, boolean strikeout,
 				      int charset, int outPrecision, int clipPrecision,
 				      int quality, int pitchAndFamily, byte[] faceName);
-    public GdiPalette createPalette();
+    public GdiPalette createPalette(int version, int[] palEntry);
     public GdiPatternBrush createPatternBrush(byte[] image);
     public GdiPen createPenIndirect(int style, int width, int color);
     public GdiRegion createRectRgn(int left, int top, int right, int bottom);
@@ -171,7 +171,7 @@ public interface Gdi {
     public void setLayout(long layout);
     public void setMapMode(int mode);
     public void setMapperFlags(long flags);
-    public void setPaletteEntries(GdiPalette palette, int startIndex, int entryCount, byte[] entries);
+    public void setPaletteEntries(GdiPalette palette, int startIndex, int[] entries);
     public void setPixel(int x, int y, int color);
     public void setPolyFillMode(int mode);
     public void setRelAbs(int mode);

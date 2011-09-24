@@ -72,9 +72,18 @@ public class WmfGdi implements Gdi, WmfConstants {
 		header = record;
 	}
 
-	public void animatePalette(GdiPalette palette, int startIndex, int entryCount, byte[] entries) {
-		// TODO Auto-generated method stub
-
+	public void animatePalette(GdiPalette palette, int startIndex, int[] entries) {
+		byte[] record = new byte[22];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_ANIMATE_PALETTE);
+		pos = setUint16(record, pos, entries.length);
+		pos = setUint16(record, pos, startIndex);
+		pos = setUint16(record, pos, ((WmfGdiPalette)palette).getID());
+		for (int i = 0; i < entries.length; i++) {
+			pos = setInt32(record, pos, entries[i]);
+		}
+		records.add(record);
 	}
 
 	public void arc(int sxr, int syr, int exr, int eyr, int sxa, int sya, int exa, int eya) {
@@ -174,9 +183,21 @@ public class WmfGdi implements Gdi, WmfConstants {
 		return font;
 	}
 
-	public GdiPalette createPalette() {
-		// TODO Auto-generated method stub
-		return null;
+	public GdiPalette createPalette(int version, int[] entries) {
+		byte[] record = new byte[10 + entries.length * 4];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_CREATE_PALETTE);
+		pos = setUint16(record, pos, version);
+		pos = setUint16(record, pos, entries.length);
+		for (int i = 0; i < entries.length; i++) {
+			pos = setInt32(record, pos, entries[i]);
+		}
+		records.add(record);
+		
+		GdiPalette palette = new WmfGdiPalette(objects.size(), version, entries);
+		objects.add(palette);
+		return palette;
 	}
 
 	public GdiPatternBrush createPatternBrush(byte[] image) {
@@ -733,10 +754,18 @@ public class WmfGdi implements Gdi, WmfConstants {
 		records.add(record);
 	}
 
-	public void setPaletteEntries(GdiPalette palette, int startIndex,
-			int entryCount, byte[] entries) {
-		// TODO Auto-generated method stub
-
+	public void setPaletteEntries(GdiPalette palette, int startIndex, int[] entries) {
+		byte[] record = new byte[6 + entries.length * 4];
+		int pos = 0;
+		pos = setUint32(record, pos, record.length/2);
+		pos = setUint16(record, pos, RECORD_SET_PALETTE_ENTRIES);
+		pos = setUint16(record, pos, ((WmfGdiPalette)palette).getID());
+		pos = setUint16(record, pos, entries.length);
+		pos = setUint16(record, pos, startIndex);
+		for (int i = 0; i < entries.length; i++) {
+			pos = setInt32(record, pos, entries[i]);
+		}
+		records.add(record);
 	}
 
 	public void setPixel(int x, int y, int color) {

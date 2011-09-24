@@ -177,7 +177,7 @@ public class SvgGdi implements Gdi {
 		dc.setFont(defaultFont);
 	}
 
-	public void animatePalette(GdiPalette palette, int startIndex, int entryCount, byte[] entries) {
+	public void animatePalette(GdiPalette palette, int startIndex, int[] entries) {
 		// TODO
 		log.fine("not implemented: animatePalette");
 	}
@@ -315,11 +315,8 @@ public class SvgGdi implements Gdi {
 		return font;
 	}
 	
-	public GdiPalette createPalette() {
-		// TODO
-		log.fine("not implemented: createPalette");
-		return new GdiPalette() {
-		};
+	public GdiPalette createPalette(int version, int[] entries) {
+		return new SvgPalette(this, version, entries);
 	}
 	
 	public GdiPatternBrush createPatternBrush(byte[] image) {
@@ -1059,7 +1056,7 @@ public class SvgGdi implements Gdi {
 		dc.setMapperFlags(flags);
 	}
 
-	public void setPaletteEntries(GdiPalette palette, int startIndex, int entryCount, byte[] entries) {
+	public void setPaletteEntries(GdiPalette palette, int startIndex, int[] entries) {
 		// TODO
 		log.fine("not implemented: setPaletteEntries");
 	}
