@@ -72,8 +72,7 @@ public class WmfGdi implements Gdi, WmfConstants {
 		header = record;
 	}
 
-	public void animatePalette(GdiPalette palette, int startIndex,
-			int entryCount, byte[] entries) {
+	public void animatePalette(GdiPalette palette, int startIndex, int entryCount, byte[] entries) {
 		// TODO Auto-generated method stub
 
 	}
