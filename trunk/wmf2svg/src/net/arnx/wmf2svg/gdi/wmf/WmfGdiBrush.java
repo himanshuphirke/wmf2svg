@@ -2,7 +2,7 @@ package net.arnx.wmf2svg.gdi.wmf;
 
 import net.arnx.wmf2svg.gdi.GdiBrush;
 
-public class WmfGdiBrush extends WmfGdiObject implements GdiBrush {
+class WmfGdiBrush extends WmfGdiObject implements GdiBrush {
 	private int style;
 	private int color;
 	private int hatch;

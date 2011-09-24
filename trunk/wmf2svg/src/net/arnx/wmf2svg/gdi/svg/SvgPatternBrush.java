@@ -2,7 +2,7 @@ package net.arnx.wmf2svg.gdi.svg;
 
 import net.arnx.wmf2svg.gdi.GdiPatternBrush;
 
-public class SvgPatternBrush extends SvgObject implements GdiPatternBrush {
+class SvgPatternBrush extends SvgObject implements GdiPatternBrush {
 	private byte[] bmp;
 	
 	public SvgPatternBrush(SvgGdi gdi, byte[] bmp) {

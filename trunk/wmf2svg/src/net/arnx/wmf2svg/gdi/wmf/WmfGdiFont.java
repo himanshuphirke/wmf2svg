@@ -3,7 +3,7 @@ package net.arnx.wmf2svg.gdi.wmf;
 import net.arnx.wmf2svg.gdi.GdiFont;
 import net.arnx.wmf2svg.gdi.GdiUtils;
 
-public class WmfGdiFont extends WmfGdiObject implements GdiFont {
+class WmfGdiFont extends WmfGdiObject implements GdiFont {
 	private int height;
 	private int width;
 	private int escapement;
