@@ -20,7 +20,7 @@ public class MainTest extends TestCase {
 		File dir = new File(System.getProperty("user.home") + "/My Documents/wmf2svg");
 		File[] files = dir.listFiles(new FileFilter() {
 			public boolean accept(File file) {
-				return file.getName().endsWith("abcdef.wmf");
+				return file.getName().endsWith(".wmf");
 			}
 		});
 		

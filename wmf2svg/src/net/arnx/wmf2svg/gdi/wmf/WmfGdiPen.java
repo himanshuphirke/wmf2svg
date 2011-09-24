@@ -2,7 +2,7 @@ package net.arnx.wmf2svg.gdi.wmf;
 
 import net.arnx.wmf2svg.gdi.GdiPen;
 
-public class WmfGdiPen extends WmfGdiObject implements GdiPen {
+class WmfGdiPen extends WmfGdiObject implements GdiPen {
 	private int style;
 	private int width;
 	private int color;

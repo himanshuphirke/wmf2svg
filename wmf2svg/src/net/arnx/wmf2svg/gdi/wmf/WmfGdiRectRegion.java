@@ -2,7 +2,7 @@ package net.arnx.wmf2svg.gdi.wmf;
 
 import net.arnx.wmf2svg.gdi.GdiRegion;
 
-public class WmfGdiRectRegion extends WmfGdiObject implements GdiRegion {
+class WmfGdiRectRegion extends WmfGdiObject implements GdiRegion {
 	private int left;
 	private int top;
 	private int right;
