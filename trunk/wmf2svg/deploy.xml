@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<project name="wmf2svg-deploy" default="deploy" basedir="." 
+	xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+	<xmlproperty file="pom.xml" />
+	
+	<property name="src" location="src" />
+	<property name="lib" location="lib" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	
+	<!-- define Maven coordinates -->
+	<property name="groupId" value="${project.groupId}" />
+	<property name="artifactId" value="${project.artifactId}" />
+	<property name="version" value="${project.version}" />
+
+    <!-- define artifacts' name, which follows the convention of Maven -->
+	<property name="maven-jar" value="${dist}/lib/${artifactId}-${version}.jar" />
+	<property name="maven-javadoc-jar" value="${dist}/lib/${artifactId}-${version}-javadoc.jar" />
+	<property name="maven-sources-jar" value="${dist}/lib/${artifactId}-${version}-sources.jar" />
+
+    <!-- defined maven snapshots and staging repository id and url -->
+	<property name="maven-snapshots-repository-id" value="sonatype-nexus-snapshots" />
+	<property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
+	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
+	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
+	
+	<path id="classpath">
+		<fileset dir="${lib}" includes="*.jar" />		
+	</path>
+	
+	<target name="init">
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}/lib" />
+	</target>
+	
+	<target name="compile" depends="init" description="compile the source">
+		<javac source="1.4" target="1.4" srcdir="${src}" destdir="${build}" includeantruntime="false">
+			<classpath refid="classpath"/>
+		</javac>
+	</target>
+	
+	<target name="dist" depends="compile" description="generate the distribution">
+		<jar jarfile="${maven-jar}">
+			<fileset dir="${build}" includes="**/*.class" />
+			<fileset dir="${src}" excludes="**/*.java" />
+		</jar>
+		
+		<javadoc sourcepath="${src}" destdir="${dist}/javadoc"
+			 encoding="UTF-8" charset="UTF-8" docencoding="UTF-8" locale="en_US"
+			 author="true">
+			 <link href="http://download.oracle.com/javase/1.4.2/docs/api/" />
+			<classpath refid="classpath"/>
+		</javadoc>
+		
+		<jar jarfile="${maven-javadoc-jar}">
+			<fileset dir="${dist}/javadoc" />
+		</jar>
+		
+		<jar jarfile="${maven-sources-jar}">
+			<fileset dir="${src}" />
+		</jar>
+	</target>
+	
+	<target name="deploy" depends="dist" description="deploy snapshot version to Maven snapshot repository">
+		
+	</target>
+	
+	<target name="clean" description="clean up">
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+</project>
