@@ -543,7 +543,8 @@ public class WmfParser implements WmfConstants {
 						break;
 					case RECORD_RESTORE_DC :
 						{
-							gdi.restoreDC();
+							int dc = in.readInt16();
+							gdi.restoreDC(dc);
 						}
 						break;
 					case RECORD_ROUND_RECT :

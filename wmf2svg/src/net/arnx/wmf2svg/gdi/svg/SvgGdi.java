@@ -40,7 +40,7 @@ public class SvgGdi implements Gdi {
 
 	private SvgDc dc;
 
-	private SvgDc saveDC;
+	private LinkedList saveDC = new LinkedList();
 
 	private Document doc = null;
 	
@@ -912,19 +912,21 @@ public class SvgGdi implements Gdi {
 		log.fine("not implemented: realizePalette");
 	}
 
-	public void restoreDC() {
-		if(saveDC != null) {
-			dc = saveDC;
-			if (!parentNode.hasChildNodes()) {
-				doc.getDocumentElement().removeChild(parentNode);
-			}
-			parentNode = doc.createElement("g");
-			Element mask = dc.getMask();
-			if (mask != null) {
-				parentNode.setAttribute("mask", "url(#" + mask.getAttribute("id") + ")");
-			}
-			doc.getDocumentElement().appendChild(parentNode);
+	public void restoreDC(int savedDC) {
+		int limit = (savedDC < 0) ? -savedDC : saveDC.size()-savedDC;
+		for (int i = 0; i < limit; i++) {
+			dc = (SvgDc)saveDC.removeLast();			
 		}
+		
+		if (!parentNode.hasChildNodes()) {
+			doc.getDocumentElement().removeChild(parentNode);
+		}
+		parentNode = doc.createElement("g");
+		Element mask = dc.getMask();
+		if (mask != null) {
+			parentNode.setAttribute("mask", "url(#" + mask.getAttribute("id") + ")");
+		}
+		doc.getDocumentElement().appendChild(parentNode);
 	}
 
 	public void rectangle(int sx, int sy, int ex, int ey) {
@@ -977,7 +979,7 @@ public class SvgGdi implements Gdi {
 	}
 
 	public void seveDC() {
-		saveDC = (SvgDc) dc.clone();
+		saveDC.add(dc.clone());
 	}
 
 	public void scaleViewportExtEx(int x, int xd, int y, int yd, Size old) {
