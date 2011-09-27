@@ -915,7 +915,7 @@ public class SvgGdi implements Gdi {
 	public void restoreDC(int savedDC) {
 		int limit = (savedDC < 0) ? -savedDC : saveDC.size()-savedDC;
 		for (int i = 0; i < limit; i++) {
-			dc = (SvgDc)saveDC.removeLast();			
+			dc = (SvgDc)saveDC.removeLast();
 		}
 		
 		if (!parentNode.hasChildNodes()) {
