@@ -583,13 +583,16 @@ public class WmfGdi implements Gdi, WmfConstants {
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_REALIZE_PALETTE);
+		records.add(record);
 	}
 	
-	public void restoreDC() {
-		byte[] record = new byte[6];
+	public void restoreDC(int savedDC) {
+		byte[] record = new byte[8];
 		int pos = 0;
 		pos = setUint32(record, pos, record.length/2);
 		pos = setUint16(record, pos, RECORD_RESTORE_DC);
+		pos = setInt16(record, pos, savedDC);
+		records.add(record);
 	}
 
 	public void rectangle(int sx, int sy, int ex, int ey) {

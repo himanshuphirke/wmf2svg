@@ -154,7 +154,7 @@ public interface Gdi {
     public void polyline(Point[] points);
     public void polyPolygon(Point[][] points);
     public void realizePalette();
-    public void restoreDC();
+    public void restoreDC(int savedDC);
     public void rectangle(int sx, int sy, int ex, int ey);
     public void resizePalette(GdiPalette palette);
     public void roundRect(int sx, int sy, int ex, int ey, int rw, int rh);
