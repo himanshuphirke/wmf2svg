@@ -207,17 +207,6 @@ public class SvgGdi implements Gdi {
 				elem.setAttribute("ry", "" + dc.toRelativeY((int)ry));
 			}
 		} else {
-			
-			// TODO
-			elem = doc.createElement("rect");
-			elem.setAttribute("x", "" + dc.toAbsoluteX(sxr));
-			elem.setAttribute("y", "" + dc.toAbsoluteY(syr));
-			elem.setAttribute("width", "" + dc.toRelativeX(rx * 2));
-			elem.setAttribute("height", "" + dc.toRelativeY(ry * 2));
-			elem.setAttribute("stroke", "black");
-			elem.setAttribute("fill", "none");
-			parentNode.appendChild(elem);
-			
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
 			double sx = rx * Math.cos(sa);
 			double sy = ry * Math.sin(sa);
