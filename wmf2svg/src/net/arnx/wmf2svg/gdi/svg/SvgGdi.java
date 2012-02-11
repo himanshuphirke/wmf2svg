@@ -36,7 +36,7 @@ public class SvgGdi implements Gdi {
 	
 	private boolean compatible;
 	
-	private Map props = new HashMap();
+	private Properties props = new Properties();
 
 	private SvgDc dc;
 
@@ -95,8 +95,7 @@ public class SvgGdi implements Gdi {
 		InputStream in = null;
 		try {
 			in = getClass().getResourceAsStream("SvgGdi.properties");
-			Properties ps = new Properties();
-			ps.load(in);
+			props.load(in);
 		} catch (Exception e) {
 			throw new SvgGdiException("properties format error: SvgGDI.properties");
 		} finally {
@@ -112,8 +111,8 @@ public class SvgGdi implements Gdi {
 		return dc;
 	}
 
-	public Object getProperty(String key) {
-		return props.get(key);
+	public String getProperty(String key) {
+		return props.getProperty(key);
 	}
 
 	public Document getDocument() {

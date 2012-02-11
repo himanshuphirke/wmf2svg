@@ -40,6 +40,7 @@ class SvgFont extends SvgObject implements GdiFont {
 	private int pitchAndFamily;
 	
 	private String faceName;
+	private double heightMultiply = 1.0;
 	private String lang;
 
 	public SvgFont(
@@ -77,6 +78,18 @@ class SvgFont extends SvgObject implements GdiFont {
 		
 		// xml:lang
 		this.lang = GdiUtils.getLanguage(charset);
+		
+		String emheight = gdi.getProperty("font-emheight." + this.faceName);
+		if (emheight == null) {
+			String alter = gdi.getProperty("alternative-font." + this.faceName);
+			if (alter != null) {
+				emheight = gdi.getProperty("font-emheight." + alter);
+			}
+		}
+		
+		if (emheight != null) {
+			this.heightMultiply = Double.parseDouble(emheight);
+		}
 	}
 	
 	public int getHeight() {
@@ -208,7 +221,7 @@ class SvgFont extends SvgObject implements GdiFont {
 	}
 	
 	public int getFontSize() {
-		return Math.abs(getGDI().getDC().toRelativeY(height));
+		return Math.abs(getGDI().getDC().toRelativeY(height * heightMultiply));
 	}
 
 	public int hashCode() {
@@ -312,40 +325,39 @@ class SvgFont extends SvgObject implements GdiFont {
 			if (faceName.charAt(0) == '@') fontFamily = faceName.substring(1);
 			fontList.add(fontFamily);
 
-			String altfont =
-				(String)getGDI().getProperty("alternative-font." + fontFamily);
+			String altfont = getGDI().getProperty("alternative-font." + fontFamily);
 			if (altfont != null && altfont.length() != 0) {
 				fontList.add(altfont);
 			}
 		}
-
-		String pitch = (String)getGDI().getProperty("generic-font." + getPitchString());
-		String family =
-			(String)getGDI().getProperty("generic-font." + getFontFamilyString());
-		if (pitch != null && pitch.length() != 0) {
-			fontList.add(pitch);
-		} else if (family != null && family.length() != 0) {
+		
+		String family = getGDI().getProperty("generic-font." + getFontFamilyString());
+		if (family != null && family.length() != 0) {
 			fontList.add(family);
 		}
-
+		
+		String pitch = getGDI().getProperty("generic-font." + getPitchString());
+		if (pitch != null && pitch.length() != 0) {
+			fontList.add(pitch);
+		}
+		
 		if (!fontList.isEmpty()) {
 			buffer.append("font-family:");
-		}
+			boolean isVertical = false;
+			for (Iterator i = fontList.iterator(); i.hasNext();) {
+				String font = (String)i.next();
+				if (font.indexOf(" ") != -1) {
+					buffer.append(" \"" + font + "\"");
+				} else {
+					buffer.append(" " + font);
+				}
 
-		boolean isVertical = false;
-		for (Iterator i = fontList.iterator(); i.hasNext();) {
-			String font = (String)i.next();
-			if (font.indexOf(" ") != -1) {
-				buffer.append(" \"" + font + "\"");
-			} else {
-				buffer.append(" " + font);
+				if (i.hasNext()) {
+					buffer.append(",");
+				}
 			}
-
-			if (i.hasNext()) {
-				buffer.append(",");
-			}
+			buffer.append("; ");
 		}
-		buffer.append("; ");
 
 		// text-decoration
 		if (underline || strikeout) {
