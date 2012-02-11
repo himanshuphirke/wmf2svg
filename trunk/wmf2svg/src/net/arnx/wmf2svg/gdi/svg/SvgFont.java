@@ -152,36 +152,6 @@ class SvgFont extends SvgObject implements GdiFont {
 		return lang;
 	}
 
-	private String getPitchString() {
-		int pitch = pitchAndFamily & 0x00000003;
-		switch (pitch) {
-			case FIXED_PITCH :
-				return "FIXED_PITCH";
-			case VARIABLE_PITCH :
-				return "VARIABLE_PITCH";
-			default :
-				return "DEFAULT_PITCH";
-		}
-	}
-
-	private String getFontFamilyString() {
-		int family = pitchAndFamily & 0x000000F0;
-		switch (family) {
-			case FF_DECORATIVE :
-				return "FF_DECORATIVE";
-			case FF_MODERN :
-				return "FF_MODERN";
-			case FF_ROMAN :
-				return "FF_ROMAN";
-			case FF_SCRIPT :
-				return "FF_SCRIPT";
-			case FF_SWISS :
-				return "FF_SWISS";
-			default :
-				return "FF_DONTCARE";
-		}
-	}
-
 	public int[] validateDx(byte[] chars, int[] dx) {
 		if (dx == null || dx.length == 0) {
 			return null;
@@ -331,14 +301,24 @@ class SvgFont extends SvgObject implements GdiFont {
 			}
 		}
 		
-		String family = getGDI().getProperty("generic-font." + getFontFamilyString());
-		if (family != null && family.length() != 0) {
-			fontList.add(family);
-		}
-		
-		String pitch = getGDI().getProperty("generic-font." + getPitchString());
-		if (pitch != null && pitch.length() != 0) {
-			fontList.add(pitch);
+		// int pitch = pitchAndFamily & 0x00000003;
+		int family = pitchAndFamily & 0x000000F0;
+		switch (family) {
+			case FF_DECORATIVE :
+				fontList.add("fantasy");
+				break;
+			case FF_MODERN :
+				fontList.add("monospace");
+				break;
+			case FF_ROMAN :
+				fontList.add("serif");
+				break;
+			case FF_SCRIPT :
+				fontList.add("cursive");
+				break;
+			case FF_SWISS :
+				fontList.add("sans-serif");
+				break;
 		}
 		
 		if (!fontList.isEmpty()) {
