@@ -170,9 +170,7 @@ public class WmfParser implements WmfConstants {
 							int clipPrecision = in.readByte();
 							int quality = in.readByte();
 							int pitchAndFamily = in.readByte();
-							int pitch = 0x00000003 & pitchAndFamily;
-							int family = 0x000000F0 & pitchAndFamily;
-							byte[] faceName = in.readBytes(2 * (size - 9));
+							byte[] faceName = in.readBytes(size * 2 - in.getCount());
 							
 							GdiObject obj = gdi.createFontIndirect(
 									height,
