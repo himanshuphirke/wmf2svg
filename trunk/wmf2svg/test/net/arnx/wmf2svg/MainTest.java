@@ -4,7 +4,10 @@ import junit.framework.TestCase;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
@@ -33,8 +36,10 @@ public class MainTest extends TestCase {
 	}
 	
 	public void testFontInternalLeadings() {
-		BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_3BYTE_BGR);
-		Graphics g = image.getGraphics();
+		Frame f = new Frame();
+		f.setVisible(true);
+		
+		Graphics2D g = (Graphics2D)f.getGraphics();
 		
 		List list = new ArrayList();
 		list.add(new Font("Arial", Font.PLAIN, 72000));
@@ -42,11 +47,13 @@ public class MainTest extends TestCase {
 		list.add(new Font("Lucida Console", Font.PLAIN, 72000));
 		
 		for (int i = 0; i < list.size(); i++) {
-			FontMetrics font = g.getFontMetrics((Font)list.get(i));
-			System.out.println("name: " +  font.getFont().getName() 
-					+ ", leading: " + font.getLeading() 
-					+ ", height: " + font.getHeight()
-					+ ", ratio: " + ((double)font.getLeading() / font.getHeight()));
+			Font font = (Font)list.get(i);
+			LineMetrics m = font.getLineMetrics("ABCdefg", g.getFontRenderContext());
+			
+			System.out.println("name: " + font.getName() 
+					+ ", leading: " + m.getLeading() 
+					+ ", height: " + m.getHeight()
+					+ ", ratio: " + ((double)m.getLeading() / m.getHeight()));
 		}
 	}
 }
