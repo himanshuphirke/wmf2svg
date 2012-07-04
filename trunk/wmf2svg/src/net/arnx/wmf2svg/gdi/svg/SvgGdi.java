@@ -485,7 +485,7 @@ public class SvgGdi implements Gdi {
 		int width = 0;
 		if (vertical) {
 			elem.setAttribute("x", Integer.toString(ax));
-			if (dc.getFont() != null) width = dc.getFont().getFontSize();
+			if (dc.getFont() != null) width = Math.abs(dc.getFont().getFontSize());
 		} else {
 			if (dc.getFont() != null) {
 				dx = dc.getFont().validateDx(text, dx);
@@ -515,7 +515,7 @@ public class SvgGdi implements Gdi {
 				}
 				elem.setAttribute("x", buffer.toString());
 			} else {
-				if (dc.getFont() != null) width = (dc.getFont().getFontSize() * text.length)/2;
+				if (dc.getFont() != null) width = Math.abs(dc.getFont().getFontSize() * text.length)/2;
 				elem.setAttribute("x", Integer.toString(ax));				
 			}
 		}
@@ -530,7 +530,7 @@ public class SvgGdi implements Gdi {
 			
 			buffer.setLength(0);
 			if(align == 0) {
-				buffer.append(ay + Math.abs(dc.toRelativeY(dc.getFont().getHeight())));
+				buffer.append(ay + dc.toRelativeY(Math.abs(dc.getFont().getHeight())));
 			} else {
 				buffer.append(ay);
 			}
@@ -558,25 +558,25 @@ public class SvgGdi implements Gdi {
 					dc.moveToEx(x, ty, null);
 				}
 			} else {
-				if (dc.getFont() != null) height = (dc.getFont().getFontSize() * text.length)/2;
+				if (dc.getFont() != null) height = Math.abs(dc.getFont().getFontSize() * text.length)/2;
 			}
 			elem.setAttribute("y", buffer.toString());
 		} else {
-			if (dc.getFont() != null) height = dc.getFont().getFontSize();
+			if (dc.getFont() != null) height = Math.abs(dc.getFont().getFontSize());
 			if (compatible) {
 				if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_TOP) {
-					elem.setAttribute("y", Integer.toString(ay + Math.abs(dc.toRelativeY(height*0.88))));	
+					elem.setAttribute("y", Integer.toString(ay + dc.toRelativeY(height*0.88)));	
 				} else if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BOTTOM) {
-					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] + Math.abs(dc.toRelativeY(height*0.88))));					
+					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] + dc.toRelativeY(height*0.88)));					
 				} else {
 					elem.setAttribute("y", Integer.toString(ay));
 				}
 			} else {
 				if((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BOTTOM && rect != null) {
-					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] - Math.abs(dc.toRelativeY(height))));
+					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] - dc.toRelativeY(height)));
 				} else {
 					elem.setAttribute("y", Integer.toString(ay));
-				}				
+				}
 			}
 		}
 		
@@ -587,24 +587,24 @@ public class SvgGdi implements Gdi {
 				if (vertical) {
 					rect[0] = x-(int)(width * 0.85);
 					if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_RIGHT) {
-						rect[0] = y-height;
+						rect[1] = y-height;
 					} else if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_CENTER) {
-						rect[0] = y-height/2;
+						rect[1] = y-height/2;
 					} else {
-						rect[0] = y;
+						rect[1] = y;
 					}
 				} else {
 					if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_RIGHT) {
-						rect[0] = x-width;						
+						rect[0] = x-width;
 					} else if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_CENTER) {
 						rect[0] = x-width/2;
 					} else {
 						rect[0] = x;
 					}
-					rect[1] = y-(int)(height * 0.85);
+					rect[1] = y;
 				}
-				rect[2] = width;
-				rect[3] = height;
+				rect[2] = rect[0] + width;
+				rect[3] = rect[1] + height;
 			}
 			bk = doc.createElement("rect");
 			bk.setAttribute("x", Integer.toString(dc.toAbsoluteX(rect[0])));
