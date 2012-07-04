@@ -195,15 +195,15 @@ public class SvgGdi implements Gdi {
 		if (sxa == exa && sya == eya) {
 			if (rx == ry) {
 				elem = doc.createElement("circle");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
-				elem.setAttribute("r", "" + dc.toRelativeX((int)rx));
+				elem.setAttribute("cx", "" + (int)dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + (int)dc.toAbsoluteY((int)cy));
+				elem.setAttribute("r", "" + (int)dc.toRelativeX((int)rx));
 			} else {
 				elem = doc.createElement("ellipse");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
-				elem.setAttribute("rx", "" + dc.toRelativeX((int)rx));
-				elem.setAttribute("ry", "" + dc.toRelativeY((int)ry));
+				elem.setAttribute("cx", "" + (int)dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + (int)dc.toAbsoluteY((int)cy));
+				elem.setAttribute("rx", "" + (int)dc.toRelativeX((int)rx));
+				elem.setAttribute("ry", "" + (int)dc.toRelativeY((int)ry));
 			}
 		} else {
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
@@ -218,7 +218,7 @@ public class SvgGdi implements Gdi {
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " A " + (dc.toRelativeX(rx * 2.0) / 2.0)  + "," + (dc.toRelativeY(ry * 2.0) / 2.0)
+					+ " A " + (((int)dc.toRelativeX(rx * 2.0)) / 2.0)  + "," + (((int)dc.toRelativeY(ry * 2.0)) / 2.0)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
 					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy));
 		}
@@ -248,15 +248,15 @@ public class SvgGdi implements Gdi {
 		if (sxa == exa && sya == eya) {
 			if (rx == ry) {
 				elem = doc.createElement("circle");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
-				elem.setAttribute("r", "" + dc.toRelativeX((int)rx));
+				elem.setAttribute("cx", "" + (int)dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + (int)dc.toAbsoluteY((int)cy));
+				elem.setAttribute("r", "" + (int)dc.toRelativeX((int)rx));
 			} else {
 				elem = doc.createElement("ellipse");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
-				elem.setAttribute("rx", "" + dc.toRelativeX((int)rx));
-				elem.setAttribute("ry", "" + dc.toRelativeY((int)ry));
+				elem.setAttribute("cx", "" + (int)dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + (int)dc.toAbsoluteY((int)cy));
+				elem.setAttribute("rx", "" + (int)dc.toRelativeX((int)rx));
+				elem.setAttribute("ry", "" + (int)dc.toRelativeY((int)ry));
 			}
 		} else {
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
@@ -271,7 +271,7 @@ public class SvgGdi implements Gdi {
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " A " + (dc.toRelativeX(rx * 2.0) / 2.0)  + "," + (dc.toRelativeY(ry * 2.0) / 2.0)
+					+ " A " + (((int)dc.toRelativeX(rx * 2.0)) / 2.0)  + "," + (((int)dc.toRelativeY(ry * 2.0)) / 2.0)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
 					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy) + " z");
 		}
@@ -381,10 +381,10 @@ public class SvgGdi implements Gdi {
 			}
 		}
 
-		elem.setAttribute("cx", "" + dc.toAbsoluteX((sx + ex) / 2));
-		elem.setAttribute("cy", "" + dc.toAbsoluteY((sy + ey) / 2));
-		elem.setAttribute("rx", "" + dc.toRelativeX((ex - sx) / 2));
-		elem.setAttribute("ry", "" + dc.toRelativeY((ey - sy) / 2));
+		elem.setAttribute("cx", "" + (int)dc.toAbsoluteX((sx + ex) / 2));
+		elem.setAttribute("cy", "" + (int)dc.toAbsoluteY((sy + ey) / 2));
+		elem.setAttribute("rx", "" + (int)dc.toRelativeX((ex - sx) / 2));
+		elem.setAttribute("ry", "" + (int)dc.toRelativeY((ey - sy) / 2));
 		parentNode.appendChild(elem);
 	}
 
@@ -400,10 +400,10 @@ public class SvgGdi implements Gdi {
 			defsNode.appendChild(mask);
 			
 			Element unclip = doc.createElement("rect");
-			unclip.setAttribute("x", "" + dc.toAbsoluteX(left));
-			unclip.setAttribute("y", "" + dc.toAbsoluteY(top));
-			unclip.setAttribute("width", "" + dc.toRelativeX(right - left));
-			unclip.setAttribute("height", "" + dc.toRelativeY(bottom - top));
+			unclip.setAttribute("x", "" + (int)dc.toAbsoluteX(left));
+			unclip.setAttribute("y", "" + (int)dc.toAbsoluteY(top));
+			unclip.setAttribute("width", "" + (int)dc.toRelativeX(right - left));
+			unclip.setAttribute("height", "" + (int)dc.toRelativeY(bottom - top));
 			unclip.setAttribute("fill", "black");
 			mask.appendChild(unclip);
 			dc.setMask(mask);
@@ -481,7 +481,7 @@ public class SvgGdi implements Gdi {
 		}
 
 		// x
-		int ax = dc.toAbsoluteX(x);
+		int ax = (int)dc.toAbsoluteX(x);
 		int width = 0;
 		if (vertical) {
 			elem.setAttribute("x", Integer.toString(ax));
@@ -507,7 +507,7 @@ public class SvgGdi implements Gdi {
 				buffer.setLength(0);
 				for (int i = 0; i < dx.length; i++) {
 					if (i > 0) buffer.append(" ");
-					buffer.append(dc.toAbsoluteX(tx));
+					buffer.append((int)dc.toAbsoluteX(tx));
 					tx += dx[i];
 				}
 				if ((align & (TA_NOUPDATECP|TA_UPDATECP)) == TA_UPDATECP) {
@@ -521,7 +521,7 @@ public class SvgGdi implements Gdi {
 		}
 		
 		// y
-		int ay = dc.toAbsoluteY(y);
+		int ay = (int)dc.toAbsoluteY(y);
 		int height = 0;
 		if (vertical) {
 			if (dc.getFont() != null) {
@@ -530,7 +530,7 @@ public class SvgGdi implements Gdi {
 			
 			buffer.setLength(0);
 			if(align == 0) {
-				buffer.append(ay + dc.toRelativeY(Math.abs(dc.getFont().getHeight())));
+				buffer.append(ay + (int)dc.toRelativeY(Math.abs(dc.getFont().getHeight())));
 			} else {
 				buffer.append(ay);
 			}
@@ -550,7 +550,7 @@ public class SvgGdi implements Gdi {
 				
 				for (int i = 0; i < dx.length; i++) {
 					buffer.append(" ");
-					buffer.append(dc.toAbsoluteY(ty));
+					buffer.append((int)dc.toAbsoluteY(ty));
 					ty += dx[i];
 				}
 	
@@ -565,15 +565,15 @@ public class SvgGdi implements Gdi {
 			if (dc.getFont() != null) height = Math.abs(dc.getFont().getFontSize());
 			if (compatible) {
 				if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_TOP) {
-					elem.setAttribute("y", Integer.toString(ay + dc.toRelativeY(height*0.88)));	
+					elem.setAttribute("y", Integer.toString(ay + (int)dc.toRelativeY(height*0.88)));	
 				} else if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BOTTOM) {
-					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] + dc.toRelativeY(height*0.88)));					
+					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] + (int)dc.toRelativeY(height*0.88)));					
 				} else {
 					elem.setAttribute("y", Integer.toString(ay));
 				}
 			} else {
 				if((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BOTTOM && rect != null) {
-					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] - dc.toRelativeY(height)));
+					elem.setAttribute("y", Integer.toString(ay + rect[3] - rect[1] - (int)dc.toRelativeY(height)));
 				} else {
 					elem.setAttribute("y", Integer.toString(ay));
 				}
@@ -607,10 +607,10 @@ public class SvgGdi implements Gdi {
 				rect[3] = rect[1] + height;
 			}
 			bk = doc.createElement("rect");
-			bk.setAttribute("x", Integer.toString(dc.toAbsoluteX(rect[0])));
-			bk.setAttribute("y", Integer.toString(dc.toAbsoluteY(rect[1])));
-			bk.setAttribute("width", Integer.toString(dc.toRelativeX(rect[2] - rect[0])));
-			bk.setAttribute("height", Integer.toString(dc.toRelativeY(rect[3] - rect[1])));
+			bk.setAttribute("x", Integer.toString((int)dc.toAbsoluteX(rect[0])));
+			bk.setAttribute("y", Integer.toString((int)dc.toAbsoluteY(rect[1])));
+			bk.setAttribute("width", Integer.toString((int)dc.toRelativeX(rect[2] - rect[0])));
+			bk.setAttribute("height", Integer.toString((int)dc.toRelativeY(rect[3] - rect[1])));
 			bk.setAttribute("fill", SvgObject.toColor(dc.getBkColor()));
 		}
 		
@@ -622,10 +622,10 @@ public class SvgGdi implements Gdi {
 			clip.setIdAttribute("id", true);
 			
 			Element clipRect = doc.createElement("rect");
-			clipRect.setAttribute("x", Integer.toString(dc.toAbsoluteX(rect[0])));
-			clipRect.setAttribute("y", Integer.toString(dc.toAbsoluteY(rect[1])));
-			clipRect.setAttribute("width", Integer.toString(dc.toRelativeX(rect[2] - rect[0])));
-			clipRect.setAttribute("height", Integer.toString(dc.toRelativeY(rect[3] - rect[1])));
+			clipRect.setAttribute("x", Integer.toString((int)dc.toAbsoluteX(rect[0])));
+			clipRect.setAttribute("y", Integer.toString((int)dc.toAbsoluteY(rect[1])));
+			clipRect.setAttribute("width", Integer.toString((int)dc.toRelativeX(rect[2] - rect[0])));
+			clipRect.setAttribute("height", Integer.toString((int)dc.toRelativeY(rect[3] - rect[1])));
 			
 			clip.appendChild(clipRect);
 			elem.setAttribute("clip-path", "url(#" + name + ")");
@@ -712,10 +712,10 @@ public class SvgGdi implements Gdi {
 
 		elem.setAttribute("fill", "none");
 
-		elem.setAttribute("x1", "" + dc.toAbsoluteX(dc.getCurrentX()));
-		elem.setAttribute("y1", "" + dc.toAbsoluteY(dc.getCurrentY()));
-		elem.setAttribute("x2", "" + dc.toAbsoluteX(ex));
-		elem.setAttribute("y2", "" + dc.toAbsoluteY(ey));
+		elem.setAttribute("x1", "" + (int)dc.toAbsoluteX(dc.getCurrentX()));
+		elem.setAttribute("y1", "" + (int)dc.toAbsoluteY(dc.getCurrentY()));
+		elem.setAttribute("x2", "" + (int)dc.toAbsoluteX(ex));
+		elem.setAttribute("y2", "" + (int)dc.toAbsoluteY(ey));
 		parentNode.appendChild(elem);
 
 		dc.moveToEx(ex, ey, null);
@@ -778,15 +778,15 @@ public class SvgGdi implements Gdi {
 		if (sxa == exa && sya == eya) {
 			if (rx == ry) {
 				elem = doc.createElement("circle");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
-				elem.setAttribute("r", "" + dc.toRelativeX((int)rx));
+				elem.setAttribute("cx", "" + (int)dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + (int)dc.toAbsoluteY((int)cy));
+				elem.setAttribute("r", "" + (int)dc.toRelativeX((int)rx));
 			} else {
 				elem = doc.createElement("ellipse");
-				elem.setAttribute("cx", "" + dc.toAbsoluteX((int)cx));
-				elem.setAttribute("cy", "" + dc.toAbsoluteY((int)cy));
-				elem.setAttribute("rx", "" + dc.toRelativeX((int)rx));
-				elem.setAttribute("ry", "" + dc.toRelativeY((int)ry));
+				elem.setAttribute("cx", "" + (int)dc.toAbsoluteX((int)cx));
+				elem.setAttribute("cy", "" + (int)dc.toAbsoluteY((int)cy));
+				elem.setAttribute("rx", "" + (int)dc.toRelativeX((int)rx));
+				elem.setAttribute("ry", "" + (int)dc.toRelativeY((int)ry));
 			}
 		} else {
 			double sa = Math.atan2((sya - cy) * rx, (sxa - cx) * ry);
@@ -802,7 +802,7 @@ public class SvgGdi implements Gdi {
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
 					+ " L " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " A " + (dc.toRelativeX(rx * 2.0) / 2.0)  + "," + (dc.toRelativeY(ry * 2.0) / 2.0)
+					+ " A " + (((int)dc.toRelativeX(rx * 2.0)) / 2.0)  + "," + (((int)dc.toRelativeY(ry * 2.0)) / 2.0)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
 					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy) + " z");
 		}
@@ -842,8 +842,8 @@ public class SvgGdi implements Gdi {
 			if (i != 0) {
 				buffer.append(" ");
 			}
-			buffer.append(dc.toAbsoluteX(points[i].x)).append(",");
-			buffer.append(dc.toAbsoluteY(points[i].y));
+			buffer.append((int)dc.toAbsoluteX(points[i].x)).append(",");
+			buffer.append((int)dc.toAbsoluteY(points[i].y));
 		}
 		elem.setAttribute("points", buffer.toString());
 		parentNode.appendChild(elem);
@@ -860,8 +860,8 @@ public class SvgGdi implements Gdi {
 		for (int i = 0; i < points.length; i++) {
 			if (i != 0)
 				buffer.append(" ");
-			buffer.append(dc.toAbsoluteX(points[i].x)).append(",");
-			buffer.append(dc.toAbsoluteY(points[i].y));
+			buffer.append((int)dc.toAbsoluteX(points[i].x)).append(",");
+			buffer.append((int)dc.toAbsoluteY(points[i].y));
 		}
 		elem.setAttribute("points", buffer.toString());
 		parentNode.appendChild(elem);
@@ -895,8 +895,8 @@ public class SvgGdi implements Gdi {
 				} else if (j == 1) {
 					buffer.append(" L ");
 				}
-				buffer.append(dc.toAbsoluteX(points[i][j].x)).append(",");
-				buffer.append(dc.toAbsoluteY(points[i][j].y)).append(" ");
+				buffer.append((int)dc.toAbsoluteX(points[i][j].x)).append(",");
+				buffer.append((int)dc.toAbsoluteY(points[i][j].y)).append(" ");
 				if (j == points[i].length - 1) {
 					buffer.append("z");
 				}
@@ -942,10 +942,10 @@ public class SvgGdi implements Gdi {
 			}
 		}
 
-		elem.setAttribute("x", "" + dc.toAbsoluteX(sx));
-		elem.setAttribute("y", "" + dc.toAbsoluteY(sy));
-		elem.setAttribute("width", "" + dc.toRelativeX(ex - sx));
-		elem.setAttribute("height", "" + dc.toRelativeY(ey - sy));
+		elem.setAttribute("x", "" + (int)dc.toAbsoluteX(sx));
+		elem.setAttribute("y", "" + (int)dc.toAbsoluteY(sy));
+		elem.setAttribute("width", "" + (int)dc.toRelativeX(ex - sx));
+		elem.setAttribute("height", "" + (int)dc.toRelativeY(ey - sy));
 		parentNode.appendChild(elem);
 	}
 
@@ -968,12 +968,12 @@ public class SvgGdi implements Gdi {
 			}
 		}
 
-		elem.setAttribute("x", "" + dc.toAbsoluteX(sx));
-		elem.setAttribute("y", "" + dc.toAbsoluteY(sy));
-		elem.setAttribute("width", "" + dc.toRelativeX(ex - sx));
-		elem.setAttribute("height", "" + dc.toRelativeY(ey - sy));
-		elem.setAttribute("rx", "" + dc.toRelativeX(rw));
-		elem.setAttribute("ry", "" + dc.toRelativeY(rh));
+		elem.setAttribute("x", "" + (int)dc.toAbsoluteX(sx));
+		elem.setAttribute("y", "" + (int)dc.toAbsoluteY(sy));
+		elem.setAttribute("width", "" + (int)dc.toRelativeX(ex - sx));
+		elem.setAttribute("height", "" + (int)dc.toRelativeY(ey - sy));
+		elem.setAttribute("rx", "" + (int)dc.toRelativeX(rw));
+		elem.setAttribute("ry", "" + (int)dc.toRelativeY(rh));
 		parentNode.appendChild(elem);
 	}
 
@@ -1066,10 +1066,10 @@ public class SvgGdi implements Gdi {
 		Element elem = doc.createElement("rect");
 		elem.setAttribute("stroke", "none");
 		elem.setAttribute("fill", SvgPen.toColor(color));
-		elem.setAttribute("x", "" + dc.toAbsoluteX(x));
-		elem.setAttribute("y", "" + dc.toAbsoluteY(y));
-		elem.setAttribute("width", "" + dc.toRelativeX(1));
-		elem.setAttribute("height", "" + dc.toRelativeY(1));
+		elem.setAttribute("x", "" + (int)dc.toAbsoluteX(x));
+		elem.setAttribute("y", "" + (int)dc.toAbsoluteY(y));
+		elem.setAttribute("width", "" + (int)dc.toRelativeX(1));
+		elem.setAttribute("height", "" + (int)dc.toRelativeY(1));
 		parentNode.appendChild(elem);
 	}
 
@@ -1103,7 +1103,7 @@ public class SvgGdi implements Gdi {
 
 	public void setTextJustification(int breakExtra, int breakCount) {
 		if (breakCount > 0) {
-			dc.setTextSpace(Math.abs(dc.toRelativeX(breakExtra)) / breakCount);
+			dc.setTextSpace(Math.abs((int)dc.toRelativeX(breakExtra)) / breakCount);
 		}
 	}
 	
@@ -1185,8 +1185,8 @@ public class SvgGdi implements Gdi {
 
 		elem.setAttribute("stroke", "none");
 		
-		int ax = dc.toAbsoluteX(x);
-		int ay = dc.toAbsoluteY(y);
+		int ax = (int)dc.toAbsoluteX(x);
+		int ay = (int)dc.toAbsoluteY(y);
 		elem.setAttribute("x", Integer.toString(ax));
 		elem.setAttribute("y", Integer.toString(ay));
 				
@@ -1208,7 +1208,7 @@ public class SvgGdi implements Gdi {
 				if (i != 0) {
 					buffer.append(" ");
 				}
-				buffer.append(dc.toRelativeX(dc.getTextCharacterExtra()));
+				buffer.append((int)dc.toRelativeX(dc.getTextCharacterExtra()));
 			}
 
 			elem.setAttribute("dx", buffer.toString());
@@ -1292,15 +1292,15 @@ public class SvgGdi implements Gdi {
 
 		Element elem = doc.createElement("image");
 		if( dh < 0 ){
-			elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
-			elem.setAttribute("y", "" + dc.toAbsoluteY(dy+dh));
-			elem.setAttribute("width", "" + dc.toRelativeX(dw));
-			elem.setAttribute("height", "" + dc.toRelativeY(-dh));
+			elem.setAttribute("x", "" + (int)dc.toAbsoluteX(dx));
+			elem.setAttribute("y", "" + (int)dc.toAbsoluteY(dy+dh));
+			elem.setAttribute("width", "" + (int)dc.toRelativeX(dw));
+			elem.setAttribute("height", "" + (int)dc.toRelativeY(-dh));
 		}else{
-			elem.setAttribute("x", "" + dc.toAbsoluteX(dx));
-			elem.setAttribute("y", "" + dc.toAbsoluteY(dy));
-			elem.setAttribute("width", "" + dc.toRelativeX(dw));
-			elem.setAttribute("height", "" + dc.toRelativeY(dh));
+			elem.setAttribute("x", "" + (int)dc.toAbsoluteX(dx));
+			elem.setAttribute("y", "" + (int)dc.toAbsoluteY(dy));
+			elem.setAttribute("width", "" + (int)dc.toRelativeX(dw));
+			elem.setAttribute("height", "" + (int)dc.toRelativeY(dh));
 		}
 
 		if (sx != 0 || sy != 0 || sw != dw || sh != dh) {
