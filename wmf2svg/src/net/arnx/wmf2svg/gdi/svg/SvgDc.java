@@ -240,26 +240,26 @@ public class SvgDc implements Cloneable {
 		cy = y;
 	}
 	
-	public int toAbsoluteX(double x) {
+	public double toAbsoluteX(double x) {
 		// TODO Handle Viewport
-		return (int)(((ww >= 0) ? 1 : -1) * (mx * x - (wx + wox)) / wsx);
+		return ((ww >= 0) ? 1 : -1) * (mx * x - (wx + wox)) / wsx;
 	}
 	
-	public int toAbsoluteY(double y) {
+	public double toAbsoluteY(double y) {
 		// TODO Handle Viewport
-		return (int)(((wh >= 0) ? 1 : -1) * (my * y - (wy + woy)) / wsy);
+		return ((wh >= 0) ? 1 : -1) * (my * y - (wy + woy)) / wsy;
 	}
 	
-	public int toRelativeX(double x) {
+	public double toRelativeX(double x) {
 		// TODO Handle Viewport
-		return (int)(((ww >= 0) ? 1 : -1) * (mx * x) / wsx);
+		return ((ww >= 0) ? 1 : -1) * (mx * x) / wsx;
 	}
 	
-	public int toRelativeY(double y) {
+	public double toRelativeY(double y) {
 		// TODO Handle Viewport
-		return (int)(((wh >= 0) ? 1 : -1) * (my * y) / wsy);
+		return ((wh >= 0) ? 1 : -1) * (my * y) / wsy;
 	}
-
+	
 	public void setDpi(int dpi) {
 		this.dpi = (dpi > 0) ? dpi : 1440;
 	}
