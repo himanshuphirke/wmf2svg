@@ -184,8 +184,8 @@ public class SvgGdi implements Gdi {
 	public void arc(int sxr, int syr, int exr, int eyr, int sxa, int sya,
 			int exa, int eya) {
 		
-		double rx = Math.abs(exr - sxr)/2.0;
-		double ry = Math.abs(eyr - syr)/2.0;
+		double rx = (Math.abs(exr - sxr) - 1) / 2.0;
+		double ry = (Math.abs(eyr - syr) - 1) / 2.0;
 		if (rx <= 0 || ry <= 0) return;
 		
 		double cx = Math.min(sxr, exr) + rx;
@@ -218,7 +218,7 @@ public class SvgGdi implements Gdi {
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " A " + (((int)dc.toRelativeX(rx * 2.0)) / 2.0)  + "," + (((int)dc.toRelativeY(ry * 2.0)) / 2.0)
+					+ " A " + dc.toRelativeX(rx)  + "," + dc.toRelativeY(ry)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
 					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy));
 		}
@@ -237,8 +237,8 @@ public class SvgGdi implements Gdi {
 
 	public void chord(int sxr, int syr, int exr, int eyr, int sxa, int sya,
 			int exa, int eya) {
-		double rx = (Math.abs(exr - sxr)-1)/2.0;
-		double ry = (Math.abs(eyr - syr)-1)/2.0;
+		double rx = (Math.abs(exr - sxr) - 1) / 2.0;
+		double ry = (Math.abs(eyr - syr) - 1) / 2.0;
 		if (rx <= 0 || ry <= 0) return;
 		
 		double cx = Math.min(sxr, exr) + rx;
@@ -271,7 +271,7 @@ public class SvgGdi implements Gdi {
 			
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " A " + (((int)dc.toRelativeX(rx * 2.0)) / 2.0)  + "," + (((int)dc.toRelativeY(ry * 2.0)) / 2.0)
+					+ " A " + dc.toRelativeX(rx)  + "," + dc.toRelativeY(ry)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
 					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy) + " z");
 		}
@@ -767,8 +767,8 @@ public class SvgGdi implements Gdi {
 
 	public void pie(int sxr, int syr, int exr, int eyr, int sxa, int sya,
 			int exa, int eya) {
-		double rx = (Math.abs(exr - sxr)-1)/2.0;
-		double ry = (Math.abs(eyr - syr)-1)/2.0;
+		double rx = (Math.abs(exr - sxr) - 1) / 2.0;
+		double ry = (Math.abs(eyr - syr) - 1) / 2.0;
 		if (rx <= 0 || ry <= 0) return;
 		
 		double cx = Math.min(sxr, exr) + rx;
@@ -802,7 +802,7 @@ public class SvgGdi implements Gdi {
 			elem = doc.createElement("path");
 			elem.setAttribute("d", "M " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
 					+ " L " + dc.toAbsoluteX(sx + cx) + "," + dc.toAbsoluteY(sy + cy)
-					+ " A " + (((int)dc.toRelativeX(rx * 2.0)) / 2.0)  + "," + (((int)dc.toRelativeY(ry * 2.0)) / 2.0)
+					+ " A " + dc.toRelativeX(rx)  + "," + dc.toRelativeY(ry)
 					+ " 0 " + (a > 0 ? "1" : "0") + " 0"
 					+ " " + dc.toAbsoluteX(ex + cx) + "," + dc.toAbsoluteY(ey + cy) + " z");
 		}
