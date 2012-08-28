@@ -1291,17 +1291,24 @@ public class SvgGdi implements Gdi {
 		}
 
 		Element elem = doc.createElement("image");
-		if( dh < 0 ){
-			elem.setAttribute("x", "" + (int)dc.toAbsoluteX(dx));
-			elem.setAttribute("y", "" + (int)dc.toAbsoluteY(dy+dh));
-			elem.setAttribute("width", "" + (int)dc.toRelativeX(dw));
-			elem.setAttribute("height", "" + (int)dc.toRelativeY(-dh));
-		}else{
-			elem.setAttribute("x", "" + (int)dc.toAbsoluteX(dx));
-			elem.setAttribute("y", "" + (int)dc.toAbsoluteY(dy));
-			elem.setAttribute("width", "" + (int)dc.toRelativeX(dw));
-			elem.setAttribute("height", "" + (int)dc.toRelativeY(dh));
+		int x = (int)dc.toAbsoluteX(dx);
+		int y = (int)dc.toAbsoluteY(dy);
+		int width = (int)dc.toRelativeX(dw);
+		int height = (int)dc.toRelativeY(dh);
+		
+		if (width < 0 && height < 0) {
+			elem.setAttribute("transform", "scale(-1, -1) translate(" + -x + ", " + -y + ")");
+		} else if (width < 0) {
+			elem.setAttribute("transform", "scale(-1, 1) translate(" + -x + ", " + y + ")");
+		} else if (height < 0) {
+			elem.setAttribute("transform", "scale(1, -1) translate(" + x + ", " + -y + ")");
+		} else {
+			elem.setAttribute("x", "" + x);
+			elem.setAttribute("y", "" + y);			
 		}
+		
+		elem.setAttribute("width", "" + Math.abs(width));
+		elem.setAttribute("height", "" + Math.abs(height));
 
 		if (sx != 0 || sy != 0 || sw != dw || sh != dh) {
 			elem.setAttribute("viewBox", "" + sx + " " + sy + " " + sw + " "+ sh);
