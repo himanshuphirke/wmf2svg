@@ -447,13 +447,13 @@ public class SvgGdi implements Gdi {
 		}
 		
 		if (compatible) {
-			buffer.append("dominant-baseline: baseline; ");
+			buffer.append("dominant-baseline: alphabetic; ");
 		} else {
 			if (vertical) {
 				elem.setAttribute("writing-mode", "tb");
 			} else {
 				if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BASELINE) {
-					buffer.append("dominant-baseline: baseline; ");
+					buffer.append("dominant-baseline: alphabetic; ");
 				} else {
 					buffer.append("dominant-baseline: text-before-edge; ");				
 				}
@@ -1164,7 +1164,7 @@ public class SvgGdi implements Gdi {
 			buffer.append("dominant-baseline: ideographic; ");
 		} else {
 			if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BASELINE) {
-				buffer.append("dominant-baseline: baseline; ");
+				buffer.append("dominant-baseline: alphabetic; ");
 			} else {
 				buffer.append("dominant-baseline: text-before-edge; ");				
 			}
