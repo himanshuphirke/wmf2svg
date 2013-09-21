@@ -8,7 +8,7 @@
 	<property name="tmp" location="${java.io.tmpdir}/${ant.project.name}" />
 	<property name="src" location="src" />
 	<property name="build" location="build" />
-	<property name="dist" location="dist" />
+	<property name="dist" location="." />
 	
 	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
 	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2" />
