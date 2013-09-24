@@ -585,11 +585,17 @@ public class SvgGdi implements Gdi {
 			if (rect == null && dc.getFont() != null) {
 				rect = new int[4];
 				if (vertical) {
-					rect[0] = x-(int)(width * 0.85);
+					if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BOTTOM) {
+						rect[0] = x - width;
+					} else if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BASELINE) {
+						rect[0] = x - (int)(width * 0.85);
+					} else {
+						rect[0] = x;
+					}
 					if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_RIGHT) {
-						rect[1] = y-height;
+						rect[1] = y - height;
 					} else if ((align & (TA_LEFT|TA_RIGHT|TA_CENTER)) == TA_CENTER) {
-						rect[1] = y-height/2;
+						rect[1] = y - height/2;
 					} else {
 						rect[1] = y;
 					}
@@ -601,7 +607,13 @@ public class SvgGdi implements Gdi {
 					} else {
 						rect[0] = x;
 					}
-					rect[1] = y;
+					if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BOTTOM) {
+						rect[1] = y - height;
+					} else if ((align & (TA_BOTTOM|TA_TOP|TA_BASELINE)) == TA_BASELINE) {
+						rect[1] = y - (int)(height * 0.85);
+					} else {
+						rect[1] = y;
+					}
 				}
 				rect[2] = rect[0] + width;
 				rect[3] = rect[1] + height;

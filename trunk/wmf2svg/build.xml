@@ -30,6 +30,9 @@
 			<classpath refid="compile.path"/>
 		</javac>
 		<jar destfile="${tmp}/${project.name}-${project.version}.jar">
+			<manifest>
+				<attribute name="Main-Class" value="net.arnx.wmf2svg.Main"/>
+			</manifest>
 			<fileset dir="${tmp}/build" includes="**/*.class" />
 			<fileset dir="${src}" excludes="**/*.java" />
 		</jar>
