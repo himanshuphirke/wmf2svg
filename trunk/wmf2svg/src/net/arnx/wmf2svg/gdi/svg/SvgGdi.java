@@ -1288,11 +1288,6 @@ public class SvgGdi implements Gdi {
 	
 	private void bmpToSvg(byte[] image, int dx, int dy, int dw, int dh, int sx, int sy,
 			int sw, int sh, int usage, long rop) {
-		if (image == null) {
-			// TODO
-			return;
-		}
-		
 		image = ImageUtil.convert(dibToBmp(image), "png", dh < 0);
 	
 		StringBuffer buffer = new StringBuffer("data:image/png;base64,");
