@@ -44,6 +44,7 @@ public class Main {
 		
 		boolean debug = false;
 		boolean compatible = false;
+		boolean replaceSymbolFont = false;
 		
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].startsWith("-")) {
@@ -51,6 +52,8 @@ public class Main {
 					debug = true;
 				} else if (args[i].equals("-compatible")) {
 					compatible = true;
+				} else if (args[i].equals("-replace-symbol-font")) {
+					replaceSymbolFont = true;
 				} else {
 					usage();
 					return;
@@ -71,6 +74,7 @@ public class Main {
 			InputStream in = new FileInputStream(src);
 			WmfParser parser = new WmfParser();
 			final SvgGdi gdi = new SvgGdi(compatible);
+			gdi.setReplaceSymbolFont(replaceSymbolFont);
 			if (debug) {
 				ClassLoader cl = gdi.getClass().getClassLoader();
 				Class[] interfaces = new Class[] { Gdi.class };
