@@ -23,7 +23,7 @@ public class MainTest extends TestCase {
 			String wmf = files[i].getAbsolutePath();
 			String svg = wmf.substring(0, wmf.length() - 4) + ".svg";
 			System.out.println(wmf + " transforming...");
-			Main.main(new String[] {"-debug", wmf, svg});
+			Main.main(new String[] {"-debug", "-replace-symbol-font", wmf, svg});
 		}
 	}
 }
