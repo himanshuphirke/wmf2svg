@@ -1298,7 +1298,6 @@ public class SvgGdi implements Gdi {
 		return (String) nameMap.get(style);
 	}
 	
-	
 	private void appendText(Element elem, String str) {
 		if (compatible) {
 			str = str.replaceAll("\\r\\n|[\\t\\r\\n ]", "\u00A0");
@@ -1330,8 +1329,8 @@ public class SvgGdi implements Gdi {
 					case 'J': ca[i] = '\u03D1'; nstate = 1; break;
 					case 'K': ca[i] = '\u039A'; nstate = 1; break;
 					case 'L': ca[i] = '\u039B'; nstate = 1; break;
-					case 'N': ca[i] = '\u039C'; nstate = 1; break;
-					case 'M': ca[i] = '\u039D'; nstate = 1; break;
+					case 'M': ca[i] = '\u039C'; nstate = 1; break;
+					case 'N': ca[i] = '\u039D'; nstate = 1; break;
 					case 'O': ca[i] = '\u039F'; nstate = 1; break;
 					case 'P': ca[i] = '\u03A0'; nstate = 1; break;
 					case 'Q': ca[i] = '\u0398'; nstate = 1; break;
@@ -1440,7 +1439,7 @@ public class SvgGdi implements Gdi {
 					case '\u00E1': ca[i] = '\u3008'; nstate = 1; break;
 					case '\u00E2': ca[i] = '\u00AE'; nstate = 2; break;
 					case '\u00E3': ca[i] = '\u00A9'; nstate = 2; break;
-					case '\u00E4': ca[i] = '\u2192'; nstate = 2; break;
+					case '\u00E4': ca[i] = '\u2122'; nstate = 2; break;
 					case '\u00E5': ca[i] = '\u2211'; nstate = 1; break;
 					case '\u00E6': ca[i] = '\u239B'; nstate = 1; break;
 					case '\u00E7': ca[i] = '\u239C'; nstate = 1; break;
