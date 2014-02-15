@@ -15,7 +15,7 @@ public final class GdiUtils {
 			str = new String(chars, 0, length, getCharset(charset));
 		} catch (UnsupportedEncodingException e) {
 			try {
-				str = new String(chars, 0, length, "Cp1252");
+				str = new String(chars, 0, length, "US-ASCII");
 			} catch (UnsupportedEncodingException e2) {
 				throw new IllegalStateException(e2);
 			}

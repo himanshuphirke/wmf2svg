@@ -12,10 +12,10 @@ public class MainTest extends TestCase {
 	public void testMain() {
 		System.setProperty("java.util.logging.config.file", "./logging.properties");
 		
-		File dir = new File(System.getProperty("user.home") + "/Documents/wmf2svg");
+		File dir = new File(System.getProperty("user.home"), "Documents/wmf2svg");
 		File[] files = dir.listFiles(new FileFilter() {
 			public boolean accept(File file) {
-				return file.getName().toLowerCase().endsWith(".wmf");
+				return file.getName().toLowerCase().endsWith("bols.wmf");
 			}
 		});
 		
